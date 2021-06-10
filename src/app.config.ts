@@ -17,14 +17,14 @@ export default {
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "static/tabBar/shop.png",
-        "selectedIconPath": "static/tabBar/shopfill.png",
+        "iconPath": "static/tabBar/mart.png",
+        "selectedIconPath": "static/tabBar/mart_selected.png",
         "text": "购物"
       },
       {
         "pagePath": "pages/my/index",
         "iconPath": "static/tabBar/my.png",
-        "selectedIconPath": "static/tabBar/myfill.png",
+        "selectedIconPath": "static/tabBar/my_selected.png",
         "text": "订单"
       }
     ]

@@ -1,5 +1,6 @@
 export default {
   pages: [
+    'pages/personal/index',
     'pages/my/index',
     'pages/index/index',
   ],
@@ -26,6 +27,12 @@ export default {
         "iconPath": "static/tabBar/my.png",
         "selectedIconPath": "static/tabBar/my_selected.png",
         "text": "订单"
+      },
+      {
+        "pagePath": "pages/personal/index",
+        "iconPath": "static/tabBar/my.png",
+        "selectedIconPath": "static/tabBar/my_selected.png",
+        "text": "个人"
       }
     ]
   }

@@ -27,7 +27,7 @@
     "dev:qq": "npm run build:qq -- --watch",
     "dev:jd": "npm run build:jd -- --watch",
     "dev:quickapp": "npm run build:quickapp -- --watch",
-    "pull-api": "echo 'Sync Api From %npm_package_devConfig_genClient_input%' && nswag openapi2tsclient /input:%npm_package_devConfig_genClient_input% /output:%npm_package_devConfig_genClient_output%"
+    "pull-api": "echo 'Sync Api From %npm_package_devConfig_genClient_input%' && nswag openapi2tsclient /input:%npm_package_devConfig_genClient_input% /output:%npm_package_devConfig_genClient_output% /template:axios"
   },
   "devConfig": {
     "genClient": {
@@ -48,8 +48,8 @@
     "@tarojs/react": "3.2.10",
     "@tarojs/runtime": "3.2.10",
     "@tarojs/taro": "3.2.10",
-    "axios": "^0.21.1",
     "axios-miniprogram-adapter": "^0.3.2",
+    "nswag": "^13.11.3",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   },

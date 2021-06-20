@@ -49,9 +49,13 @@
     "@tarojs/runtime": "3.2.10",
     "@tarojs/taro": "3.2.10",
     "axios-miniprogram-adapter": "^0.3.2",
+    "dva-core": "^2.0.4",
+    "dva-loading": "^3.0.22",
     "nswag": "^13.11.3",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-dom": "^17.0.0",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",

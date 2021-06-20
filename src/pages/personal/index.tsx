@@ -1,23 +1,34 @@
 import { Button, View, Image } from "@tarojs/components";
 import React, { useState } from "react";
-import Taro from '@tarojs/taro';
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { ConnectState } from "src/models/connect";
+import { UserModelState } from "src/models/user";
+import { AccountInfoResponse } from "../../api/client";
 import { API } from "../../api/index";
-import { AccountInfoResponse, GetWechatUserInfo } from "../../api/client";
 
-const login = async () => {
-    const [wechatLoginResult, userProfile] = await Promise.all([Taro.login({}), Taro.getUserProfile({ desc: '用于完善会员资料' })])
-    var apiLoginResult = await API.authClient.auth(new GetWechatUserInfo({ code: wechatLoginResult.code, rawData: userProfile.rawData, signature: userProfile.signature }))
-    Taro.setStorage({ key: 'token', data: apiLoginResult!.token })
-}
+export type PersonalProps = {
+    dispatch: Dispatch;
+    user: UserModelState;
+};
 
-
-const Personal: React.FC = () => {
+const Personal: React.FC<PersonalProps> = (props) => {
     const getUserInfo = async () => {
         setAccountInfo(await API.accountClient.getAccountInfo())
     }
+    const login = () => {
+        props.dispatch({
+            type: 'user/login',
+            callback: () => {
+                console.log('ok')
+            }
+        });
+    }
+
     const [accountInfo, setAccountInfo] = useState<AccountInfoResponse>()
     return (
         <View className='container'>
+            {props.user.currentUser?.nickName}
             <Image src={accountInfo?.avator || ""} />
             <Button onClick={login}>login</Button>
             <Button onClick={getUserInfo}>login</Button>
@@ -25,4 +36,4 @@ const Personal: React.FC = () => {
     )
 }
 
-export default Personal;
+export default connect(({ user }: ConnectState) => ({ user }))(Personal);

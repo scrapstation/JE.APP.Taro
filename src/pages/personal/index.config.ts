@@ -1,3 +1,4 @@
 export default {
-  navigationBarTitleText: 'personal'
+  navigationBarTitleText: 'personal',
+  navigationStyle: "custom",
 }

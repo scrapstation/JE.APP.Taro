@@ -1,11 +1,12 @@
-import { Button, View, Image } from "@tarojs/components";
+import { Button, View, Image, Navigator } from "@tarojs/components";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
+import { AtList, AtListItem } from "taro-ui";
 import { AccountInfoResponse } from "../../api/client";
-import { API } from "../../api/index";
+import "./index.scss"
 
 export type PersonalProps = {
     dispatch: Dispatch;
@@ -13,26 +14,89 @@ export type PersonalProps = {
 };
 
 const Personal: React.FC<PersonalProps> = (props) => {
-    const getUserInfo = async () => {
-        setAccountInfo(await API.accountClient.getAccountInfo())
-    }
-    const login = () => {
-        props.dispatch({
-            type: 'user/login',
-            callback: () => {
-                console.log('ok')
-            }
-        });
-    }
+    // const login = () => {
+    //     props.dispatch({
+    //         type: 'user/login',
+    //         callback: () => {
+    //             console.log('ok')
+    //         }
+    //     });
+    // }
 
     const [accountInfo, setAccountInfo] = useState<AccountInfoResponse>()
     return (
         <View className='container'>
-            {props.user.currentUser?.nickName}
-            <Image src={accountInfo?.avator || ""} />
-            <Button onClick={login}>login</Button>
-            <Button onClick={getUserInfo}>login</Button>
+            <Image className='header-img' src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
+            <View className='content'>
+                <View className='member-card'>
+                    <View className='info'>
+                        <View className='title'>
+                            <View className='wenyue-font'>GO会员</View>
+                            <View className='tips'>
+                                <View>成为星球会员享双倍积分</View>
+                                <Image src='/static/images/my/icon_arrow.png'></Image>
+                            </View>
+                        </View>
+                        <Image src='https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132' className='avatar'></Image>
+                        <View className='badage'>
+                            Lv1
+                        </View>
+                    </View>
+                    <View className='row'>
+                        <Navigator className='grid' open-type='navigate' url='/pages/integrals/mall'>
+                            <Image src={require('../../static/images/my/me_icon_points.png')}></Image>
+                            <View className='value'>63</View>
+                            <View className='title'>积分商城</View>
+                        </Navigator>
+                        <View className='grid' hover-className='opacity-6'>
+                            <Image src={require('../../static/images/my/me_icon_quan.png')}></Image>
+                            <View className='value'>0</View>
+                            <View className='title'>喜茶劵</View>
+                        </View>
+                        <Navigator className='grid' open-type='navigate' url='/pages/my/wallet'>
+                            <Image src={require('../../static/images/my/me_icon_wallet.png')}></Image>
+                            <View className='value'>0.00</View>
+                            <View className='title'>钱包</View>
+                        </Navigator>
+                    </View>
+                </View >
+            </View >
+            <AtList>
+                <AtListItem title='标题文字' />
+            </AtList>
+            {/* <list-cell hover arrow >
+        <View className="list-cell-wrapper">
+            <View View="title">会员码</View>
+            <View className="subtitle">门店扫码积分、喜茶钱包和阿喜有礼卡支持</View>
         </View>
+		</list - cell >
+		<list-cell hover arrow>
+			<View className="list-cell-wrapper">
+				<View View="title">兑换中心</View>
+				<View className="subtitle">兑换星球会员、喜茶券和阿喜有礼卡</View>
+			</View>
+		</list-cell>
+		<list-cell hover arrow>
+			<View className="list-cell-wrapper">
+				<View View="title">星球封面</View>
+			</View>
+		</list-cell>
+		<list-cell hover arrow>
+			<View className="list-cell-wrapper">
+				<View View="title">联系客服</View>
+			</View>
+		</list-cell>
+		<list-cell hover arrow>
+			<View className="list-cell-wrapper">
+				<View View="title">消息中心</View>
+			</View>
+		</list-cell>
+		<list-cell hover arrow last>
+			<View className="list-cell-wrapper">
+				<View View="title">更多</View>
+			</View>
+		</list-cell> */}
+        </View >
     )
 }
 

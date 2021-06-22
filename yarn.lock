@@ -8026,7 +8026,7 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
-nswag@^13.11.3:
+nswag@^13.10.8:
   version "13.11.3"
   resolved "https://registry.nlark.com/nswag/download/nswag-13.11.3.tgz#622fcc481d30ff972df7dfcd47a35fc4ae92be4c"
   integrity sha1-Yi/MSB0w/5ct99/NR6NfxK6Svkw=

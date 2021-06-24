@@ -1,7 +1,7 @@
 /* 颜色变量 */
 
 /* 行为相关颜色 */
-$color-primary: #DBA871;
+$color-primary: #dba871;
 $color-success: #4cd964;
 $color-warning: #f0ad4e;
 $color-error: #dd524d;
@@ -10,13 +10,13 @@ $color-error: #dd524d;
 $text-color-base: #343434; //基本色
 $text-color-inverse: #fff; //反色
 $text-color-assist: #999; //辅助灰色，如加载更多的提示信息
-$text-color-warning: #432A21;
+$text-color-warning: #432a21;
 $text-color-grey: #666;
 $text-color-placeholder: #808080;
 $text-color-disable: #c0c0c0;
 
 /* 背景颜色 */
-$bg-color: #F8F8F8;
+$bg-color: #f8f8f8;
 $bg-color-white: #ffffff;
 $bg-color-grey: #f9f9f9;
 $bg-color-hover: #f1f1f1; //点击状态颜色
@@ -59,7 +59,10 @@ $spacing-col-lg: 30rpx;
 /* 透明度 */
 $opacity-disabled: 0.3; // 组件禁用态的透明度
 
-$box-shadow: 0 20rpx 20rpx -20rpx rgba($color: #333, $alpha: 0.1);
+$box-shadow: 0 20rpx 20rpx -20rpx rgba(
+    $color: #333,
+    $alpha: 0.1,
+  );
 
 /* 文章场景相关 */
 $color-title: #2c405a; // 文章标题颜色

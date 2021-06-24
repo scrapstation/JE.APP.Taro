@@ -1,10 +1,10 @@
-import { Button, View, Image, Navigator } from "@tarojs/components";
+import { View, Image, Navigator } from "@tarojs/components";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
-import { AtList, AtListItem } from "taro-ui";
+import { AtButton, AtList, AtListItem, AtTag } from "taro-ui";
 import { AccountInfoResponse } from "../../api/client";
 import "./index.scss"
 
@@ -14,16 +14,7 @@ export type PersonalProps = {
 };
 
 const Personal: React.FC<PersonalProps> = (props) => {
-    // const login = () => {
-    //     props.dispatch({
-    //         type: 'user/login',
-    //         callback: () => {
-    //             console.log('ok')
-    //         }
-    //     });
-    // }
-
-    const [accountInfo, setAccountInfo] = useState<AccountInfoResponse>()
+    const { currentUser, isLogin } = props.user
     return (
         <View className='container'>
             <Image className='header-img' src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
@@ -31,16 +22,17 @@ const Personal: React.FC<PersonalProps> = (props) => {
                 <View className='member-card'>
                     <View className='info'>
                         <View className='title'>
-                            <View className='wenyue-font'>GO会员</View>
-                            <View className='tips'>
-                                <View>成为星球会员享双倍积分</View>
-                                <Image src='/static/images/my/icon_arrow.png'></Image>
+                            <View className='wenyue-font'>{isLogin ? `你好, ${currentUser?.nickName}` : "请先登录哟~"}</View>
+                        </View>
+                        <Image src={isLogin ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} className='avatar'></Image>
+                        {!isLogin &&
+                            <AtTag onClick={() => props.dispatch({ type: "user/login" })} size='small' active type='primary' className='login-button'>点击登录</AtTag>
+                        }
+                        {isLogin &&
+                            <View className='badage'>
+                                Lv1
                             </View>
-                        </View>
-                        <Image src='https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132' className='avatar'></Image>
-                        <View className='badage'>
-                            Lv1
-                        </View>
+                        }
                     </View>
                     <View className='row'>
                         <Navigator className='grid' open-type='navigate' url='/pages/integrals/mall'>

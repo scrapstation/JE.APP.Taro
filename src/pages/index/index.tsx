@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { API } from '../../api/index';
 import { CategoryReponse, ICategoryReponse } from 'src/api/client';
 import './index.scss';
+import { AtButton } from 'taro-ui';
 
 const Index: React.FC = () => {
   const [categories, setCategories] = useState<Array<CategoryReponse>>([]);
@@ -24,6 +25,15 @@ const Index: React.FC = () => {
   }, [categories]);
 
   const calcSize = () => {
+    let View = Taro.createSelectorQuery().select(`#products-75234e8c-adf0-480f-a91a-88c23dd58c72`);
+    View.fields(
+      {
+        size: true,
+      },
+      (data) => {
+        console.log(data.height);
+      }
+    ).exec();
     console.log('call', categories);
     let h = 0;
     const positions = categories.map((x) => {
@@ -51,6 +61,10 @@ const Index: React.FC = () => {
   };
   return (
     <View className='container'>
+      <View id='aaa' style={{ height: 40 }}>
+        1
+      </View>
+      <AtButton onClick={() => calcSize()}>222</AtButton>
       <View className='main'>
         <ScrollView className='menu-bar' scrollY scrollWithAnimation>
           <View className='wrapper'>

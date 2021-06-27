@@ -1,20 +1,18 @@
 import { View, Image, Navigator } from "@tarojs/components";
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
-import { AtButton, AtList, AtListItem, AtTag } from "taro-ui";
-import { AccountInfoResponse } from "../../api/client";
+import { AtList, AtListItem, AtTag } from "taro-ui";
 import "./index.scss"
 
 export type PersonalProps = {
-    dispatch: Dispatch;
     user: UserModelState;
 };
 
-const Personal: React.FC<PersonalProps> = (props) => {
-    const { currentUser, isLogin } = props.user
+const Personal: React.FC = () => {
+    const dispatch = useDispatch()
+    const { currentUser, isLogin } = useSelector<ConnectState,UserModelState>(x=>x.user)
     return (
         <View className='container'>
             <Image className='header-img' src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
@@ -26,7 +24,7 @@ const Personal: React.FC<PersonalProps> = (props) => {
                         </View>
                         <Image src={isLogin ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} className='avatar'></Image>
                         {!isLogin &&
-                            <AtTag onClick={() => props.dispatch({ type: "user/login" })} size='small' active type='primary' className='login-button'>点击登录</AtTag>
+                            <AtTag onClick={() => dispatch({ type: "user/login" })} size='small' active type='primary' className='login-button'>点击登录</AtTag>
                         }
                         {isLogin &&
                             <View className='badage'>
@@ -92,4 +90,4 @@ const Personal: React.FC<PersonalProps> = (props) => {
     )
 }
 
-export default connect(({ user }: ConnectState) => ({ user }))(Personal);
+export default Personal;

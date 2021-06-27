@@ -15,6 +15,7 @@ export type UserModelType = {
     state: UserModelState;
     effects: {
         login: Effect;
+        getCurrentUserInfo: Effect;
     };
     reducers: {
         saveCurrentUser: Reducer<UserModelState, any>;
@@ -29,15 +30,17 @@ const user: UserModelType = {
         currentUser: undefined
     },
     effects: {
-        *login(_, { call, put }) {
+        *login(_, { call }) {
             const getLoginInfo = async () => {
                 const [wechatLoginResult, userProfile] = await Promise.all([Taro.login({}), Taro.getUserProfile({ desc: '用于完善会员资料' })])
                 const apiLoginResult = await API.authClient.auth(new GetWechatUserInfo({ code: wechatLoginResult.code, rawData: userProfile.rawData, signature: userProfile.signature }))
                 return apiLoginResult.token
             }
-            const getUserInfo = async () => await API.accountClient.getAccountInfo()
             const token = yield call(getLoginInfo)
             Taro.setStorageSync('token', token)
+        },
+        *getCurrentUserInfo(_, { call, put }) {
+            const getUserInfo = async () => await API.accountClient.getAccountInfo()
             const userInfo = yield call(getUserInfo)
             yield put({ type: 'saveCurrentUser', payload: userInfo })
         }

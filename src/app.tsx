@@ -11,6 +11,9 @@ const dvaApp = dva.createApp({
 const store = dvaApp.getStore();
 class App extends Component {
 
+  componentDidMount(){
+    store.dispatch({type:'user/getCurrentUserInfo'})
+  }
   render() {
     return (
       <Provider store={store} >

@@ -27,13 +27,12 @@ const Index: React.FC = () => {
     let h = 0;
     const positions = categories.map((x) => {
       let position = { id: x.id, top: 0, bottom: 0 };
-      let View = Taro.createSelectorQuery().select(`#products-${x.id}`);
+      let View = Taro.createSelectorQuery().select(`#category-${x.id}`);
       View.fields(
         {
           size: true,
         },
         (data) => {
-          console.log(data);
           position.top = h;
           h += Math.floor(data.height);
           position.bottom = h;
@@ -41,13 +40,21 @@ const Index: React.FC = () => {
       ).exec();
       return position;
     });
-    console.log(positions);
     setProductPosition(positions);
   };
+
   const handleMenuSelected = (id: string) => {
     setProductsScrollTop(productPosition.find((item) => item.id == id)!.top);
     Taro.nextTick(() => setCurrentCategoryId(id));
   };
+
+  const productsScroll = ({detail})=> {
+    const {scrollTop} = detail
+    let tabs = productPosition.filter(item=> item.top <= scrollTop).reverse()
+    if(tabs.length > 0){
+      setCurrentCategoryId(tabs[0].id)
+    }
+  }
   return (
     <View className='container'>
       <View className='main'>
@@ -63,12 +70,12 @@ const Index: React.FC = () => {
             })}
           </View>
         </ScrollView>
-        <ScrollView className='product-section' scrollY scrollWithAnimation scrollTop={productsScrollTop} onScroll={() => {}}>
+        <ScrollView className='product-section' scrollY scrollWithAnimation scrollTop={productsScrollTop} onScroll={productsScroll}>
           <View className='wrapper'>
             {categories.map((category) => {
               return (
-                <View className='products-list' key={category.id} id={`products-${category.id}`}>
-                  <View className='category-name'>{category.name}</View>
+                <View className='category' key={category.id} id={`category-${category.id}`}>
+                  <View className='name'>{category.name}</View>
                   <View className='products'>
                     {category.products!.map((product) => {
                       return (

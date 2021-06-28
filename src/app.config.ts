@@ -1,7 +1,6 @@
 export default {
   pages: [
     'pages/personal/index',
-    'pages/my/index',
     'pages/index/index',
   ],
   window: {
@@ -22,12 +21,12 @@ export default {
         "selectedIconPath": "static/tabBar/mart_selected.png",
         "text": "购物"
       },
-      {
-        "pagePath": "pages/my/index",
-        "iconPath": "static/tabBar/my.png",
-        "selectedIconPath": "static/tabBar/my_selected.png",
-        "text": "订单"
-      },
+      // {
+      //   "pagePath": "pages/my/index",
+      //   "iconPath": "static/tabBar/my.png",
+      //   "selectedIconPath": "static/tabBar/my_selected.png",
+      //   "text": "订单"
+      // },
       {
         "pagePath": "pages/personal/index",
         "iconPath": "static/tabBar/my.png",

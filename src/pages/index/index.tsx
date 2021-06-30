@@ -4,12 +4,23 @@ import { useEffect, useState } from 'react';
 import { API } from '../../api/index';
 import { CategoryReponse } from 'src/api/client';
 import './index.scss';
+import Action from './components/Action';
 
+export type CardItem =
+  {
+    productId: string,
+    skuId: string,
+    productName: string,
+    skuPrice: number,
+    number: number,
+    image: string
+  }
 const Index: React.FC = () => {
   const [categories, setCategories] = useState<Array<CategoryReponse>>([]);
   const [productPosition, setProductPosition] = useState<Array<{ id: string; top: number; bottom: number }>>([]);
   const [currentCategoryId, setCurrentCategoryId] = useState<string>('');
   const [productsScrollTop, setProductsScrollTop] = useState<number>(0);
+  const [cart, setCart] = useState<CardItem[]>([]);
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await API.categoryClient.getAllCategory();
@@ -48,12 +59,45 @@ const Index: React.FC = () => {
     Taro.nextTick(() => setCurrentCategoryId(id));
   };
 
-  const productsScroll = ({detail})=> {
-    const {scrollTop} = detail
-    let tabs = productPosition.filter(item=> item.top <= scrollTop).reverse()
-    if(tabs.length > 0){
+  const productsScroll = ({ detail }) => {
+    const { scrollTop } = detail
+    let tabs = productPosition.filter(item => item.top <= scrollTop).reverse()
+    if (tabs.length > 0) {
       setCurrentCategoryId(tabs[0].id)
     }
+  }
+
+  const productCartNum = (id: string) => {	//计算单个饮品添加到购物车的数量
+    const count = cart.reduce((acc, cur: any) => {
+      if (cur.productId === id) {
+        return acc += cur.number
+      }
+      return acc
+    }, 0)
+    console.log(count)
+    return count;
+  }
+
+  const handleAddToCart = (cardItem: CardItem) => {	//添加到购物车
+    const cartTemp = cart;
+    const index = cartTemp.findIndex(x => x.skuId === cardItem.skuId)
+    if (index > -1) {
+      cartTemp[index].number += 1
+    } else {
+      cartTemp.push(cardItem)
+    }
+    console.log(cartTemp)
+    setCart(cartTemp)
+  }
+
+  const handleMinusFromCart = (productId: string) => { //从购物车减商品
+    const cartTemp = cart;
+    const index = cartTemp.findIndex(item => item.productId == productId)
+    cartTemp[index].number -= 1
+    if (cartTemp[index].number <= 0) {
+      cartTemp.splice(index, 1)
+    }
+    setCart(cartTemp)
   }
   return (
     <View className='container'>
@@ -80,7 +124,7 @@ const Index: React.FC = () => {
                     {category.products!.map((product) => {
                       return (
                         <View className='product' key={product.id}>
-                          <Image src={product.imgUrl!} mode='widthFix' className='image'></Image>
+                          <Image lazyLoad src={product.imgUrl!} mode='widthFix' className='image'></Image>
                           <View className='content'>
                             <View className='name'>{product.name}</View>
                             <View className='labels'>
@@ -95,6 +139,7 @@ const Index: React.FC = () => {
                             <View className='description'>{product.description || ''}</View>
                             <View className='price'>
                               <View>￥{product.price}</View>
+                              <Action materialsBtn={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: '', productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.id)} onSelectMaterails={() => { }}></Action>
                             </View>
                           </View>
                         </View>

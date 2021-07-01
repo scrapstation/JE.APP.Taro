@@ -20,7 +20,7 @@ const Index: React.FC = () => {
   const [productPosition, setProductPosition] = useState<Array<{ id: string; top: number; bottom: number }>>([]);
   const [currentCategoryId, setCurrentCategoryId] = useState<string>('');
   const [productsScrollTop, setProductsScrollTop] = useState<number>(0);
-  const [cart, setCart] = useState<CardItem[]>([]);
+  const [cart, setCart] = useState<any[]>([]);
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await API.categoryClient.getAllCategory();
@@ -67,6 +67,7 @@ const Index: React.FC = () => {
     }
   }
 
+  // 优化
   const productCartNum = (id: string) => {	//计算单个饮品添加到购物车的数量
     const count = cart.reduce((acc, cur: any) => {
       if (cur.productId === id) {
@@ -74,24 +75,22 @@ const Index: React.FC = () => {
       }
       return acc
     }, 0)
-    console.log(count)
     return count;
   }
 
   const handleAddToCart = (cardItem: CardItem) => {	//添加到购物车
-    const cartTemp = cart;
+    const cartTemp = JSON.parse(JSON.stringify(cart)) as CardItem[];
     const index = cartTemp.findIndex(x => x.skuId === cardItem.skuId)
     if (index > -1) {
       cartTemp[index].number += 1
     } else {
       cartTemp.push(cardItem)
     }
-    console.log(cartTemp)
     setCart(cartTemp)
   }
 
   const handleMinusFromCart = (productId: string) => { //从购物车减商品
-    const cartTemp = cart;
+    const cartTemp = JSON.parse(JSON.stringify(cart)) as CardItem[];
     const index = cartTemp.findIndex(item => item.productId == productId)
     cartTemp[index].number -= 1
     if (cartTemp[index].number <= 0) {
@@ -99,6 +98,7 @@ const Index: React.FC = () => {
     }
     setCart(cartTemp)
   }
+
   return (
     <View className='container'>
       <View className='main'>

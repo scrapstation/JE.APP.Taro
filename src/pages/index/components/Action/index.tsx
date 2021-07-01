@@ -1,6 +1,6 @@
 import { View, Image } from "@tarojs/components"
 import { AtButton } from "taro-ui"
-import "./Action.scss"
+import "./index.scss"
 
 export type ActionProps = {
     number: number;
@@ -14,9 +14,9 @@ const Action: React.FC<ActionProps> = (props) => {
         <View className="actions">
             {!props.materialsBtn &&
                 <>
-                    <Image src={require('../../../static/images/index/round_minus.png')} className="minus-btn" onClick={() => props.onMinus()}></Image>
+                    <Image src={require('../../../../static/images/index/round_minus.png')} className="minus-btn" onClick={() => props.onMinus()}></Image>
                     <View className="number">{props.number}</View>
-                    <Image src={require('../../../static/images/index/round_add_normal.png')} className="add-btn" onClick={() => props.onAdd()}></Image>
+                    <Image src={require('../../../../static/images/index/round_add_normal.png')} className="add-btn" onClick={() => props.onAdd()}></Image>
                 </>
             }
             {props.materialsBtn &&

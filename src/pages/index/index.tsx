@@ -5,6 +5,7 @@ import { API } from '../../api/index';
 import { CategoryReponse } from 'src/api/client';
 import './index.scss';
 import Action from './components/Action';
+import CartBar from './components/CartBar';
 
 export type CardItem =
   {
@@ -20,7 +21,7 @@ const Index: React.FC = () => {
   const [productPosition, setProductPosition] = useState<Array<{ id: string; top: number; bottom: number }>>([]);
   const [currentCategoryId, setCurrentCategoryId] = useState<string>('');
   const [productsScrollTop, setProductsScrollTop] = useState<number>(0);
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState<CardItem[]>([]);
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await API.categoryClient.getAllCategory();
@@ -152,6 +153,7 @@ const Index: React.FC = () => {
           </View>
         </ScrollView>
       </View>
+      <CartBar cartNum={cart.reduce((arr, x) => arr + x.number, 0)} cartPrice={cart.reduce((arr, x) => arr + (x.skuPrice * x.number), 0)} onDetail={() => { }} onPay={() => { }}></CartBar>
     </View>
   );
 };

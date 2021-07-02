@@ -1,53 +1,139 @@
-.left {
-	display: flex;
-	align-items: center;
+/* 行为相关颜色 */
+$color-primary: #dba871;
+$color-success: #4cd964;
+$color-warning: #f0ad4e;
+$color-error: #dd524d;
 
-	.detail-action {
-		height: 100%;
-		border-radius: 100%;
-		background-color: #ffffff;
-		box-shadow: 0 10rpx 10rpx 0 rgba($color: $border-color, $alpha: 0.2);
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 100rpx;
-		height: 100rpx;
-		margin-top: -20rpx;
-		margin-right: 20rpx;
-		margin-left: 20rpx;
+/* 文字基本颜色 */
+$text-color-base: #343434; //基本色
+$text-color-inverse: #fff; //反色
+$text-color-assist: #999; //辅助灰色，如加载更多的提示信息
+$text-color-warning: #432a21;
+$text-color-grey: #666;
+$text-color-placeholder: #808080;
+$text-color-disable: #c0c0c0;
 
-		.shopbag-btn {
-			width: 70rpx;
-			height: 70rpx;
-		}
+/* 背景颜色 */
+$bg-color: #f8f8f8;
+$bg-color-white: #ffffff;
+$bg-color-grey: #f9f9f9;
+$bg-color-hover: #f1f1f1; //点击状态颜色
+$bg-color-mask: rgba(0, 0, 0, 0.4); //遮罩颜色
 
-		.badge {
-			background-color: $color-primary;
-			font-size: $font-size-sm;
-			color: $bg-color-white;
-			line-height: 1rem;
-			width: 1rem;
-			text-align: center;
-			border-radius: 100%;
-			position: absolute;
-			right: 0;
-			top: 0;
-		}
-	}
+/* 边框颜色 */
+$border-color: #c8c7cc;
 
-	.price {
-		font-size: $font-size-extra-lg;
-		font-weight: bold;
-		color: $text-color-base;
-	}
-}
+/* 尺寸变量 */
 
-.right {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0 70rpx;
-	border-radius: 0 !important;
-	font-size: $font-size-extra-lg;
+/* 文字尺寸 */
+$font-size-extra-sm: 22rpx;
+$font-size-sm: 24rpx;
+$font-size-base: 26rpx;
+$font-size-medium: 28rpx;
+$font-size-lg: 32rpx;
+$font-size-extra-lg: 36rpx;
+
+/* 图片尺寸 */
+$img-size-sm: 40rpx;
+$img-size-base: 52rpx;
+$img-size-lg: 80rpx;
+
+/* Border Radius */
+$border-radius-sm: 4rpx;
+$border-radius-base: 6rpx;
+$border-radius-lg: 12rpx;
+$border-radius-circle: 50%;
+
+/* 水平间距 */
+$spacing-row-sm: 10rpx;
+$spacing-row-base: 20rpx;
+$spacing-row-lg: 30rpx;
+
+/* 垂直间距 */
+$spacing-col-sm: 10rpx;
+$spacing-col-base: 20rpx;
+$spacing-col-lg: 30rpx;
+
+/* 透明度 */
+$opacity-disabled: 0.3; // 组件禁用态的透明度
+
+$box-shadow: 0 20rpx 20rpx -20rpx rgba(
+    $color: #333,
+    $alpha: 0.1,
+  );
+
+/* 文章场景相关 */
+$color-title: #2c405a; // 文章标题颜色
+$font-size-title: 40rpx;
+$color-subtitle: #555555; // 二级标题颜色
+$font-size-subtitle: 36rpx;
+$color-paragraph: #3f536e; // 文章段落颜色
+$font-size-paragraph: 30rpx;
+.cart-bar {
+  position: fixed;
+  bottom: 0;
+  // #ifdef H5
+  bottom: var(--window-bottom);
+  // #endif
+  width: 100%;
+  z-index: 995;
+  height: 100rpx;
+  background-color: #f0f0f1;
+  border-bottom: 2rpx solid #c8c7cc;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  .left {
+    display: flex;
+    align-items: center;
+
+    .detail-action {
+      height: 100%;
+      border-radius: 100%;
+      background-color: #ffffff;
+      box-shadow: 0 10rpx 10rpx 0 rgba($color: $border-color, $alpha: 0.2);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100rpx;
+      height: 100rpx;
+      margin-top: -20rpx;
+      margin-right: 20rpx;
+      margin-left: 20rpx;
+
+      .shopbag-btn {
+        width: 70rpx;
+        height: 70rpx;
+      }
+
+      .badge {
+        background-color: $color-primary;
+        font-size: $font-size-sm;
+        color: $bg-color-white;
+        line-height: 1rem;
+        width: 1rem;
+        text-align: center;
+        border-radius: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    .price {
+      font-size: $font-size-extra-lg;
+      font-weight: bold;
+      color: $text-color-base;
+    }
+  }
+
+  .right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 70rpx;
+    border-radius: 0 !important;
+    font-size: $font-size-extra-lg;
+  }
 }

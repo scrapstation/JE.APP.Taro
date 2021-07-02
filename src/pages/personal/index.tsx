@@ -12,7 +12,13 @@ export type PersonalProps = {
 
 const Personal: React.FC = () => {
     const dispatch = useDispatch()
-    const { currentUser, isLogin } = useSelector<ConnectState,UserModelState>(x=>x.user)
+    const { currentUser, isLogin } = useSelector<ConnectState, UserModelState>(x => x.user)
+    useEffect(() => {
+        console.log(useEffect)
+        if (isLogin) {
+            dispatch({ type: 'user/getCurrentUserInfo' });
+        }
+    }, [isLogin])
     return (
         <View className='container'>
             <Image className='header-img' src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
@@ -20,13 +26,13 @@ const Personal: React.FC = () => {
                 <View className='member-card'>
                     <View className='info'>
                         <View className='title'>
-                            <View className='wenyue-font'>{isLogin ? `你好, ${currentUser?.nickName}` : "请先登录哟~"}</View>
+                            <View className='wenyue-font'>{currentUser ? `你好, ${currentUser?.nickName}` : "请先登录哟~"}</View>
                         </View>
-                        <Image src={isLogin ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} className='avatar'></Image>
-                        {!isLogin &&
+                        <Image src={currentUser ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} className='avatar'></Image>
+                        {!currentUser &&
                             <AtTag onClick={() => dispatch({ type: "user/login" })} size='small' active type='primary' className='login-button'>点击登录</AtTag>
                         }
-                        {isLogin &&
+                        {currentUser &&
                             <View className='badage'>
                                 Lv1
                             </View>

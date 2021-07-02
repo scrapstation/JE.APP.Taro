@@ -1,5 +1,6 @@
 import { View, Image } from "@tarojs/components"
 import { AtButton } from "taro-ui"
+import "./index.scss"
 
 export type CartBarProps = {
     cartNum: number;
@@ -10,17 +11,19 @@ export type CartBarProps = {
 const CartBar: React.FC<CartBarProps> = (props) => {
     return (
         <View>
-            {/* <uni-transition :mode-class="['slide-bottom']" :show="!!cartNum" :styles="cartBarStyles"> */}
-            <View className="left">
-                <View className="detail-action" onClick={() => props.onDetail()}>
-                    <Image src="/static/images/index/icon_shopping_bag.png" className="shopbag-btn"></Image>
-                    <View className="badge">{props.cartNum}</View>
+            <View className="cart-bar">
+                {/* <uni-transition :mode-class="['slide-bottom']" :show="!!cartNum" :styles="cartBarStyles"> */}
+                <View className="left">
+                    <View className="detail-action" onClick={() => props.onDetail()}>
+                        <Image src="/static/images/index/icon_shopping_bag.png" className="shopbag-btn"></Image>
+                        <View className="badge">{props.cartNum}</View>
+                    </View>
+                    <View className="price">￥{props.cartPrice}</View>
                 </View>
-                <View className="price">￥{props.cartPrice}</View>
+                <button className="right" onClick={() => props.onPay()}>结算</button>
+                {/* </uni-transtion> */}
+                {/* <cart-popup :cart="cart" ref="cartPopup" @add="add" @minus="minus" @clear="clear"></cart-popup> */}
             </View>
-            <AtButton type="primary" className="right" onClick={() => props.onPay()}>结算</AtButton>
-            {/* </uni-transtion> */}
-            {/* <cart-popup :cart="cart" ref="cartPopup" @add="add" @minus="minus" @clear="clear"></cart-popup> */}
         </View>
     )
 }

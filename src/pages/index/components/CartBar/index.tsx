@@ -1,100 +1,36 @@
-import { View, Image } from "@tarojs/components"
-import { AtButton } from "taro-ui"
+import { View, Image, Button } from "@tarojs/components"
+import React, { useEffect } from "react";
+import { CardItem } from "../..";
+import CartPopup, { CartPopupRefs } from "./CartPopup";
 import "./index.scss"
 
 export type CartBarProps = {
-    cartNum: number;
-    cartPrice: number;
+    cart: CardItem[];
+    onAdd: (item: CardItem) => void;
+    onMinus: (skuId: string) => void;
+    onClear: () => void;
     onPay: () => void;
     onDetail: () => void;
 };
 const CartBar: React.FC<CartBarProps> = (props) => {
+
+    const cartPopupRef = React.createRef<CartPopupRefs>();
     return (
         <View>
             <View className="cart-bar">
                 {/* <uni-transition :mode-class="['slide-bottom']" :show="!!cartNum" :styles="cartBarStyles"> */}
                 <View className="left">
-                    <View className="detail-action" onClick={() => props.onDetail()}>
-                        <Image src="/static/images/index/icon_shopping_bag.png" className="shopbag-btn"></Image>
-                        <View className="badge">{props.cartNum}</View>
+                    <View className="detail-action" onClick={() => cartPopupRef.current?.open()}>
+                        <Image src={require('../../../../static/images/index/icon_shopping_bag.png')} className="shopbag-btn"></Image>
+                        <View className="badge">{props.cart.reduce((arr, x) => arr + x.number, 0)}</View>
                     </View>
-                    <View className="price">￥{props.cartPrice}</View>
+                    <View className="price">￥{props.cart.reduce((arr, x) => arr + (x.skuPrice * x.number), 0)}</View>
                 </View>
-                <button className="right" onClick={() => props.onPay()}>结算</button>
+                <Button type="primary" className="right" onClick={() => props.onPay()}>结算</Button>
                 {/* </uni-transtion> */}
-                {/* <cart-popup :cart="cart" ref="cartPopup" @add="add" @minus="minus" @clear="clear"></cart-popup> */}
             </View>
+            <CartPopup ref={cartPopupRef} cart={props.cart} onAdd={(item) => props.onAdd(item)} onMinus={(skuId) => props.onMinus(skuId)} onClear={() => props.onClear()} />
         </View>
     )
 }
 export default CartBar
-
-// <script>
-// import uniTransition from '@/components/uni-transition/uni-transition.vue'
-// import cartPopup from '../cart-popup/cart-popup.vue'
-
-// export default {
-// 	name: 'CartBar',
-// 	components: {
-// 		uniTransition,
-// 		cartPopup
-// 	},
-// 	props: {
-// 		cart: {
-// 			type: Array,
-// 			default: () => []
-// 		}
-// 	},
-// 	computed: {
-// 		cartNum() { //计算购物车总数
-// 			return this.cart.reduce((acc, cur) => acc + cur.number, 0)
-// 		},
-// 		cartPrice() {	//计算购物车总价
-// 			return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0)
-// 		}	
-// 	},
-// 	data() {
-// 		return {
-// 			cartBarStyles: {
-// 				'position': 'fixed',
-// 				'bottom': 0,
-// 				// #ifdef H5
-// 				'bottom': 'var(--window-bottom)',
-// 				// #endif
-// 				'width': '100%',
-// 				'z-index': '995',
-// 				'height': '100rpx',
-// 				'background-color': '#f0f0f1',
-// 				'border-bottom': '2rpx solid #c8c7cc',
-// 				'display': 'flex',
-// 				'justify-content': 'space-between',
-// 				'align-items': 'stretch',
-// 			}
-// 		}
-// 	},
-// 	methods: {
-// 		details() {
-// 			this.$refs['cartPopup'].open()
-// 		},
-// 		add(product) {
-// 			this.$emit('add', {...product, number: 1})
-// 		},
-// 		minus(product) {
-// 			this.$emit('minus', product)
-// 		},
-// 		clear() {
-// 			this.$emit('clear')
-// 		},
-// 		pay() {
-// 			this.$emit('pay')
-// 		}
-// 	},
-// 	watch: {
-// 		cartNum(val) {
-// 			if(!val) {
-// 				this.$refs['cartPopup'].close()
-// 			}
-// 		}
-// 	}
-// };
-// </script>

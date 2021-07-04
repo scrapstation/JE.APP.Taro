@@ -1,3 +1,5 @@
+const path = require('path')
+
 const config = {
   projectName: 'JE.APP.Taro',
   date: '2021-6-8',
@@ -18,6 +20,9 @@ const config = {
     }
   },
   framework: 'react',
+  // sass: {
+  //   resource: path.resolve(__dirname, '..', 'src/styles/common.scss')
+  // },
   mini: {
     postcss: {
       pxtransform: {

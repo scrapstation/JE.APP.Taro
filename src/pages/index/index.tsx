@@ -90,9 +90,9 @@ const Index: React.FC = () => {
     setCart(cartTemp)
   }
 
-  const handleMinusFromCart = (productId: string) => { //从购物车减商品
+  const handleMinusFromCart = (skuId: string) => { //从购物车减商品
     const cartTemp = JSON.parse(JSON.stringify(cart)) as CardItem[];
-    const index = cartTemp.findIndex(item => item.productId == productId)
+    const index = cartTemp.findIndex(item => item.skuId == skuId)
     cartTemp[index].number -= 1
     if (cartTemp[index].number <= 0) {
       cartTemp.splice(index, 1)
@@ -140,7 +140,7 @@ const Index: React.FC = () => {
                             <View className='description'>{product.description || ''}</View>
                             <View className='price'>
                               <View>￥{product.price}</View>
-                              <Action materialsBtn={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: '', productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.id)} onSelectMaterails={() => { }}></Action>
+                              <Action isMultiSku={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: product.skus![0].id, productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.skus![0].id)} onSelectMaterails={() => { }}></Action>
                             </View>
                           </View>
                         </View>
@@ -153,7 +153,10 @@ const Index: React.FC = () => {
           </View>
         </ScrollView>
       </View>
-      <CartBar cartNum={cart.reduce((arr, x) => arr + x.number, 0)} cartPrice={cart.reduce((arr, x) => arr + (x.skuPrice * x.number), 0)} onDetail={() => { }} onPay={() => { }}></CartBar>
+      {
+        cart.length > 0 &&
+        <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => { }}></CartBar>
+      }
     </View>
   );
 };

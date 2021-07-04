@@ -4,7 +4,7 @@ import "./index.scss"
 
 export type ActionProps = {
     number: number;
-    materialsBtn: boolean;
+    isMultiSku: boolean;
     onAdd: () => void;
     onMinus: () => void;
     onSelectMaterails: () => void;
@@ -12,14 +12,14 @@ export type ActionProps = {
 const Action: React.FC<ActionProps> = (props) => {
     return (
         <View className="actions">
-            {!props.materialsBtn &&
+            {!props.isMultiSku &&
                 <>
                     <Image src={require('../../../../static/images/index/round_minus.png')} className="minus-btn" onClick={() => props.onMinus()}></Image>
                     <View className="number">{props.number}</View>
                     <Image src={require('../../../../static/images/index/round_add_normal.png')} className="add-btn" onClick={() => props.onAdd()}></Image>
                 </>
             }
-            {props.materialsBtn &&
+            {props.isMultiSku &&
                 <View className="materials-box">
                     <AtButton type="primary" size="small" className="materials-btn" onClick={() => props.onSelectMaterails()}>选规格</AtButton>
                     <View className="number-badge" v-show="number">

@@ -2,10 +2,11 @@ import { View, ScrollView, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { API } from '../../api/index';
-import { CategoryReponse } from 'src/api/client';
+import { CategoryReponse, ProductReponse } from 'src/api/client';
 import './index.scss';
 import Action from './components/Action';
 import CartBar from './components/CartBar';
+import ProductModal from './components/ProductModal';
 
 export type CardItem =
   {
@@ -22,6 +23,10 @@ const Index: React.FC = () => {
   const [currentCategoryId, setCurrentCategoryId] = useState<string>('');
   const [productsScrollTop, setProductsScrollTop] = useState<number>(0);
   const [cart, setCart] = useState<CardItem[]>([]);
+  const [productModal, setProductModal] = useState<{ visible: boolean, product: ProductReponse | null }>({
+    visible: false,
+    product: null
+  });
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await API.categoryClient.getAllCategory();
@@ -140,7 +145,7 @@ const Index: React.FC = () => {
                             <View className='description'>{product.description || ''}</View>
                             <View className='price'>
                               <View>￥{product.price}</View>
-                              <Action isMultiSku={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: product.skus![0].id, productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.skus![0].id)} onSelectMaterails={() => { }}></Action>
+                              <Action isMultiSku={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: product.skus![0].id, productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.skus![0].id)} onSelectMaterails={() => setProductModal({ visible: true, product })}></Action>
                             </View>
                           </View>
                         </View>
@@ -156,6 +161,10 @@ const Index: React.FC = () => {
       {
         cart.length > 0 &&
         <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => { }}></CartBar>
+      }
+      {
+        productModal.visible &&
+        <ProductModal product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
       }
     </View>
   );

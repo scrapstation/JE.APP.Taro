@@ -9,31 +9,63 @@ import "./index.scss"
 export type ProductModalProps = {
     product: ProductReponse;
     onClose: () => void;
+    onAddToCart: (cartItem: CardItem) => void;
 }
 const ProductModal: React.FC<ProductModalProps> = (props) => {
-    const [attributeSelectedInfo, setAttributeSelectedInfo] = useState<{ attributeId: string, attributeItemId: string }[]>(props.product.attributes!.map(x => { return { attributeId: x.id, attributeItemId: x.attributeItems![0].id } }));
+    const [attributeSelectedInfo, setAttributeSelectedInfo] = useState<{ attributeId: string, attributeItemId: string }[]>([]);
     const [cartItem, setCartItem] = useState<CardItem>({
         productId: props.product.id,
-        skuId: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].id,
+        skuId: '',
         productName: props.product.name!,
-        skuPrice: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].price,
-        number: 0,
+        skuPrice: 0,
+        number: 1,
         image: props.product.imgUrl!
     })
+
     const handleAttributeSelectedChange = (attributeId: string, attributeItemId: string) => {
-        // update selected attributeItem ids
         let attributeSelectedInfoTemp = attributeSelectedInfo.map(x => Object.assign({}, x));
         const attributeItemIndex = attributeSelectedInfoTemp.findIndex(x => x.attributeId === attributeId);
         attributeSelectedInfoTemp[attributeItemIndex].attributeItemId = attributeItemId;
         setAttributeSelectedInfo(attributeSelectedInfoTemp)
     }
+
     useEffect(() => {
+        setAttributeSelectedInfo(props.product.attributes!.map(x => { return { attributeId: x.id, attributeItemId: x.attributeItems![0].id } }))
+    }, [])
+
+    useEffect(() => {
+        if (attributeSelectedInfo.length == 0) {
+            return
+        }
         setCartItem({
             ...cartItem,
             skuId: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].id,
             skuPrice: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].price
         })
     }, [attributeSelectedInfo])
+
+    const handleOnAdd = () => {
+        setCartItem({ ...cartItem, number: cartItem.number + 1 })
+    }
+    const handleOnMinus = () => {
+        if (cartItem.number <= 1) {
+            return
+        }
+        setCartItem({ ...cartItem, number: cartItem.number - 1 })
+    }
+
+    const getSkuInfo = () => {
+        let allAttributeItems = props.product.attributes!.map(x => x.attributeItems!).flat()
+        let allSelectedAttributeItemIds = attributeSelectedInfo.map(x => x.attributeItemId)
+        return allAttributeItems
+            .filter(x => allSelectedAttributeItemIds.findIndex(attributeItemId => attributeItemId == x.id) != -1)
+            .map(x => `${x.name} `)
+    }
+
+    const handleAddToCart = () => {
+        props.onAddToCart(cartItem)
+    }
+
     return (
         <>
             <View className="header">
@@ -86,11 +118,11 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
                 <View className="cart-item-info">
                     <View className="price-and-materials">
                         <View className="price">￥{cartItem.skuPrice}</View>
-                        <View className="materials" >111</View>
+                        <View className="materials" >{getSkuInfo()}</View>
                     </View>
-                    <Action isMultiSku={false} number={cartItem.number} onAdd={() => setCartItem({ ...cartItem, number: cartItem.number + 1 })} onMinus={() => setCartItem({ ...cartItem, number: cartItem.number - 1 })} onSelectMaterails={() => { }}></Action>
+                    <Action isMultiSku={false} number={cartItem.number} onAdd={() => handleOnAdd()} onMinus={() => handleOnMinus()} onSelectMaterails={() => { }}></Action>
                 </View>
-                <Button type="primary" className="add-cart-btn" onClick={() => { }}>加入购物袋</Button>
+                <Button type="primary" className="add-cart-btn" onClick={() => handleAddToCart()}>加入购物袋</Button>
             </View >
         </>
     )

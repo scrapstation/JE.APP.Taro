@@ -168,7 +168,7 @@ const Index: React.FC = () => {
       {
         <AtModal isOpened={productModal.visible}>
           {productModal.visible &&
-            <ProductModal product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
+            <ProductModal onAddToCart={(cartItem) => handleAddToCart(cartItem)} product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
           }
         </AtModal>
       }

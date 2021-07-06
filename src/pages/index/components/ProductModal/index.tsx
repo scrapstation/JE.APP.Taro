@@ -1,5 +1,5 @@
 import { View, Image, Swiper, SwiperItem, ScrollView, Button } from "@tarojs/components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ProductReponse } from "src/api/client"
 import { AtButton, AtModal } from "taro-ui"
 import { CardItem } from "../.."
@@ -11,20 +11,33 @@ export type ProductModalProps = {
     onClose: () => void;
 }
 const ProductModal: React.FC<ProductModalProps> = (props) => {
-    const [selectedAttributeItemIds, setSelectedAttributeItemIds] = useState<string[]>(props.product.attributes!.map(x => x.attributeItems![0].id));
+    const [attributeSelectedInfo, setAttributeSelectedInfo] = useState<{ attributeId: string, attributeItemId: string }[]>(props.product.attributes!.map(x => { return { attributeId: x.id, attributeItemId: x.attributeItems![0].id } }));
     const [cartItem, setCartItem] = useState<CardItem>({
         productId: props.product.id,
-        skuId: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === selectedAttributeItemIds.sort().toString())![0].id,
+        skuId: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].id,
         productName: props.product.name!,
-        skuPrice: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === selectedAttributeItemIds.sort().toString())![0].price,
+        skuPrice: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].price,
         number: 0,
         image: props.product.imgUrl!
     })
+    const handleAttributeSelectedChange = (attributeId: string, attributeItemId: string) => {
+        // update selected attributeItem ids
+        let attributeSelectedInfoTemp = attributeSelectedInfo.map(x => Object.assign({}, x));
+        const attributeItemIndex = attributeSelectedInfoTemp.findIndex(x => x.attributeId === attributeId);
+        attributeSelectedInfoTemp[attributeItemIndex].attributeItemId = attributeItemId;
+        setAttributeSelectedInfo(attributeSelectedInfoTemp)
+    }
+    useEffect(() => {
+        setCartItem({
+            ...cartItem,
+            skuId: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].id,
+            skuPrice: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].price
+        })
+    }, [attributeSelectedInfo])
     return (
-        <AtModal isOpened >
+        <>
             <View className="header">
-                <Image src="/static/Images/index/menupopup_btn_share_normal.png"></Image>
-                <Image src="/static/Images/index/round_close_btn.png" onClick={() => props.onClose()}></Image>
+                <Image src={require('../../../../static/Images/index/round_close_btn.png')} onClick={() => props.onClose()}></Image>
             </View>
             <Swiper duration={1000} indicator-dots className="swiper" autoplay interval={3000}>
                 <SwiperItem className="swiper-item">
@@ -56,7 +69,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
                                         {
                                             attribute.attributeItems!.map(attributeItem => {
                                                 return (
-                                                    <View className="value" onClick={() => { }}>
+                                                    <View className={attributeSelectedInfo.map(x => x.attributeItemId).findIndex(id => id == attributeItem.id) !== -1 ? 'value selected' : "value"} onClick={() => handleAttributeSelectedChange(attribute.id, attributeItem.id)}>
                                                         {attributeItem.name}
                                                     </View>
                                                 )
@@ -70,16 +83,16 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
                 </View>
             </ScrollView >
             <View className="bottom" style="{height: !productData.is_single ? '250rpx' : '200rpx'}">
-                <View className="d-flex align-items-center">
+                <View className="cart-item-info">
                     <View className="price-and-materials">
-                        <View className="price">￥{props.product.price}</View>
-                        {/* <View className="materials" v-show="getProductSelectedMaterials">{ getProductSelectedMaterials }</View> */}
+                        <View className="price">￥{cartItem.skuPrice}</View>
+                        <View className="materials" >111</View>
                     </View>
                     <Action isMultiSku={false} number={cartItem.number} onAdd={() => setCartItem({ ...cartItem, number: cartItem.number + 1 })} onMinus={() => setCartItem({ ...cartItem, number: cartItem.number - 1 })} onSelectMaterails={() => { }}></Action>
                 </View>
                 <Button type="primary" className="add-cart-btn" onClick={() => { }}>加入购物袋</Button>
             </View >
-        </AtModal >
+        </>
     )
 }
 export default ProductModal

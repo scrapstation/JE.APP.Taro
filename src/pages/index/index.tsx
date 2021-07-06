@@ -7,6 +7,7 @@ import './index.scss';
 import Action from './components/Action';
 import CartBar from './components/CartBar';
 import ProductModal from './components/ProductModal';
+import { AtModal } from 'taro-ui';
 
 export type CardItem =
   {
@@ -27,6 +28,7 @@ const Index: React.FC = () => {
     visible: false,
     product: null
   });
+  const [isOpened, setIsOpened] = useState(false)
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await API.categoryClient.getAllCategory();
@@ -37,6 +39,7 @@ const Index: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    console.log("calcSize");
     Taro.nextTick(() => calcSize());
   }, [categories]);
 
@@ -108,7 +111,7 @@ const Index: React.FC = () => {
   return (
     <View className='container'>
       <View className='main'>
-        <ScrollView className='menu-bar' scrollY scrollWithAnimation>
+        <ScrollView className='menu-bar' enableFlex scrollY scrollWithAnimation>
           <View className='wrapper'>
             {categories.map((category) => {
               return (
@@ -163,8 +166,11 @@ const Index: React.FC = () => {
         <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => { }}></CartBar>
       }
       {
-        productModal.visible &&
-        <ProductModal product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
+        <AtModal isOpened={productModal.visible}>
+          {productModal.visible &&
+            <ProductModal product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
+          }
+        </AtModal>
       }
     </View>
   );

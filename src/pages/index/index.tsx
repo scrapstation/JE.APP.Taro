@@ -161,17 +161,16 @@ const Index: React.FC = () => {
           </View>
         </ScrollView>
       </View>
-      {
-        cart.length > 0 &&
-        <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => { }}></CartBar>
-      }
-      {
-        <AtModal isOpened={productModal.visible}>
-          {productModal.visible &&
-            <ProductModal onAddToCart={(cartItem) => handleAddToCart(cartItem)} product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
-          }
-        </AtModal>
-      }
+      <View>
+        {
+          cart.length > 0 &&
+          <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => { }}></CartBar>
+        }
+        {
+          productModal.visible &&
+          <ProductModal onAddToCart={(cartItem) => handleAddToCart(cartItem)} product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>
+        }
+      </View>
     </View>
   );
 };

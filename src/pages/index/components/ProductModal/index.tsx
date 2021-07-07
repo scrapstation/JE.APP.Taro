@@ -67,7 +67,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
     }
 
     return (
-        <>
+        <AtModal isOpened>
             <View className="header">
                 <Image src={require('../../../../static/Images/index/round_close_btn.png')} onClick={() => props.onClose()}></Image>
             </View>
@@ -124,7 +124,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
                 </View>
                 <Button type="primary" className="add-cart-btn" onClick={() => handleAddToCart()}>加入购物袋</Button>
             </View >
-        </>
+        </AtModal>
     )
 }
 export default ProductModal

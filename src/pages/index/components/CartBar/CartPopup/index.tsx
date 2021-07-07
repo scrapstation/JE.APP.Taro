@@ -32,16 +32,6 @@ const CartPopup: React.ForwardRefExoticComponent<PropsWithoutRef<CartPopupProps>
         <View>
             <AtFloatLayout isOpened={showPopup} title="这是个标题" onClose={() => setShowPopup(false)} className="popup">
                 <View className="cart">
-                    <View className="header">
-                        <View className="order-type">
-                            <View className="font-weight-bold">门店订单</View>
-                            <View className="extra">自提/外送</View>
-                        </View>
-                        <View className="d-flex align-items-center" onClick={() => props.onClear()}>
-                            <Image src="/static/images/common/delete.png" className="delete-btn"></Image>
-                            <View>清空购物车</View>
-                        </View>
-                    </View>
                     <ScrollView scroll-y className="content">
                         <View className="wrapper">
                             <View className="list">
@@ -59,7 +49,7 @@ const CartPopup: React.ForwardRefExoticComponent<PropsWithoutRef<CartPopupProps>
                                                     </View>
                                                     <View className="price-and-actions">
                                                         <View className="price">￥{item.skuPrice}</View>
-                                                        <Action number={item.number} onAdd={() => props.onAdd(item)} onMinus={() => props.onMinus(item.skuId)} materialsBtn={false} onSelectMaterails={() => { }}></Action>
+                                                        <Action number={item.number} onAdd={() => props.onAdd(item)} onMinus={() => props.onMinus(item.skuId)} isMultiSku={false} onSelectMaterails={() => { }}></Action>
                                                     </View>
                                                 </View>
                                             </View>

@@ -10,10 +10,12 @@ export default {
     navigationBarTextStyle: 'black'
   },
   tabBar: {
-    'color': '#000',
-    'selectedColor': '#56abe4',
-    'backgroundColor': '#fff',
-    'borderStyle': 'white',
+		"color": "#999999",
+		"selectedColor": "#343434",
+		"borderStyle": "white",
+		"backgroundColor": "#F7F7F7",
+		"fontSize": "16px",
+		"iconWidth": "30px",
     "list": [
       {
         "pagePath": "pages/index/index",

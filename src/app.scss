@@ -1,4 +1,6 @@
-$color-brand-light: #000 !default;
+$color-brand: #dba871;
+$color-brand-light: #e4be95;
+$color-brand-dark: #af865a;
 @import "~taro-ui/dist/style/index.scss";
 
 @font-face {
@@ -17,4 +19,10 @@ $color-brand-light: #000 !default;
 
 .neutra-font {
   font-family: "neutra";
+}
+
+button {
+  &:after {
+    border: 0;
+  }
 }

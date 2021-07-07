@@ -30,7 +30,7 @@ const CartPopup: React.ForwardRefExoticComponent<PropsWithoutRef<CartPopupProps>
 
     return (
         <View>
-            <AtFloatLayout isOpened={showPopup} title="这是个标题" onClose={() => setShowPopup(false)} className="popup">
+            <AtFloatLayout isOpened={showPopup} onClose={() => setShowPopup(false)} className="popup">
                 <View className="cart">
                     <ScrollView scroll-y className="content">
                         <View className="wrapper">

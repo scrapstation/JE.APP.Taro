@@ -1,10 +1,10 @@
 import { View, Image, Swiper, SwiperItem, ScrollView, Button } from "@tarojs/components"
 import { useEffect, useState } from "react"
 import { ProductReponse } from "src/api/client"
-import { AtButton, AtModal } from "taro-ui"
+import { AtModal } from "taro-ui"
 import { CardItem } from "../.."
 import Action from "../Action"
-import "./index.scss"
+import styles from "./index.module.scss"
 
 export type ProductModalProps = {
     product: ProductReponse;
@@ -30,6 +30,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
     }
 
     useEffect(() => {
+        console.log(styles)
         setAttributeSelectedInfo(props.product.attributes!.map(x => { return { attributeId: x.id, attributeItemId: x.attributeItems![0].id } }))
     }, [])
 
@@ -68,40 +69,40 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
 
     return (
         <AtModal isOpened>
-            <View className="header">
+            <View className={styles.header}>
                 <Image src={require('../../../../static/Images/index/round_close_btn.png')} onClick={() => props.onClose()}></Image>
             </View>
-            <Swiper duration={1000} indicator-dots className="swiper" autoplay interval={3000}>
-                <SwiperItem className="swiper-item">
-                    <Image src={props.product.imgUrl!} className="w-100 h-100"></Image>
+            <Swiper duration={1000} indicator-dots className={styles.swiper} autoplay interval={3000}>
+                <SwiperItem>
+                    <Image src={props.product.imgUrl!}></Image>
                 </SwiperItem>
             </Swiper>
-            <ScrollView scroll-y className="content">
-                <View className="wrapper">
-                    <View className="title">{props.product.name}</View>
-                    <View className="labels">
+            <ScrollView scroll-y className={styles.content}>
+                <View className={styles.wrapper}>
+                    <View className={styles.title}>{props.product.name}</View>
+                    <View className={styles.labels}>
                         {
                             props.product.attributes?.map(attribute => {
                                 return (
-                                    <View className="label" style="{color: label.label_color, background: $util.hexToRgba(label.label_color, 0.2)}">
+                                    <View className={styles.label} style="{color: label.label_color, background: $util.hexToRgba(label.label_color, 0.2)}">
                                         {attribute.name}
                                     </View>
                                 )
                             })
                         }
                     </View>
-                    <View className="mb-10">产品描述</View>
-                    <View className="mb-20">{props.product.description}</View>
+                    <View>产品描述</View>
+                    <View>{props.product.description}</View>
                     {
                         props.product.attributes?.map(attribute => {
                             return (
-                                <View className="materials">
-                                    <View className="group-name">{attribute.name}</View>
-                                    <View className="values">
+                                <View className={styles.materials}>
+                                    <View className={styles.groupName}>{attribute.name}</View>
+                                    <View className={styles.values}>
                                         {
                                             attribute.attributeItems!.map(attributeItem => {
                                                 return (
-                                                    <View className={attributeSelectedInfo.map(x => x.attributeItemId).findIndex(id => id == attributeItem.id) !== -1 ? 'value selected' : "value"} onClick={() => handleAttributeSelectedChange(attribute.id, attributeItem.id)}>
+                                                    <View className={attributeSelectedInfo.map(x => x.attributeItemId).findIndex(id => id == attributeItem.id) !== -1 ? styles.value + ' ' + styles.selected : styles.value} onClick={() => handleAttributeSelectedChange(attribute.id, attributeItem.id)}>
                                                         {attributeItem.name}
                                                     </View>
                                                 )
@@ -114,15 +115,15 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
                     }
                 </View>
             </ScrollView >
-            <View className="bottom" style="{height: !productData.is_single ? '250rpx' : '200rpx'}">
-                <View className="cart-item-info">
-                    <View className="price-and-materials">
-                        <View className="price">￥{cartItem.skuPrice}</View>
-                        <View className="materials" >{getSkuInfo()}</View>
+            <View className={styles.bottom} style="{height: !productData.is_single ? '250rpx' : '200rpx'}">
+                <View className={styles.cartItemInfo}>
+                    <View className={styles.priceAndMaterials}>
+                        <View className={styles.price}>￥{cartItem.skuPrice}</View>
+                        <View className={styles.materials} >{getSkuInfo()}</View>
                     </View>
                     <Action isMultiSku={false} number={cartItem.number} onAdd={() => handleOnAdd()} onMinus={() => handleOnMinus()} onSelectMaterails={() => { }}></Action>
                 </View>
-                <Button type="primary" className="add-cart-btn" onClick={() => handleAddToCart()}>加入购物袋</Button>
+                <Button type="primary" className={styles.addCartBtn} onClick={() => handleAddToCart()}>加入购物袋</Button>
             </View >
         </AtModal>
     )

@@ -1,3 +1,4 @@
 export default {
-  navigationBarTitleText: '戴夫小卖部'
+  navigationBarTitleText: '戴夫小卖部',
+  navigationStyle:'custom'
 }

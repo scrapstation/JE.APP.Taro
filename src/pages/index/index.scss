@@ -9,153 +9,9 @@ page {
   flex-direction: column;
 }
 
-.header {
-  z-index: 10;
-
-  .search-box {
-    height: 100rpx;
-    padding: 20rpx 40rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .search-input {
-      height: 60rpx;
-      width: 100%;
-      background-color: #f7f7f7;
-      font-size: 26rpx;
-      border-radius: 50rem !important;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .search-icon {
-        width: 30rpx;
-        height: 30rpx;
-        margin-right: 10rpx;
-      }
-    }
-  }
-
-  .center {
-    height: 130rpx;
-    padding: 10rpx 40rpx;
-    display: flex;
-    flex-direction: column;
-
-    .store {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .title {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        font-size: 32rpx;
-        color: #343434;
-        font-weight: bold;
-        overflow: hidden;
-
-        .address {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .left-icon {
-          flex-shrink: 0;
-          width: 30rpx;
-          height: 30rpx;
-          margin: 10rpx;
-        }
-
-        .right-icon {
-          flex-shrink: 0;
-          width: 40rpx;
-          height: 40rpx;
-        }
-      }
-
-      .buttons {
-        display: flex;
-        align-items: stretch;
-        background-color: #f6f6f6;
-        border-radius: 50rem !important;
-        padding: 4rpx;
-        border: 2rpx solid #eaeaea;
-
-        .button {
-          height: 100%;
-          width: 50%;
-          border-radius: 50rem !important;
-          border: 0 !important;
-          font-size: 24rpx !important;
-          line-height: 2.4 !important;
-
-          &.active {
-            background-color: #343434;
-            color: #ffffff !important;
-            transition: all 0.3s;
-          }
-        }
-      }
-    }
-
-    .location {
-      font-size: 26rpx;
-      color: #999;
-    }
-  }
-
-  .notices {
-    height: 60rpx;
-    display: flex;
-    align-items: stretch;
-    padding: 10rpx 40rpx;
-    font-size: 24rpx;
-    color: #999;
-    box-shadow: 0 20rpx 20rpx -20rpx rgba($color: #333, $alpha: 0.1);;
-
-    .swiper {
-      height: 100%;
-      flex: 1;
-
-      .swiper-item {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        overflow: hidden;
-        align-items: center;
-
-        .image {
-          width: 30rpx;
-          height: 30rpx;
-          flex-shrink: 0;
-          margin-right: 10rpx;
-        }
-
-        .content {
-          flex: 1;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-    }
-
-    .more {
-      padding-left: 20rpx;
-      display: flex;
-      align-items: center;
-
-      .down-icon {
-        margin-left: 10rpx;
-        width: 40rpx;
-        height: 40rpx;
-      }
-    }
-  }
+.store{
+  margin-top: 88rpx;
+  height: 130rpx;
 }
 
 .main {
@@ -222,7 +78,7 @@ page {
   }
 
   .category {
-    .name {
+    &.name {
       padding: 30rpx 0;
       font-size: 26rpx;
       color: #999;
@@ -239,15 +95,15 @@ page {
       margin-bottom: 40rpx;
 
       .image {
-        width: 180rpx;
-        height: 180rpx;
-        flex-shrink: 0;
+        width: 138rpx;
+        height: 138rpx;
       }
 
       .content {
         flex: 1;
         display: flex;
         flex-direction: column;
+        margin-left:20rpx;
         overflow: hidden;
 
         .name {
@@ -256,6 +112,7 @@ page {
           text-overflow: ellipsis;
           white-space: nowrap;
           margin-bottom: 8rpx;
+          color: #343434;
         }
 
         .labels {

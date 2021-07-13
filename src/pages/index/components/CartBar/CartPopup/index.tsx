@@ -40,7 +40,7 @@ const CartPopup: React.ForwardRefExoticComponent<PropsWithoutRef<CartPopupProps>
                                         return (
                                             <View className="item">
                                                 <View className="left">
-                                                    <Image src={item.image} mode="widthFix" className="image"></Image>
+                                                    <Image src={item.image} mode='aspectFill' className="image"></Image>
                                                 </View>
                                                 <View className="right">
                                                     <View className="name-and-materials">

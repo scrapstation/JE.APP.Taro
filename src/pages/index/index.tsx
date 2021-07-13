@@ -110,6 +110,11 @@ const Index: React.FC = () => {
 
   return (
     <View className='container'>
+      <View className="store">
+        <View className="title">
+          <View className="address">中心城店</View>
+        </View>
+      </View>
       <View className='main'>
         <ScrollView className='menu-bar' enableFlex scrollY scrollWithAnimation>
           <View className='wrapper'>
@@ -128,12 +133,12 @@ const Index: React.FC = () => {
             {categories.map((category) => {
               return (
                 <View className='category' key={category.id} id={`category-${category.id}`}>
-                  <View className='name'>{category.name}</View>
+                  <View className='category.name'>{category.name}</View>
                   <View className='products'>
                     {category.products!.map((product) => {
                       return (
                         <View className='product' key={product.id}>
-                          <Image lazyLoad src={product.imgUrl!} mode='widthFix' className='image'></Image>
+                          <Image lazyLoad mode='aspectFill' src={product.imgUrl!} className='image'></Image>
                           <View className='content'>
                             <View className='name'>{product.name}</View>
                             <View className='labels'>

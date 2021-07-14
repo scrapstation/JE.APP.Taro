@@ -7,7 +7,7 @@ import './index.scss';
 import Action from './components/Action';
 import CartBar from './components/CartBar';
 import ProductModal from './components/ProductModal';
-import { AtModal } from 'taro-ui';
+import { AtIcon, AtModal } from 'taro-ui';
 
 export type CardItem =
   {
@@ -112,7 +112,12 @@ const Index: React.FC = () => {
     <View className='container'>
       <View className="store">
         <View className="title">
-          <View className="address">中心城店</View>
+          <View className="address">
+            齐鲁工业大学店
+            {
+              [1, 2, 3].map(_ => <AtIcon value='star-2' size="16" color="#DBA871"></AtIcon>)
+            }
+          </View>
         </View>
       </View>
       <View className='main'>

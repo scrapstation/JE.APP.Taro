@@ -8,10 +8,20 @@ page {
   display: flex;
   flex-direction: column;
 }
-
 .store{
-  margin-top: 88rpx;
-  height: 130rpx;
+  margin-left: 30rpx;
+  padding-top: 88rpx;
+  height: 176rpx;
+  width: 100%;
+    box-sizing: border-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: row;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
 }
 
 .main {

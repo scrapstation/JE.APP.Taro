@@ -40,6 +40,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
         }
         setCartItem({
             ...cartItem,
+            mark: getSkuInfo().join(""),
             skuId: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].id,
             skuPrice: props.product.skus!.filter(x => x.attributeItemIds?.sort().toString() === attributeSelectedInfo.map(x => x.attributeItemId).sort().toString())![0].price
         })

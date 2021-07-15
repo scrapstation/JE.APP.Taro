@@ -16,7 +16,8 @@ export type CardItem =
     productName: string,
     skuPrice: number,
     number: number,
-    image: string
+    image: string,
+    mark?: string
   }
 const Index: React.FC = () => {
   const [categories, setCategories] = useState<Array<CategoryReponse>>([]);

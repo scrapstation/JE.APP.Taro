@@ -45,7 +45,10 @@ const CartPopup: React.ForwardRefExoticComponent<PropsWithoutRef<CartPopupProps>
                                                 <View className="right">
                                                     <View className="name-and-materials">
                                                         <View className="name">{item.productName}</View>
-                                                        <View className="materials" v-if="item.materials_text">不是单独吃的冰淇淋，如需购买直接吃的冰淇淋请在“喜茶制冰”系列选购。不是单独吃的冰淇淋，如需购买直接吃的冰淇淋请在“喜茶制冰”系列选购。</View>
+                                                        {
+                                                            item.mark &&
+                                                            <View className="materials" v-if="item.materials_text">{item.mark}</View>
+                                                        }
                                                     </View>
                                                     <View className="price-and-actions">
                                                         <View className="price">￥{item.skuPrice}</View>

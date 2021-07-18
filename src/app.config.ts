@@ -1,5 +1,7 @@
 export default {
   pages: [
+    'pages/consignee/add/index',
+    'pages/consignee/index',
     'pages/index/index',
     'pages/personal/index',
   ],

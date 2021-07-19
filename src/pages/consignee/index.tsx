@@ -4,6 +4,7 @@ import { API } from '../../api/index';
 import { ConsigneeItemResponse } from "src/api/client";
 import { AtButton, AtDivider, AtIcon } from "taro-ui";
 import './index.scss'
+import Taro, { useDidShow } from '@tarojs/taro';
 
 
 const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
@@ -22,13 +23,18 @@ const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
 
 const Consignee: React.FC = () => {
     const [consignees, setConsignees] = useState<ConsigneeItemResponse[]>([]);
-    useEffect(() => {
+    useDidShow(() => {
         const fetchConsignee = async () => {
             const data = await API.consigneeClient.getAll();
             setConsignees(data)
         };
         fetchConsignee();
-    }, [])
+    })
+    const toAddPage = () => {
+        Taro.navigateTo({
+            url: '/pages/consignee/add/index'
+        })
+    }
     return (
         <>
             <ScrollView
@@ -50,7 +56,7 @@ const Consignee: React.FC = () => {
                 <View style={{ height: 100 }}></View>
             </ScrollView>
             <View style={{ zIndex: 999, position: 'fixed', left: 0, right: 0, bottom: 30 }}>
-                <AtButton type='primary' customStyle={{ margin: '0 20px' }}>添加</AtButton>
+                <AtButton type='primary' customStyle={{ margin: '0 20px' }} onClick={() => toAddPage()}>添加</AtButton>
             </View>
         </>
     )

@@ -1,13 +1,23 @@
 import { useState } from 'react';
-import { CreateConsigneeRequest, ICreateConsigneeRequest } from '../../../api/client';
+import { CreateConsigneeRequest, ICreateConsigneeRequest, ModifyConsigneeRequest } from '../../../api/client';
 import { AtButton, AtCheckbox, AtDivider, AtInput } from 'taro-ui';
 import styles from './index.module.scss';
-import Taro from '@tarojs/taro';
+import Taro, { useDidShow, useReady, useRouter } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { API } from '../../../api';
 
 const AddConsignee: React.FC = () => {
+    const router = useRouter()
+    const [editId, setEditId] = useState<string>();
     const [consignee, setConsignee] = useState<ICreateConsigneeRequest>(new CreateConsigneeRequest());
+    useReady(() => {
+        if (router.params.consignee) {
+            const editConsigneeInfo = ModifyConsigneeRequest.fromJS(JSON.parse(router.params.consignee))
+            setConsignee(editConsigneeInfo)
+            setEditId(editConsigneeInfo.id)
+            Taro.setNavigationBarTitle({ title: '修改地址' })
+        }
+    })
     const choseAddress = async () => {
         const result = await Taro.chooseLocation({});
         setConsignee({
@@ -18,12 +28,30 @@ const AddConsignee: React.FC = () => {
             longitude: Number(result.longitude),
         });
     };
-    const add = async () => {
-        if (!consignee.name || !consignee.mobile || !consignee.simpleAddress || !consignee.houseNumber) {
-            Taro.showToast({ title: '请检查收货人信息', icon: 'none' })
+    const save = async () => {
+        if (!consignee.name) {
+            Taro.showToast({ title: '请输入正确的联系人', icon: 'none' })
             return
         }
-        await API.consigneeClient.create(new CreateConsigneeRequest(consignee));
+        const mobileError = consignee.mobile?.length !== 11
+        if (mobileError) {
+            Taro.showToast({ title: '请输入正确的手机号', icon: 'none' })
+            return
+        }
+        if (!consignee.simpleAddress) {
+            Taro.showToast({ title: '请选择地址', icon: 'none' })
+            return
+        }
+        const houseNumberError = (consignee.houseNumber?.length || 0) < 3
+        if (houseNumberError) {
+            Taro.showToast({ title: '请填写详细的门牌号', icon: 'none' })
+            return
+        }
+        if (editId) {
+            await API.consigneeClient.modify(ModifyConsigneeRequest.fromJS({ ...consignee, id: editId }))
+        } else {
+            await API.consigneeClient.create(new CreateConsigneeRequest(consignee));
+        }
         Taro.navigateBack()
     };
     return (
@@ -46,8 +74,8 @@ const AddConsignee: React.FC = () => {
             <AtDivider height={0.5} customStyle={{ margin: '0 15px', width: 'unset' }} lineColor='#fafafa'></AtDivider>
             <AtCheckbox className={styles.redio} customStyle={{ border: '0' }} options={[{ value: true, label: '设为默认地址' }]} selectedList={consignee.isDefault ? [true] : []} onChange={() => setConsignee({ ...consignee, isDefault: !consignee.isDefault })} />
             <AtDivider height={0.5} customStyle={{ margin: '0 15px', width: 'unset' }} lineColor='#fafafa'></AtDivider>
-            <AtButton type='primary' customStyle={{ margin: '10px 24rpx' }} onClick={() => add()}>
-                添加
+            <AtButton type='primary' customStyle={{ margin: '10px 24rpx' }} onClick={() => save()}>
+                保存
             </AtButton>
         </>
     );

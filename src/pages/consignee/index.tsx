@@ -6,6 +6,16 @@ import { AtButton, AtDivider, AtIcon } from "taro-ui";
 import './index.scss'
 import Taro, { useDidShow } from '@tarojs/taro';
 
+const toAddPage = () => {
+    Taro.navigateTo({
+        url: '/pages/consignee/add/index'
+    })
+}
+const toEditPage = (consigneeItem: ConsigneeItemResponse) => (
+    Taro.navigateTo({
+        url: `/pages/consignee/add/index?consignee=${JSON.stringify(consigneeItem)}`
+    })
+)
 
 const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
     return (
@@ -15,7 +25,7 @@ const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
                 <View style={{ fontSize: 14, color: '#C8C8C8', marginTop: 10 }}>{`${consigneeItem.name} ${consigneeItem.mobile}`}</View>
             </View>
             <View>
-                <AtIcon value='edit' size='16' ></AtIcon>
+                <AtIcon value='edit' size='16' onClick={() => toEditPage(consigneeItem)}></AtIcon>
             </View>
         </View>
     )
@@ -30,11 +40,7 @@ const Consignee: React.FC = () => {
         };
         fetchConsignee();
     })
-    const toAddPage = () => {
-        Taro.navigateTo({
-            url: '/pages/consignee/add/index'
-        })
-    }
+
     return (
         <>
             <ScrollView

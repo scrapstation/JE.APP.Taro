@@ -1,4 +1,4 @@
 export default {
-  navigationBarTitleText: '收货地址',
+  navigationBarTitleText: '订单结算',
   disableScroll: true,
 };

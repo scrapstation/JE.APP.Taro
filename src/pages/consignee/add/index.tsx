@@ -16,6 +16,8 @@ const AddConsignee: React.FC = () => {
             setConsignee(editConsigneeInfo)
             setEditId(editConsigneeInfo.id)
             Taro.setNavigationBarTitle({ title: '修改地址' })
+        } else {
+            Taro.setNavigationBarTitle({ title: '添加地址' })
         }
     })
     const choseAddress = async () => {

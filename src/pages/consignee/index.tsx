@@ -27,7 +27,7 @@ const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
         <View onClick={() => back(consigneeItem.id)} style="background-color:#FFF;padding:15px;display:flex;align-items:center;">
             <View style={{ flex: 1 }}>
                 <View style={{ fontSize: 15 }}>{`${consigneeItem.simpleAddress} ${consigneeItem.houseNumber}`}</View>
-                <View style={{ fontSize: 14, color: '#C8C8C8', marginTop: 10 }}>{`${consigneeItem.name} ${consigneeItem.mobile}`}</View>
+                <View style={{ fontSize: 14, color: '#999999', marginTop: 10 }}>{`${consigneeItem.name} ${consigneeItem.mobile}`}</View>
             </View>
             <View>
                 <AtIcon value='edit' size='16' onClick={() => toEditPage(consigneeItem)}></AtIcon>

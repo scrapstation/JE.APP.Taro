@@ -1,5 +1,5 @@
 import { ScrollView, View } from "@tarojs/components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { API } from '../../api/index';
 import { ConsigneeItemResponse } from "src/api/client";
 import { AtButton, AtDivider, AtIcon } from "taro-ui";
@@ -12,15 +12,19 @@ const toAddPage = () => {
     })
 }
 const toEditPage = (consigneeItem: ConsigneeItemResponse) => (
-
     Taro.navigateTo({
         url: `/pages/consignee/add/index?consignee=${JSON.stringify(consigneeItem)}`
     })
 )
 
+const back = (consigneeId: string) => {
+    Taro.eventCenter.trigger('selectConsignee', consigneeId)
+    // navigateBack()
+}
+
 const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
     return (
-        <View style="background-color:#FFF;padding:15px;display:flex;align-items:center;">
+        <View onClick={() => back(consigneeItem.id)} style="background-color:#FFF;padding:15px;display:flex;align-items:center;">
             <View style={{ flex: 1 }}>
                 <View style={{ fontSize: 15 }}>{`${consigneeItem.simpleAddress} ${consigneeItem.houseNumber}`}</View>
                 <View style={{ fontSize: 14, color: '#C8C8C8', marginTop: 10 }}>{`${consigneeItem.name} ${consigneeItem.mobile}`}</View>

@@ -1,10 +1,10 @@
-import { ScrollView, View } from "@tarojs/components";
+import { Button, ScrollView, View } from "@tarojs/components";
 import { useState } from "react";
 import { API } from '../../api/index';
 import { ConsigneeItemResponse } from "src/api/client";
 import { AtButton, AtDivider, AtIcon } from "taro-ui";
 import './index.scss'
-import Taro, { useDidShow } from '@tarojs/taro';
+import Taro, { navigateBack, useDidShow } from '@tarojs/taro';
 
 const toAddPage = () => {
     Taro.navigateTo({
@@ -19,7 +19,7 @@ const toEditPage = (consigneeItem: ConsigneeItemResponse) => (
 
 const back = (consigneeId: string) => {
     Taro.eventCenter.trigger('selectConsignee', consigneeId)
-    // navigateBack()
+    navigateBack()
 }
 
 const renderConsigneeItem = (consigneeItem: ConsigneeItemResponse) => {
@@ -67,7 +67,7 @@ const Consignee: React.FC = () => {
                 <View style={{ height: 100 }}></View>
             </ScrollView>
             <View style={{ zIndex: 999, position: 'fixed', left: 0, right: 0, bottom: 30 }}>
-                <AtButton type='primary' customStyle={{ margin: '0 20px' }} onClick={() => toAddPage()}>添加</AtButton>
+                <Button type='primary' style={{ backgroundColor: '#DBA871', color: "#fff", margin: '0 20px' }} onClick={() => toAddPage()}>添加</Button>
             </View>
         </>
     )

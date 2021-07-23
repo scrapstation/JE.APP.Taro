@@ -1,24 +1,24 @@
 $color-brand: #dba871;
 $color-brand-light: #e4be95;
 $color-brand-dark: #af865a;
-@import "~taro-ui/dist/style/index.scss";
+@import '~taro-ui/dist/style/index.scss';
 
 @font-face {
-  font-family: "wenyue";
-  src: url("https://static.heytea.com/taro_trial/v1/font/WenYue-XinQingNianTi-NC-W8_1.otf");
+  font-family: 'wenyue';
+  src: url('https://static.heytea.com/taro_trial/v1/font/WenYue-XinQingNianTi-NC-W8_1.otf');
 }
 
 @font-face {
-  font-family: "neutra";
-  src: url("https://static.heytea.com/taro_trial/v1/font/NeutraTextDemiAlt.otf");
+  font-family: 'neutra';
+  src: url('https://static.heytea.com/taro_trial/v1/font/NeutraTextDemiAlt.otf');
 }
 
 .wenyue-font {
-  font-family: "wenyue";
+  font-family: 'wenyue';
 }
 
 .neutra-font {
-  font-family: "neutra";
+  font-family: 'neutra';
 }
 
 button {
@@ -28,7 +28,8 @@ button {
 }
 
 ::-webkit-scrollbar {
-
   display: none;
-
+}
+button::after {
+  border-radius: 0;
 }

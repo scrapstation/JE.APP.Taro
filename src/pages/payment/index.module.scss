@@ -2,6 +2,18 @@ page {
   height: 100%;
   background-color: #f7f7f7;
 }
+.loading {
+  @keyframes rotation {
+    from {
+      -webkit-transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  transform: rotate(360deg);
+  animation: rotation 3s linear infinite;
+}
 .card {
   margin: 20px;
   padding: 30px 20px;

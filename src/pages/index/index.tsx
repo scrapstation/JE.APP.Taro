@@ -1,5 +1,5 @@
 import { View, ScrollView, Image } from '@tarojs/components';
-import Taro from '@tarojs/taro';
+import Taro, { useDidHide, useDidShow } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { API } from '../../api/index';
 import { CategoryReponse, ProductReponse } from 'src/api/client';
@@ -7,7 +7,7 @@ import './index.scss';
 import Action from './components/Action';
 import CartBar from './components/CartBar';
 import ProductModal from './components/ProductModal';
-import { AtIcon, AtModal } from 'taro-ui';
+import { AtIcon } from 'taro-ui';
 
 export type CardItem =
   {
@@ -29,7 +29,12 @@ const Index: React.FC = () => {
     visible: false,
     product: null
   });
-  const [isOpened, setIsOpened] = useState(false)
+  useDidShow(() => {
+    setCart(Taro.getStorageSync('cart') || [])
+  })
+  useDidHide(() => {
+    Taro.setStorage({ key: 'cart', data: cart })
+  })
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await API.categoryClient.getAllCategory();
@@ -109,6 +114,10 @@ const Index: React.FC = () => {
     setCart(cartTemp)
   }
 
+  const toPaymentPage = () => {
+    Taro.navigateTo({ url: '/pages/payment/index' })
+  }
+
   return (
     <View className='container'>
       <View className="store">
@@ -175,7 +184,7 @@ const Index: React.FC = () => {
       <View>
         {
           cart.length > 0 &&
-          <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => { }}></CartBar>
+          <CartBar cart={cart} onClear={() => { }} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => { }} onPay={() => toPaymentPage()}></CartBar>
         }
         {
           productModal.visible &&

@@ -13,7 +13,6 @@ export type CartBarProps = {
     onDetail: () => void;
 };
 const CartBar: React.FC<CartBarProps> = (props) => {
-
     const cartPopupRef = React.createRef<CartPopupRefs>();
     return (
         <View>

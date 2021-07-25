@@ -2112,6 +2112,7 @@ export interface ICreateOrderResponse {
 export class CreateOrderRequest implements ICreateOrderRequest {
     createOrderItems?: CreateOrderItem[] | undefined;
     consigneeId!: string;
+    remark?: string | undefined;
 
     constructor(data?: ICreateOrderRequest) {
         if (data) {
@@ -2130,6 +2131,7 @@ export class CreateOrderRequest implements ICreateOrderRequest {
                     this.createOrderItems!.push(CreateOrderItem.fromJS(item));
             }
             this.consigneeId = _data["consigneeId"];
+            this.remark = _data["remark"];
         }
     }
 
@@ -2148,6 +2150,7 @@ export class CreateOrderRequest implements ICreateOrderRequest {
                 data["createOrderItems"].push(item.toJSON());
         }
         data["consigneeId"] = this.consigneeId;
+        data["remark"] = this.remark;
         return data; 
     }
 }
@@ -2155,6 +2158,7 @@ export class CreateOrderRequest implements ICreateOrderRequest {
 export interface ICreateOrderRequest {
     createOrderItems?: CreateOrderItem[] | undefined;
     consigneeId: string;
+    remark?: string | undefined;
 }
 
 export class CreateOrderItem implements ICreateOrderItem {

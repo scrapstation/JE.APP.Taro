@@ -1,5 +1,5 @@
 export default {
-  pages: ['pages/payment/index', 'pages/consignee/index', 'pages/personal/index', 'pages/consignee/add/index', 'pages/index/index'],
+  pages: ['pages/index/index', 'pages/order/index', 'pages/payment/index', 'pages/payment/remark/index', 'pages/consignee/index', 'pages/personal/index', 'pages/consignee/add/index'],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
@@ -20,12 +20,12 @@ export default {
         selectedIconPath: 'static/tabBar/mart_selected.png',
         text: '购物',
       },
-      // {
-      //   "pagePath": "pages/my/index",
-      //   "iconPath": "static/tabBar/my.png",
-      //   "selectedIconPath": "static/tabBar/my_selected.png",
-      //   "text": "订单"
-      // },
+      {
+        pagePath: 'pages/order/index',
+        iconPath: 'static/tabBar/my.png',
+        selectedIconPath: 'static/tabBar/my_selected.png',
+        text: '订单',
+      },
       {
         pagePath: 'pages/personal/index',
         iconPath: 'static/tabBar/my.png',

@@ -16,7 +16,7 @@ export class AccountClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getAccountInfo(  cancelToken?: CancelToken | undefined): Promise<AccountInfoResponse> {
@@ -74,7 +74,7 @@ export class AuthClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     auth(model: GetWechatUserInfo , cancelToken?: CancelToken | undefined): Promise<WechatAuthResponse> {
@@ -136,7 +136,7 @@ export class CategoryClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getAllCategory(  cancelToken?: CancelToken | undefined): Promise<CategoryReponse[]> {
@@ -201,7 +201,7 @@ export class ConsigneeClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     create(req: CreateConsigneeRequest , cancelToken?: CancelToken | undefined): Promise<boolean> {
@@ -516,7 +516,7 @@ export class OrderClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     search(request: SearchOrderRequest , cancelToken?: CancelToken | undefined): Promise<PagedResultOfSearchOrderResponse> {
@@ -731,7 +731,7 @@ export class RiderClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getDeliverySummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetDeliverySummaryResponse> {
@@ -997,7 +997,7 @@ export class ShoppingCartClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     get(  cancelToken?: CancelToken | undefined): Promise<ShoppingCartInfoResponse> {
@@ -1767,6 +1767,10 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
     amount!: number;
     actualPayment!: number;
     status!: OrderStatusEnum;
+    packageStatus?: PackageStatusEnum | undefined;
+    deliveryStatus?: DeliveryStatusEnum | undefined;
+    paymentStatus!: PaymentStatusEnum;
+    refundStatus?: RefundStatusEnum | undefined;
 
     constructor(data?: ISearchOrderResponse) {
         super(data);
@@ -1784,6 +1788,10 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
             this.amount = _data["amount"];
             this.actualPayment = _data["actualPayment"];
             this.status = _data["status"];
+            this.packageStatus = _data["packageStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.refundStatus = _data["refundStatus"];
         }
     }
 
@@ -1805,6 +1813,10 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
         data["amount"] = this.amount;
         data["actualPayment"] = this.actualPayment;
         data["status"] = this.status;
+        data["packageStatus"] = this.packageStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
+        data["paymentStatus"] = this.paymentStatus;
+        data["refundStatus"] = this.refundStatus;
         super.toJSON(data);
         return data; 
     }
@@ -1816,6 +1828,10 @@ export interface ISearchOrderResponse extends IAuditFields {
     amount: number;
     actualPayment: number;
     status: OrderStatusEnum;
+    packageStatus?: PackageStatusEnum | undefined;
+    deliveryStatus?: DeliveryStatusEnum | undefined;
+    paymentStatus: PaymentStatusEnum;
+    refundStatus?: RefundStatusEnum | undefined;
 }
 
 export class OrderItemVo implements IOrderItemVo {
@@ -1865,6 +1881,31 @@ export enum OrderStatusEnum {
     InRefund = "InRefund",
     Canceled = "Canceled",
     Completed = "Completed",
+}
+
+export enum PackageStatusEnum {
+    PenddingPackage = "PenddingPackage",
+    InPacking = "InPacking",
+    CompletedPackage = "CompletedPackage",
+}
+
+export enum DeliveryStatusEnum {
+    PenddingDelivery = "PenddingDelivery",
+    InDelivery = "InDelivery",
+    CompletedDelivery = "CompletedDelivery",
+}
+
+export enum PaymentStatusEnum {
+    PenddingPayment = "PenddingPayment",
+    ExpiredPayment = "ExpiredPayment",
+    CanceldPayment = "CanceldPayment",
+    CompletedPayment = "CompletedPayment",
+}
+
+export enum RefundStatusEnum {
+    PenddingRefund = "PenddingRefund",
+    RefusedRefund = "RefusedRefund",
+    CompleteRefund = "CompleteRefund",
 }
 
 export class QueryModel implements IQueryModel {
@@ -1932,7 +1973,6 @@ export interface IQueryModel {
 }
 
 export class SearchOrderRequest extends QueryModel implements ISearchOrderRequest {
-    orderTabType?: OrderTabEnum | undefined;
     keyword?: string | undefined;
 
     constructor(data?: ISearchOrderRequest) {
@@ -1942,7 +1982,6 @@ export class SearchOrderRequest extends QueryModel implements ISearchOrderReques
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.orderTabType = _data["orderTabType"];
             this.keyword = _data["keyword"];
         }
     }
@@ -1956,7 +1995,6 @@ export class SearchOrderRequest extends QueryModel implements ISearchOrderReques
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["orderTabType"] = this.orderTabType;
         data["keyword"] = this.keyword;
         super.toJSON(data);
         return data; 
@@ -1964,13 +2002,7 @@ export class SearchOrderRequest extends QueryModel implements ISearchOrderReques
 }
 
 export interface ISearchOrderRequest extends IQueryModel {
-    orderTabType?: OrderTabEnum | undefined;
     keyword?: string | undefined;
-}
-
-export enum OrderTabEnum {
-    Recently = "Recently",
-    History = "History",
 }
 
 export class Sort implements ISort {
@@ -2529,12 +2561,6 @@ export interface ISearchRiderDeliveryTaskResponse {
     houseNumber?: string | undefined;
     latitude: number;
     longitude: number;
-}
-
-export enum DeliveryStatusEnum {
-    PenddingDelivery = "PenddingDelivery",
-    InDelivery = "InDelivery",
-    CompletedDelivery = "CompletedDelivery",
 }
 
 export class SearchRiderDeliveryTaskRequest extends QueryModel implements ISearchRiderDeliveryTaskRequest {

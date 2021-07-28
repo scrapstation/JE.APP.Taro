@@ -7,6 +7,7 @@ import Taro, { navigateBack, navigateTo, useDidShow, useReady } from '@tarojs/ta
 import styles from './index.module.scss'
 import classNames from "classnames";
 import { CardItem } from "../index";
+import tryFetch from "../../../src/utils/tryfetch";
 
 const Payment: React.FC = () => {
     const [consigneeLoading, setConsigneeLoading] = useState<boolean>(true)
@@ -66,19 +67,20 @@ const Payment: React.FC = () => {
     }
 
     const pay = async () => {
-        const payinfo = await API.orderClient.create(new CreateOrderRequest({
+        const orderId = await tryFetch(API.orderClient.create(new CreateOrderRequest({
             consigneeId: consignee.id,
             createOrderItems: cart.map((x) => new CreateOrderItem({ skuId: x.skuId, quantity: x.number })),
             remark: remark
-        }))
-        Taro.requestPayment({
+        })), true)
+        const payinfo = await tryFetch(API.orderClient.pay(orderId), true)
+        await tryFetch(Taro.requestPayment({
             timeStamp: payinfo.timeStamp!,
             nonceStr: payinfo.nonceStr!,
             package: payinfo.package!,
             // @ts-ignore
             signType: payinfo.signType!,
             paySign: payinfo.paySign!,
-        })
+        }), true)
     }
 
     const getRemark = () => {

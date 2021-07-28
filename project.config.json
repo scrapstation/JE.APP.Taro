@@ -4,7 +4,7 @@
   "description": "daveshop wechat miniprogram",
   "appid": "wx336823b522515bca",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
     "postcss": false,
     "minified": false

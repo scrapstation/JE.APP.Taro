@@ -570,7 +570,7 @@ export class OrderClient {
         return Promise.resolve<PagedResultOfSearchOrderResponse>(<any>null);
     }
 
-    create(req: CreateOrderRequest , cancelToken?: CancelToken | undefined): Promise<CreateOrderResponse> {
+    create(req: CreateOrderRequest , cancelToken?: CancelToken | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Order";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -598,7 +598,7 @@ export class OrderClient {
         });
     }
 
-    protected processCreate(response: AxiosResponse): Promise<CreateOrderResponse> {
+    protected processCreate(response: AxiosResponse): Promise<string> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -612,13 +612,13 @@ export class OrderClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = CreateOrderResponse.fromJS(resultData200);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
             return result200;
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<CreateOrderResponse>(<any>null);
+        return Promise.resolve<string>(<any>null);
     }
 
     cancel(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
@@ -670,6 +670,57 @@ export class OrderClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<boolean>(<any>null);
+    }
+
+    pay(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<PaymentResponse> {
+        let url_ = this.baseUrl + "/api/Order/pay?";
+        if (orderId === null)
+            throw new Error("The parameter 'orderId' cannot be null.");
+        else if (orderId !== undefined)
+            url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPay(_response);
+        });
+    }
+
+    protected processPay(response: AxiosResponse): Promise<PaymentResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = PaymentResponse.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<PaymentResponse>(<any>null);
     }
 
     notify(request: TransactionNotifyRequest , cancelToken?: CancelToken | undefined): Promise<WechatTransactionResponse> {
@@ -1762,7 +1813,7 @@ export interface IAuditFields {
 }
 
 export class SearchOrderResponse extends AuditFields implements ISearchOrderResponse {
-    orderItems?: OrderItemVo[] | undefined;
+    id!: string;
     externalId?: string | undefined;
     amount!: number;
     actualPayment!: number;
@@ -1771,6 +1822,7 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
     deliveryStatus?: DeliveryStatusEnum | undefined;
     paymentStatus!: PaymentStatusEnum;
     refundStatus?: RefundStatusEnum | undefined;
+    orderItems?: OrderItemVo[] | undefined;
 
     constructor(data?: ISearchOrderResponse) {
         super(data);
@@ -1779,11 +1831,7 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            if (Array.isArray(_data["orderItems"])) {
-                this.orderItems = [] as any;
-                for (let item of _data["orderItems"])
-                    this.orderItems!.push(OrderItemVo.fromJS(item));
-            }
+            this.id = _data["id"];
             this.externalId = _data["externalId"];
             this.amount = _data["amount"];
             this.actualPayment = _data["actualPayment"];
@@ -1792,6 +1840,11 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
             this.deliveryStatus = _data["deliveryStatus"];
             this.paymentStatus = _data["paymentStatus"];
             this.refundStatus = _data["refundStatus"];
+            if (Array.isArray(_data["orderItems"])) {
+                this.orderItems = [] as any;
+                for (let item of _data["orderItems"])
+                    this.orderItems!.push(OrderItemVo.fromJS(item));
+            }
         }
     }
 
@@ -1804,11 +1857,7 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.orderItems)) {
-            data["orderItems"] = [];
-            for (let item of this.orderItems)
-                data["orderItems"].push(item.toJSON());
-        }
+        data["id"] = this.id;
         data["externalId"] = this.externalId;
         data["amount"] = this.amount;
         data["actualPayment"] = this.actualPayment;
@@ -1817,13 +1866,18 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
         data["deliveryStatus"] = this.deliveryStatus;
         data["paymentStatus"] = this.paymentStatus;
         data["refundStatus"] = this.refundStatus;
+        if (Array.isArray(this.orderItems)) {
+            data["orderItems"] = [];
+            for (let item of this.orderItems)
+                data["orderItems"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface ISearchOrderResponse extends IAuditFields {
-    orderItems?: OrderItemVo[] | undefined;
+    id: string;
     externalId?: string | undefined;
     amount: number;
     actualPayment: number;
@@ -1832,6 +1886,41 @@ export interface ISearchOrderResponse extends IAuditFields {
     deliveryStatus?: DeliveryStatusEnum | undefined;
     paymentStatus: PaymentStatusEnum;
     refundStatus?: RefundStatusEnum | undefined;
+    orderItems?: OrderItemVo[] | undefined;
+}
+
+export enum OrderStatusEnum {
+    InPayment = "InPayment",
+    InPackage = "InPackage",
+    InDelivery = "InDelivery",
+    InRefund = "InRefund",
+    Canceled = "Canceled",
+    Completed = "Completed",
+}
+
+export enum PackageStatusEnum {
+    PenddingPackage = "PenddingPackage",
+    InPacking = "InPacking",
+    CompletedPackage = "CompletedPackage",
+}
+
+export enum DeliveryStatusEnum {
+    PenddingDelivery = "PenddingDelivery",
+    InDelivery = "InDelivery",
+    CompletedDelivery = "CompletedDelivery",
+}
+
+export enum PaymentStatusEnum {
+    PenddingPayment = "PenddingPayment",
+    ExpiredPayment = "ExpiredPayment",
+    CanceldPayment = "CanceldPayment",
+    CompletedPayment = "CompletedPayment",
+}
+
+export enum RefundStatusEnum {
+    PenddingRefund = "PenddingRefund",
+    RefusedRefund = "RefusedRefund",
+    CompleteRefund = "CompleteRefund",
 }
 
 export class OrderItemVo implements IOrderItemVo {
@@ -1872,40 +1961,6 @@ export class OrderItemVo implements IOrderItemVo {
 export interface IOrderItemVo {
     snapshotName?: string | undefined;
     imgUrl?: string | undefined;
-}
-
-export enum OrderStatusEnum {
-    InPayment = "InPayment",
-    InPackage = "InPackage",
-    InDelivery = "InDelivery",
-    InRefund = "InRefund",
-    Canceled = "Canceled",
-    Completed = "Completed",
-}
-
-export enum PackageStatusEnum {
-    PenddingPackage = "PenddingPackage",
-    InPacking = "InPacking",
-    CompletedPackage = "CompletedPackage",
-}
-
-export enum DeliveryStatusEnum {
-    PenddingDelivery = "PenddingDelivery",
-    InDelivery = "InDelivery",
-    CompletedDelivery = "CompletedDelivery",
-}
-
-export enum PaymentStatusEnum {
-    PenddingPayment = "PenddingPayment",
-    ExpiredPayment = "ExpiredPayment",
-    CanceldPayment = "CanceldPayment",
-    CompletedPayment = "CompletedPayment",
-}
-
-export enum RefundStatusEnum {
-    PenddingRefund = "PenddingRefund",
-    RefusedRefund = "RefusedRefund",
-    CompleteRefund = "CompleteRefund",
 }
 
 export class QueryModel implements IQueryModel {
@@ -2085,62 +2140,6 @@ export interface IFilter {
     value?: any | undefined;
 }
 
-export class CreateOrderResponse implements ICreateOrderResponse {
-    orderId!: string;
-    timeStamp?: string | undefined;
-    nonceStr?: string | undefined;
-    package?: string | undefined;
-    signType?: string | undefined;
-    paySign?: string | undefined;
-
-    constructor(data?: ICreateOrderResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.orderId = _data["orderId"];
-            this.timeStamp = _data["timeStamp"];
-            this.nonceStr = _data["nonceStr"];
-            this.package = _data["package"];
-            this.signType = _data["signType"];
-            this.paySign = _data["paySign"];
-        }
-    }
-
-    static fromJS(data: any): CreateOrderResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateOrderResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["orderId"] = this.orderId;
-        data["timeStamp"] = this.timeStamp;
-        data["nonceStr"] = this.nonceStr;
-        data["package"] = this.package;
-        data["signType"] = this.signType;
-        data["paySign"] = this.paySign;
-        return data; 
-    }
-}
-
-export interface ICreateOrderResponse {
-    orderId: string;
-    timeStamp?: string | undefined;
-    nonceStr?: string | undefined;
-    package?: string | undefined;
-    signType?: string | undefined;
-    paySign?: string | undefined;
-}
-
 export class CreateOrderRequest implements ICreateOrderRequest {
     createOrderItems?: CreateOrderItem[] | undefined;
     consigneeId!: string;
@@ -2231,6 +2230,62 @@ export class CreateOrderItem implements ICreateOrderItem {
 export interface ICreateOrderItem {
     skuId: string;
     quantity: number;
+}
+
+export class PaymentResponse implements IPaymentResponse {
+    orderId!: string;
+    timeStamp?: string | undefined;
+    nonceStr?: string | undefined;
+    package?: string | undefined;
+    signType?: string | undefined;
+    paySign?: string | undefined;
+
+    constructor(data?: IPaymentResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderId = _data["orderId"];
+            this.timeStamp = _data["timeStamp"];
+            this.nonceStr = _data["nonceStr"];
+            this.package = _data["package"];
+            this.signType = _data["signType"];
+            this.paySign = _data["paySign"];
+        }
+    }
+
+    static fromJS(data: any): PaymentResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaymentResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderId"] = this.orderId;
+        data["timeStamp"] = this.timeStamp;
+        data["nonceStr"] = this.nonceStr;
+        data["package"] = this.package;
+        data["signType"] = this.signType;
+        data["paySign"] = this.paySign;
+        return data; 
+    }
+}
+
+export interface IPaymentResponse {
+    orderId: string;
+    timeStamp?: string | undefined;
+    nonceStr?: string | undefined;
+    package?: string | undefined;
+    signType?: string | undefined;
+    paySign?: string | undefined;
 }
 
 export class WechatTransactionResponse implements IWechatTransactionResponse {

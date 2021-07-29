@@ -3,7 +3,7 @@ import { useState } from "react";
 import { API } from '../../api/index';
 import { ConsigneeItemResponse, CreateOrderItem, CreateOrderRequest } from "../../../src/api/client";
 import { AtIcon } from "taro-ui";
-import Taro, { navigateBack, navigateTo, useDidShow, useReady } from '@tarojs/taro';
+import Taro, { navigateBack, navigateTo, switchTab, useDidShow, useReady } from '@tarojs/taro';
 import styles from './index.module.scss'
 import classNames from "classnames";
 import { CardItem } from "../index";
@@ -73,14 +73,20 @@ const Payment: React.FC = () => {
             remark: remark
         })), true)
         const payinfo = await tryFetch(API.orderClient.pay(orderId), true)
-        await tryFetch(Taro.requestPayment({
-            timeStamp: payinfo.timeStamp!,
-            nonceStr: payinfo.nonceStr!,
-            package: payinfo.package!,
-            // @ts-ignore
-            signType: payinfo.signType!,
-            paySign: payinfo.paySign!,
-        }), true)
+        try {
+            await Taro.requestPayment({
+                timeStamp: payinfo.timeStamp!,
+                nonceStr: payinfo.nonceStr!,
+                package: payinfo.package!,
+                // @ts-ignore
+                signType: payinfo.signType!,
+                paySign: payinfo.paySign!,
+            })
+        } finally {
+            await switchTab({
+                url: `/pages/order/index`
+            })
+        }
     }
 
     const getRemark = () => {

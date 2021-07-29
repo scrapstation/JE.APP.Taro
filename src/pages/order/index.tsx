@@ -56,7 +56,7 @@ const Order: React.FC = () => {
         )
     }
     const cancelOrder = async (orderId: string) => {
-        const result = await Taro.showModal({ title: "确认" })
+        const result = await Taro.showModal({ content: "取消订单后,退款及优惠券将原路退回，可能出现退款延迟到账" })
         if (result.confirm) {
             await tryFetch(API.orderClient.cancel(orderId), true)
             const queryedOrders = await tryFetch(API.orderClient.search(new SearchOrderRequest({ pageIndex: 1, pageSize: 20 })), true)

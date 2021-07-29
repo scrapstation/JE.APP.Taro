@@ -7,30 +7,7 @@ import { OrderStatusEnum, SearchOrderRequest, SearchOrderResponse } from "../../
 import './index.scss'
 import Taro from '@tarojs/taro';
 import tryFetch from "../../../src/utils/tryfetch"
-
-const getStatusText = (orderStatus: OrderStatusEnum) => {
-    let status = ''
-    switch (orderStatus) {
-        case OrderStatusEnum.InPayment:
-            status = '待支付'
-            break;
-        case OrderStatusEnum.InPackage:
-            status = '打包中'
-            break;
-        case OrderStatusEnum.InDelivery:
-            status = '配送中'
-            break;
-        case OrderStatusEnum.Completed:
-            status = '已完成'
-            break;
-        case OrderStatusEnum.Canceled:
-            status = '已取消'
-            break;
-        default:
-            break;
-    }
-    return status
-}
+import getStatusText from "./common"
 
 
 const Order: React.FC = () => {

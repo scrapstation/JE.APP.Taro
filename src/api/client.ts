@@ -519,7 +519,7 @@ export class OrderClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
-    search(request: SearchOrderRequest , cancelToken?: CancelToken | undefined): Promise<PagedResultOfSearchOrderResponse> {
+    search(request: SearchOrderRequest , cancelToken?: CancelToken | undefined): Promise<PagedResultOfOrderResponse> {
         let url_ = this.baseUrl + "/api/Order/search";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -547,7 +547,7 @@ export class OrderClient {
         });
     }
 
-    protected processSearch(response: AxiosResponse): Promise<PagedResultOfSearchOrderResponse> {
+    protected processSearch(response: AxiosResponse): Promise<PagedResultOfOrderResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -561,13 +561,63 @@ export class OrderClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = PagedResultOfSearchOrderResponse.fromJS(resultData200);
+            result200 = PagedResultOfOrderResponse.fromJS(resultData200);
             return result200;
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<PagedResultOfSearchOrderResponse>(<any>null);
+        return Promise.resolve<PagedResultOfOrderResponse>(<any>null);
+    }
+
+    getById(orderId: string , cancelToken?: CancelToken | undefined): Promise<OrderResponse> {
+        let url_ = this.baseUrl + "/api/Order/{orderId}";
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined.");
+        url_ = url_.replace("{orderId}", encodeURIComponent("" + orderId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetById(_response);
+        });
+    }
+
+    protected processGetById(response: AxiosResponse): Promise<OrderResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = OrderResponse.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<OrderResponse>(<any>null);
     }
 
     create(req: CreateOrderRequest , cancelToken?: CancelToken | undefined): Promise<string> {
@@ -1712,14 +1762,14 @@ export interface IConsigneeItemResponse extends ICreateConsigneeRequest {
     id: string;
 }
 
-export class PagedResultOfSearchOrderResponse implements IPagedResultOfSearchOrderResponse {
-    list?: SearchOrderResponse[] | undefined;
+export class PagedResultOfOrderResponse implements IPagedResultOfOrderResponse {
+    list?: OrderResponse[] | undefined;
     pageSize!: number;
     pageIndex!: number;
     recordCount!: number;
     pageCount!: number;
 
-    constructor(data?: IPagedResultOfSearchOrderResponse) {
+    constructor(data?: IPagedResultOfOrderResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1733,7 +1783,7 @@ export class PagedResultOfSearchOrderResponse implements IPagedResultOfSearchOrd
             if (Array.isArray(_data["list"])) {
                 this.list = [] as any;
                 for (let item of _data["list"])
-                    this.list!.push(SearchOrderResponse.fromJS(item));
+                    this.list!.push(OrderResponse.fromJS(item));
             }
             this.pageSize = _data["pageSize"];
             this.pageIndex = _data["pageIndex"];
@@ -1742,9 +1792,9 @@ export class PagedResultOfSearchOrderResponse implements IPagedResultOfSearchOrd
         }
     }
 
-    static fromJS(data: any): PagedResultOfSearchOrderResponse {
+    static fromJS(data: any): PagedResultOfOrderResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfSearchOrderResponse();
+        let result = new PagedResultOfOrderResponse();
         result.init(data);
         return result;
     }
@@ -1764,8 +1814,8 @@ export class PagedResultOfSearchOrderResponse implements IPagedResultOfSearchOrd
     }
 }
 
-export interface IPagedResultOfSearchOrderResponse {
-    list?: SearchOrderResponse[] | undefined;
+export interface IPagedResultOfOrderResponse {
+    list?: OrderResponse[] | undefined;
     pageSize: number;
     pageIndex: number;
     recordCount: number;
@@ -1812,7 +1862,7 @@ export interface IAuditFields {
     lastModifiedOn?: Date | undefined;
 }
 
-export class SearchOrderResponse extends AuditFields implements ISearchOrderResponse {
+export class OrderResponse extends AuditFields implements IOrderResponse {
     id!: string;
     externalId?: string | undefined;
     amount!: number;
@@ -1823,8 +1873,9 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
     paymentStatus!: PaymentStatusEnum;
     refundStatus?: RefundStatusEnum | undefined;
     orderItems?: OrderItemVo[] | undefined;
+    expireTime!: Date;
 
-    constructor(data?: ISearchOrderResponse) {
+    constructor(data?: IOrderResponse) {
         super(data);
     }
 
@@ -1845,12 +1896,13 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
                 for (let item of _data["orderItems"])
                     this.orderItems!.push(OrderItemVo.fromJS(item));
             }
+            this.expireTime = _data["expireTime"] ? new Date(_data["expireTime"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): SearchOrderResponse {
+    static fromJS(data: any): OrderResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchOrderResponse();
+        let result = new OrderResponse();
         result.init(data);
         return result;
     }
@@ -1871,12 +1923,13 @@ export class SearchOrderResponse extends AuditFields implements ISearchOrderResp
             for (let item of this.orderItems)
                 data["orderItems"].push(item.toJSON());
         }
+        data["expireTime"] = this.expireTime ? this.expireTime.toISOString() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface ISearchOrderResponse extends IAuditFields {
+export interface IOrderResponse extends IAuditFields {
     id: string;
     externalId?: string | undefined;
     amount: number;
@@ -1887,6 +1940,7 @@ export interface ISearchOrderResponse extends IAuditFields {
     paymentStatus: PaymentStatusEnum;
     refundStatus?: RefundStatusEnum | undefined;
     orderItems?: OrderItemVo[] | undefined;
+    expireTime: Date;
 }
 
 export enum OrderStatusEnum {

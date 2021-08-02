@@ -3,7 +3,7 @@ import { useDidShow } from "@tarojs/taro"
 import moment from "moment"
 import { useState } from "react"
 import { API } from "../../../src/api"
-import { OrderStatusEnum, SearchOrderRequest, SearchOrderResponse } from "../../../src/api/client"
+import { OrderStatusEnum, SearchOrderRequest, OrderResponse } from "../../../src/api/client"
 import './index.scss'
 import Taro from '@tarojs/taro';
 import tryFetch from "../../../src/utils/tryfetch"
@@ -11,17 +11,22 @@ import getStatusText from "./common"
 
 
 const Order: React.FC = () => {
-    const [orders, setOrders] = useState<SearchOrderResponse[]>([])
+    const [orders, setOrders] = useState<OrderResponse[]>([])
     useDidShow(async () => {
         const queryedOrders = await API.orderClient.search(new SearchOrderRequest({ pageIndex: 1, pageSize: 20 }))
         setOrders(queryedOrders.list || [])
     })
-    const renderOrderItem = (order: SearchOrderResponse) => {
+    const toOrderDetail = (order: OrderResponse) => {
+        Taro.navigateTo({
+            url: `/pages/order/detail/index?order=${JSON.stringify(order)}`
+        })
+    }
+    const renderOrderItem = (order: OrderResponse) => {
         return (
             <View style={{ display: 'flex', flexDirection: 'column', marginTop: 10, padding: 10, backgroundColor: '#FFF' }}>
                 <View style={{ display: 'flex', justifyContent: 'space-between', }}>
                     <View style={{ fontSize: 14 }}>{moment(order.createdOn).format('YYYY-MM-DD HH:mm:ss')}</View>
-                    <View style={{ fontSize: 14, color: '#999' }}>{getStatusText(order.status)}</View>
+                    <View style={{ fontSize: 14, color: '#999' }} onClick={() => toOrderDetail(order)}>{getStatusText(order.status)}</View>
                 </View>
                 <View style={{ display: 'flex', marginTop: 20 }}>
                     <View style={{ flex: 1, width: '70%', display: 'flex', overflow: 'auto', marginRight: 20 }}>

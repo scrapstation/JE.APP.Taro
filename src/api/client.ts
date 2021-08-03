@@ -1980,6 +1980,10 @@ export enum RefundStatusEnum {
 export class OrderItemVo implements IOrderItemVo {
     snapshotName?: string | undefined;
     imgUrl?: string | undefined;
+    price!: number;
+    actualPayment!: number;
+    quantity!: number;
+    snapshotAttributeItemNames?: string | undefined;
 
     constructor(data?: IOrderItemVo) {
         if (data) {
@@ -1994,6 +1998,10 @@ export class OrderItemVo implements IOrderItemVo {
         if (_data) {
             this.snapshotName = _data["snapshotName"];
             this.imgUrl = _data["imgUrl"];
+            this.price = _data["price"];
+            this.actualPayment = _data["actualPayment"];
+            this.quantity = _data["quantity"];
+            this.snapshotAttributeItemNames = _data["snapshotAttributeItemNames"];
         }
     }
 
@@ -2008,6 +2016,10 @@ export class OrderItemVo implements IOrderItemVo {
         data = typeof data === 'object' ? data : {};
         data["snapshotName"] = this.snapshotName;
         data["imgUrl"] = this.imgUrl;
+        data["price"] = this.price;
+        data["actualPayment"] = this.actualPayment;
+        data["quantity"] = this.quantity;
+        data["snapshotAttributeItemNames"] = this.snapshotAttributeItemNames;
         return data; 
     }
 }
@@ -2015,6 +2027,10 @@ export class OrderItemVo implements IOrderItemVo {
 export interface IOrderItemVo {
     snapshotName?: string | undefined;
     imgUrl?: string | undefined;
+    price: number;
+    actualPayment: number;
+    quantity: number;
+    snapshotAttributeItemNames?: string | undefined;
 }
 
 export class QueryModel implements IQueryModel {

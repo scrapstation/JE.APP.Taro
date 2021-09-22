@@ -45,33 +45,45 @@ const Index: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("calcSize");
-    Taro.nextTick(() => calcSize());
+    setTimeout(() => {
+      calcSize()
+    })
   }, [categories]);
 
-  const calcSize = () => {
-    let h = 0;
-    const positions = categories.map((x) => {
-      let position = { id: x.id, top: 0, bottom: 0 };
-      let View = Taro.createSelectorQuery().select(`#category-${x.id}`);
+  const getDomHeight = async (id: string) => {
+    return new Promise<number>((reslove, reject) => {
+      var View = Taro.createSelectorQuery().select(id);
       View.fields(
         {
           size: true,
         },
         (data) => {
-          position.top = h;
-          h += Math.floor(data.height);
-          position.bottom = h;
+          console.log(data.height)
+          reslove(data.height)
         }
       ).exec();
+    })
+  }
+
+  const calcSize = async () => {
+    var h = 0;
+    const positions = await Promise.all(categories.map(async (x) => {
+      var position = { id: x.id, top: 0, bottom: 0 };
+      var domHeght = await getDomHeight(`#category-${x.id}`)
+      position.top = h;
+      h += Math.floor(domHeght);
+      position.bottom = h;
       return position;
-    });
+    }));
+    console.log('positions', positions)
+    console.log('positions', positions.map(x => x.top))
+    console.log('positions', positions)
     setProductPosition(positions);
   };
 
   const handleMenuSelected = (id: string) => {
-    setProductsScrollTop(productPosition.find((item) => item.id == id)!.top);
-    Taro.nextTick(() => setCurrentCategoryId(id));
+    setCurrentCategoryId(id);
+    setProductsScrollTop(productPosition.find((item) => item.id == id)!.top)
   };
 
   const productsScroll = ({ detail }) => {
@@ -143,7 +155,7 @@ const Index: React.FC = () => {
             })}
           </View>
         </ScrollView>
-        <ScrollView className='product-section' scrollY scrollWithAnimation scrollTop={productsScrollTop} onScroll={productsScroll}>
+        <ScrollView className='product-section' scrollY enableFlex scrollWithAnimation scrollTop={productsScrollTop} onScroll={productsScroll}>
           <View className='wrapper'>
             {categories.map((category) => {
               return (
@@ -153,24 +165,30 @@ const Index: React.FC = () => {
                     {category.products!.map((product) => {
                       return (
                         <View className='product' key={product.id}>
-                          <Image lazyLoad mode='aspectFill' src={product.imgUrl!} className='image'></Image>
-                          <View className='content'>
-                            <View className='name'>{product.name}</View>
-                            <View className='labels'>
-                              {product.attributes!.map((attribute) => {
-                                return (
-                                  <View className='label' key={attribute.id}>
-                                    {attribute.name}
-                                  </View>
-                                );
-                              })}
-                            </View>
-                            <View className='description'>{product.description || ''}</View>
-                            <View className='price'>
-                              <View>￥{product.price}</View>
-                              <Action isMultiSku={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: product.skus![0].id, productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.skus![0].id)} onSelectMaterails={() => setProductModal({ visible: true, product })}></Action>
-                            </View>
-                          </View>
+                          {
+                            // 只渲染当前分类和相邻分类
+                            Math.abs(categories.findIndex(x => x.id === category.id) - categories.findIndex(x => x.id === currentCategoryId)) <= 1 &&
+                            <>
+                              <Image mode='aspectFill' src={product.imgUrl!} className='image'></Image>
+                              <View className='content'>
+                                <View className='name'>{product.name}</View>
+                                <View className='labels'>
+                                  {product.attributes!.map((attribute) => {
+                                    return (
+                                      <View className='label' key={attribute.id}>
+                                        {attribute.name}
+                                      </View>
+                                    );
+                                  })}
+                                </View>
+                                <View className='description'>{product.description || ''}</View>
+                                <View className='price'>
+                                  <View>￥{product.price}</View>
+                                  <Action isMultiSku={product.isMultiSku} number={productCartNum(product.id)} onAdd={() => handleAddToCart({ productId: product.id, skuId: product.skus![0].id, productName: product.name!, skuPrice: product.skus![0].price, number: 1, image: product.imgUrl! })} onMinus={() => handleMinusFromCart(product.skus![0].id)} onSelectMaterails={() => setProductModal({ visible: true, product })}></Action>
+                                </View>
+                              </View>
+                            </>
+                          }
                         </View>
                       );
                     })}

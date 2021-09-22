@@ -69,7 +69,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
     }
 
     return (
-        <AtModal isOpened>
+        <AtModal isOpened onClose={() => props.onClose()}>
             <View className={styles.header}>
                 <Image src={require('../../../../static/Images/index/round_close_btn.png')} onClick={() => props.onClose()}></Image>
             </View>

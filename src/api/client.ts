@@ -835,53 +835,6 @@ export class RiderClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
-    getDeliverySummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetDeliverySummaryResponse> {
-        let url_ = this.baseUrl + "/api/Rider/delivery_summary";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "POST",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGetDeliverySummary(_response);
-        });
-    }
-
-    protected processGetDeliverySummary(response: AxiosResponse): Promise<RiderGetDeliverySummaryResponse> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = RiderGetDeliverySummaryResponse.fromJS(resultData200);
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<RiderGetDeliverySummaryResponse>(<any>null);
-    }
-
     taskOrder(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/Rider/task_order?";
         if (orderId === null)
@@ -1867,11 +1820,7 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
     externalId?: string | undefined;
     amount!: number;
     actualPayment!: number;
-    status!: OrderStatusEnum;
-    packageStatus?: PackageStatusEnum | undefined;
-    deliveryStatus?: DeliveryStatusEnum | undefined;
-    paymentStatus!: PaymentStatusEnum;
-    refundStatus?: RefundStatusEnum | undefined;
+    status!: StatusEnum;
     orderItems?: OrderItemVo[] | undefined;
     expireTime!: Date;
 
@@ -1887,10 +1836,6 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
             this.amount = _data["amount"];
             this.actualPayment = _data["actualPayment"];
             this.status = _data["status"];
-            this.packageStatus = _data["packageStatus"];
-            this.deliveryStatus = _data["deliveryStatus"];
-            this.paymentStatus = _data["paymentStatus"];
-            this.refundStatus = _data["refundStatus"];
             if (Array.isArray(_data["orderItems"])) {
                 this.orderItems = [] as any;
                 for (let item of _data["orderItems"])
@@ -1914,10 +1859,6 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
         data["amount"] = this.amount;
         data["actualPayment"] = this.actualPayment;
         data["status"] = this.status;
-        data["packageStatus"] = this.packageStatus;
-        data["deliveryStatus"] = this.deliveryStatus;
-        data["paymentStatus"] = this.paymentStatus;
-        data["refundStatus"] = this.refundStatus;
         if (Array.isArray(this.orderItems)) {
             data["orderItems"] = [];
             for (let item of this.orderItems)
@@ -1934,47 +1875,19 @@ export interface IOrderResponse extends IAuditFields {
     externalId?: string | undefined;
     amount: number;
     actualPayment: number;
-    status: OrderStatusEnum;
-    packageStatus?: PackageStatusEnum | undefined;
-    deliveryStatus?: DeliveryStatusEnum | undefined;
-    paymentStatus: PaymentStatusEnum;
-    refundStatus?: RefundStatusEnum | undefined;
+    status: StatusEnum;
     orderItems?: OrderItemVo[] | undefined;
     expireTime: Date;
 }
 
-export enum OrderStatusEnum {
-    InPayment = "InPayment",
-    InPackage = "InPackage",
-    InDelivery = "InDelivery",
-    InRefund = "InRefund",
+export enum StatusEnum {
+    PendingPayment = "PendingPayment",
+    PendingPack = "PendingPack",
+    Packing = "Packing",
+    PenddingDelivery = "PenddingDelivery",
+    Delivering = "Delivering",
     Canceled = "Canceled",
     Completed = "Completed",
-}
-
-export enum PackageStatusEnum {
-    PenddingPackage = "PenddingPackage",
-    InPacking = "InPacking",
-    CompletedPackage = "CompletedPackage",
-}
-
-export enum DeliveryStatusEnum {
-    PenddingDelivery = "PenddingDelivery",
-    InDelivery = "InDelivery",
-    CompletedDelivery = "CompletedDelivery",
-}
-
-export enum PaymentStatusEnum {
-    PenddingPayment = "PenddingPayment",
-    ExpiredPayment = "ExpiredPayment",
-    CanceldPayment = "CanceldPayment",
-    CompletedPayment = "CompletedPayment",
-}
-
-export enum RefundStatusEnum {
-    PenddingRefund = "PenddingRefund",
-    RefusedRefund = "RefusedRefund",
-    CompleteRefund = "CompleteRefund",
 }
 
 export class OrderItemVo implements IOrderItemVo {
@@ -2511,47 +2424,6 @@ export interface ITransactionNotifyResource {
     nonce?: string | undefined;
 }
 
-export class RiderGetDeliverySummaryResponse extends AuditFields implements IRiderGetDeliverySummaryResponse {
-    inPackagingCount!: number;
-    paddingDeliveryCount!: number;
-    myTodayDeliveryCount!: number;
-
-    constructor(data?: IRiderGetDeliverySummaryResponse) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.inPackagingCount = _data["inPackagingCount"];
-            this.paddingDeliveryCount = _data["paddingDeliveryCount"];
-            this.myTodayDeliveryCount = _data["myTodayDeliveryCount"];
-        }
-    }
-
-    static fromJS(data: any): RiderGetDeliverySummaryResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new RiderGetDeliverySummaryResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["inPackagingCount"] = this.inPackagingCount;
-        data["paddingDeliveryCount"] = this.paddingDeliveryCount;
-        data["myTodayDeliveryCount"] = this.myTodayDeliveryCount;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IRiderGetDeliverySummaryResponse extends IAuditFields {
-    inPackagingCount: number;
-    paddingDeliveryCount: number;
-    myTodayDeliveryCount: number;
-}
-
 export class PagedResultOfSearchRiderDeliveryTaskResponse implements IPagedResultOfSearchRiderDeliveryTaskResponse {
     list?: SearchRiderDeliveryTaskResponse[] | undefined;
     pageSize!: number;
@@ -2615,7 +2487,7 @@ export interface IPagedResultOfSearchRiderDeliveryTaskResponse {
 export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTaskResponse {
     id!: string;
     orderId!: string;
-    deliveryStatus!: DeliveryStatusEnum;
+    status!: DeliveryStatusEnum;
     name?: string | undefined;
     mobile?: string | undefined;
     avator?: string | undefined;
@@ -2638,7 +2510,7 @@ export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTask
         if (_data) {
             this.id = _data["id"];
             this.orderId = _data["orderId"];
-            this.deliveryStatus = _data["deliveryStatus"];
+            this.status = _data["status"];
             this.name = _data["name"];
             this.mobile = _data["mobile"];
             this.avator = _data["avator"];
@@ -2661,7 +2533,7 @@ export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTask
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["orderId"] = this.orderId;
-        data["deliveryStatus"] = this.deliveryStatus;
+        data["status"] = this.status;
         data["name"] = this.name;
         data["mobile"] = this.mobile;
         data["avator"] = this.avator;
@@ -2677,7 +2549,7 @@ export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTask
 export interface ISearchRiderDeliveryTaskResponse {
     id: string;
     orderId: string;
-    deliveryStatus: DeliveryStatusEnum;
+    status: DeliveryStatusEnum;
     name?: string | undefined;
     mobile?: string | undefined;
     avator?: string | undefined;
@@ -2686,6 +2558,13 @@ export interface ISearchRiderDeliveryTaskResponse {
     houseNumber?: string | undefined;
     latitude: number;
     longitude: number;
+}
+
+export enum DeliveryStatusEnum {
+    InDelivery = "InDelivery",
+    Transferred = "Transferred",
+    Canceled = "Canceled",
+    Complated = "Complated",
 }
 
 export class SearchRiderDeliveryTaskRequest extends QueryModel implements ISearchRiderDeliveryTaskRequest {

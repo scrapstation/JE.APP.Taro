@@ -21,7 +21,9 @@ const Personal: React.FC = () => {
     }, [isLogin])
     return (
         <View className='container'>
-            <Image className='header-img' src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
+            <View className='header-img'>
+                <Image src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
+            </View>
             <View className='content'>
                 <View className='member-card'>
                     <View className='info'>
@@ -39,27 +41,32 @@ const Personal: React.FC = () => {
                         }
                     </View>
                     <View className='row'>
-                        <Navigator className='grid' open-type='navigate' url='/pages/integrals/mall'>
+                        <View className='grid'>
                             <Image src={require('../../static/images/my/me_icon_points.png')}></Image>
                             <View className='value'>63</View>
                             <View className='title'>积分商城</View>
-                        </Navigator>
+                        </View>
                         <View className='grid' hover-className='opacity-6'>
                             <Image src={require('../../static/images/my/me_icon_quan.png')}></Image>
                             <View className='value'>0</View>
                             <View className='title'>喜茶劵</View>
                         </View>
-                        <Navigator className='grid' open-type='navigate' url='/pages/my/wallet'>
+                        <View className='grid'>
                             <Image src={require('../../static/images/my/me_icon_wallet.png')}></Image>
                             <View className='value'>0.00</View>
                             <View className='title'>钱包</View>
-                        </Navigator>
+                        </View>
                     </View>
                 </View >
             </View >
-            <AtList>
-                <AtListItem title='标题文字' />
-            </AtList>
+            {/* <View>
+                <Navigator style={{ padding: '15px 10px' }}>
+                    111
+                </Navigator>
+                <Navigator style={{ padding: '15px 10px' }}>
+                    111
+                </Navigator>
+            </View> */}
             {/* <list-cell hover arrow >
         <View className="list-cell-wrapper">
             <View View="title">会员码</View>

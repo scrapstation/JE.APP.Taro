@@ -1,21 +1,27 @@
-import { OrderStatusEnum } from '../../../src/api/client';
+import { StatusEnum } from '../../../src/api/client';
 
-const getStatusText = (orderStatus: OrderStatusEnum) => {
+const getStatusText = (orderStatus: StatusEnum) => {
   let status = '';
   switch (orderStatus) {
-    case OrderStatusEnum.InPayment:
+    case StatusEnum.PendingPayment:
       status = '待支付';
       break;
-    case OrderStatusEnum.InPackage:
+    case StatusEnum.PendingPack:
+      status = '待打包';
+      break;
+    case StatusEnum.Packing:
       status = '打包中';
       break;
-    case OrderStatusEnum.InDelivery:
+    case StatusEnum.PenddingDelivery:
+      status = '待配送';
+      break;
+    case StatusEnum.Delivering:
       status = '配送中';
       break;
-    case OrderStatusEnum.Completed:
+    case StatusEnum.Completed:
       status = '已完成';
       break;
-    case OrderStatusEnum.Canceled:
+    case StatusEnum.Canceled:
       status = '已取消';
       break;
     default:

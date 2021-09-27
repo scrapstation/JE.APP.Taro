@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
-import { AtList, AtListItem, AtTag } from "taro-ui";
+import { AtBadge, AtList, AtListItem, AtTag } from "taro-ui";
+import bg from '/src/static/images/my/headerbg.png'
 import "./index.scss"
 
 export type PersonalProps = {
@@ -22,23 +23,30 @@ const Personal: React.FC = () => {
     return (
         <View className='container'>
             <View className='header-img'>
-                <Image src={require('../../static/images/my/header-bg.jpg')} mode='widthFix'></Image>
+                <Image style={{ width: '100%' }} src={bg} mode='widthFix'></Image>
             </View>
             <View className='content'>
                 <View className='member-card'>
-                    <View className='info'>
-                        <View className='title'>
-                            <View className='wenyue-font'>{currentUser ? `你好, ${currentUser?.nickName}` : "请先登录哟~"}</View>
+                    <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                            {currentUser &&
+                                <>
+                                    <AtBadge value={'Lv1'}>
+                                        <View className='wenyue-font' style={{ fontSize: 24 }}>{`你好, ${currentUser?.nickName}`}</View>
+                                    </AtBadge>
+                                    <View>
+                                        热情周五，为你打气
+                                    </View>
+                                </>
+                            }
+                            {!currentUser &&
+                                <>
+                                    <View className='wenyue-font' style={{ fontSize: 20 }}>{currentUser ? `你好, ${currentUser?.nickName}` : "请先登录哟~"}</View>
+                                    <AtTag onClick={() => dispatch({ type: "user/login" })} active type='primary' className='login-button'>点击登录</AtTag>
+                                </>
+                            }
                         </View>
                         <Image src={currentUser ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} className='avatar'></Image>
-                        {!currentUser &&
-                            <AtTag onClick={() => dispatch({ type: "user/login" })} size='small' active type='primary' className='login-button'>点击登录</AtTag>
-                        }
-                        {currentUser &&
-                            <View className='badage'>
-                                Lv1
-                            </View>
-                        }
                     </View>
                     <View className='row'>
                         <View className='grid'>

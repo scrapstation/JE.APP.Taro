@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
-import { AtBadge, AtList, AtListItem, AtTag } from "taro-ui";
+import { AtBadge, AtTag } from "taro-ui";
 import bg from '/src/static/images/my/headerbg.png'
 import "./index.scss"
 
@@ -27,54 +27,57 @@ const Personal: React.FC = () => {
             </View>
             <View className='content'>
                 <View className='member-card'>
-                    <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                    <View style={{ display: 'flex' }}>
+                        <Image className='avatar' src={currentUser ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} ></Image>
+                        <View style={{ display: 'flex', marginLeft: 10, flexDirection: 'column', justifyContent: 'space-evenly' }}>
                             {currentUser &&
                                 <>
                                     <AtBadge value={'Lv1'}>
-                                        <View className='wenyue-font' style={{ fontSize: 24 }}>{`你好, ${currentUser?.nickName}`}</View>
+                                        <View className='wenyue-font' style={{ fontSize: 20 }}>{`你好, ${currentUser?.nickName}`}</View>
                                     </AtBadge>
-                                    <View>
+                                    <View style={{ fontSize: 14 }}>
                                         热情周五，为你打气
                                     </View>
                                 </>
                             }
                             {!currentUser &&
                                 <>
-                                    <View className='wenyue-font' style={{ fontSize: 20 }}>{currentUser ? `你好, ${currentUser?.nickName}` : "请先登录哟~"}</View>
-                                    <AtTag onClick={() => dispatch({ type: "user/login" })} active type='primary' className='login-button'>点击登录</AtTag>
+                                    <View className='wenyue-font' style={{ fontSize: 20 }} onClick={() => dispatch({ type: "user/login" })}>轻点登录</View>
+                                    {/* <AtTag onClick={() => dispatch({ type: "user/login" })} active type='primary' className='login-button'>点击登录</AtTag> */}
                                 </>
                             }
                         </View>
-                        <Image src={currentUser ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} className='avatar'></Image>
                     </View>
-                    <View className='row'>
+                    <View className='row' style={{ marginTop: 20 }}>
                         <View className='grid'>
-                            <Image src={require('../../static/images/my/me_icon_points.png')}></Image>
+                            {/* <Image src={require('../../static/images/my/me_icon_points.png')}></Image> */}
                             <View className='value'>63</View>
                             <View className='title'>积分商城</View>
                         </View>
                         <View className='grid' hover-className='opacity-6'>
-                            <Image src={require('../../static/images/my/me_icon_quan.png')}></Image>
+                            {/* <Image src={require('../../static/images/my/me_icon_quan.png')}></Image> */}
                             <View className='value'>0</View>
                             <View className='title'>喜茶劵</View>
                         </View>
                         <View className='grid'>
-                            <Image src={require('../../static/images/my/me_icon_wallet.png')}></Image>
+                            {/* <Image src={require('../../static/images/my/me_icon_wallet.png')}></Image> */}
                             <View className='value'>0.00</View>
                             <View className='title'>钱包</View>
                         </View>
                     </View>
                 </View >
             </View >
-            {/* <View>
-                <Navigator style={{ padding: '15px 10px' }}>
-                    111
+            <View style={{ backgroundColor: '#fff', marginTop: 20 }}>
+                <Navigator style={{ padding: '15px 20px' }}>
+                    兑换中心
                 </Navigator>
-                <Navigator style={{ padding: '15px 10px' }}>
-                    111
+                <Navigator style={{ padding: '15px 20px' }}>
+                    联系客服
                 </Navigator>
-            </View> */}
+                <Navigator style={{ padding: '15px 20px' }}>
+                    关于我们
+                </Navigator>
+            </View>
             {/* <list-cell hover arrow >
         <View className="list-cell-wrapper">
             <View View="title">会员码</View>

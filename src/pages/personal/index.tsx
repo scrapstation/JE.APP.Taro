@@ -3,13 +3,27 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
-import { AtBadge, AtTag } from "taro-ui";
+import { AtBadge, AtIcon, AtList, AtListItem, AtTag } from "taro-ui";
 import bg from '/src/static/images/my/headerbg.png'
 import "./index.scss"
 
 export type PersonalProps = {
     user: UserModelState;
 };
+
+const renderListItem = (title: string, desc: string, showArrow: boolean) => {
+    return (<Navigator style={{ padding: '20px 20px' }}>
+        <View style={{ display: 'flex', alignItems: 'center' }}>
+            <View style={{ fontSize: 16, color: '#343434' }}>{title}</View>
+            <View style={{ flex: 1, textAlign: 'right', fontSize: 14, color: '#C1C3C6' }}>{desc}</View>
+            <View>
+                {showArrow &&
+                    <AtIcon value='chevron-right' size={14} color='#C1C3C6' customStyle={{ marginLeft: 10, verticalAlign: 'unset' }}></AtIcon>
+                }
+            </View>
+        </View>
+    </Navigator>)
+}
 
 const Personal: React.FC = () => {
     const dispatch = useDispatch()
@@ -67,49 +81,13 @@ const Personal: React.FC = () => {
                     </View>
                 </View >
             </View >
-            <View style={{ backgroundColor: '#fff', marginTop: 20 }}>
-                <Navigator style={{ padding: '15px 20px' }}>
-                    兑换中心
-                </Navigator>
-                <Navigator style={{ padding: '15px 20px' }}>
-                    联系客服
-                </Navigator>
-                <Navigator style={{ padding: '15px 20px' }}>
-                    关于我们
-                </Navigator>
+            <View style={{ backgroundColor: '#fff', marginTop: 40 }}>
+                {renderListItem('兑换中心', '积分换购', true)}
+                {renderListItem('联系客服', '7*24在线客服', true)}
+                {renderListItem('技术支持', 'LIMO科技', true)}
+                {renderListItem('关于我们', '几个青年的创业故事', true)}
+                {renderListItem('退出登陆', '', false)}
             </View>
-            {/* <list-cell hover arrow >
-        <View className="list-cell-wrapper">
-            <View View="title">会员码</View>
-            <View className="subtitle">门店扫码积分、喜茶钱包和阿喜有礼卡支持</View>
-        </View>
-		</list - cell >
-		<list-cell hover arrow>
-			<View className="list-cell-wrapper">
-				<View View="title">兑换中心</View>
-				<View className="subtitle">兑换星球会员、喜茶券和阿喜有礼卡</View>
-			</View>
-		</list-cell>
-		<list-cell hover arrow>
-			<View className="list-cell-wrapper">
-				<View View="title">星球封面</View>
-			</View>
-		</list-cell>
-		<list-cell hover arrow>
-			<View className="list-cell-wrapper">
-				<View View="title">联系客服</View>
-			</View>
-		</list-cell>
-		<list-cell hover arrow>
-			<View className="list-cell-wrapper">
-				<View View="title">消息中心</View>
-			</View>
-		</list-cell>
-		<list-cell hover arrow last>
-			<View className="list-cell-wrapper">
-				<View View="title">更多</View>
-			</View>
-		</list-cell> */}
         </View >
     )
 }

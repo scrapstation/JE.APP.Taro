@@ -1,5 +1,5 @@
 export default {
-  pages: ['pages/order/index', 'pages/order/detail/index', 'pages/index/index', 'pages/payment/index', 'pages/payment/remark/index', 'pages/consignee/index', 'pages/personal/index', 'pages/consignee/add/index'],
+  pages: ['pages/index/index', 'pages/order/index', 'pages/rider/index', 'pages/order/detail/index', 'pages/payment/index', 'pages/payment/remark/index', 'pages/consignee/index', 'pages/personal/index', 'pages/consignee/add/index'],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

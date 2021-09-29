@@ -1,6 +1,6 @@
 import { View, Image, Swiper, SwiperItem, ScrollView, Button } from "@tarojs/components"
 import { useEffect, useState } from "react"
-import { ProductReponse } from "src/api/client"
+import { ProductReponse } from "../../../../../src/api/client"
 import { AtModal } from "taro-ui"
 import { CardItem } from "../.."
 import Action from "../Action"

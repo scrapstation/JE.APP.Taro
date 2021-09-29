@@ -11,8 +11,8 @@ export type PersonalProps = {
     user: UserModelState;
 };
 
-const renderListItem = (title: string, desc: string, showArrow: boolean) => {
-    return (<Navigator style={{ padding: '20px 20px' }}>
+const renderListItem = (title: string, path: string, desc: string, showArrow: boolean) => {
+    return (<Navigator url={path} style={{ padding: '20px 20px' }}>
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ fontSize: 16, color: '#343434' }}>{title}</View>
             <View style={{ flex: 1, textAlign: 'right', fontSize: 14, color: '#C1C3C6' }}>{desc}</View>
@@ -81,12 +81,15 @@ const Personal: React.FC = () => {
                     </View>
                 </View >
             </View >
-            <View style={{ backgroundColor: '#fff', marginTop: 40 }}>
-                {renderListItem('兑换中心', '积分换购', true)}
-                {renderListItem('联系客服', '7*24在线客服', true)}
-                {renderListItem('技术支持', 'LIMO科技', true)}
-                {renderListItem('关于我们', '几个青年的创业故事', true)}
-                {renderListItem('退出登陆', '', false)}
+            <View style={{ backgroundColor: '#fff', marginBottom: 20 }}>
+                {renderListItem('骑手中心', '/pages/rider/index', '', true)}
+            </View>
+            <View style={{ backgroundColor: '#fff', marginBottom: 20 }}>
+                {renderListItem('兑换中心', '/pages/rider/index', '积分换购', true)}
+                {renderListItem('联系客服', '', '7*24在线客服', true)}
+                {renderListItem('技术支持', '', 'LIMO科技', true)}
+                {renderListItem('关于我们', '', '几个青年的创业故事', true)}
+                {renderListItem('退出登陆', '', '', false)}
             </View>
         </View >
     )

@@ -12,7 +12,10 @@ const Deliveries: React.FC<DeliveriesProps> = (props) => {
             {props.deliveries.map(x => {
                 return (
                     <View style={{ margin: 15, borderRadius: 5, backgroundColor: '#fff', padding: 15, boxShadow: '4px 4px 20px #f3f3f3' }}>
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{ textAlign: 'right', color: '#626675', lineHeight: 0.5 }}>
+                            · · ·
+                        </View>
+                        <View style={{ marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View>还剩<Text style={{ color: 'red' }}> 8 </Text>分钟</View>
                             <View>#8952</View>
                         </View>

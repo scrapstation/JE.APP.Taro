@@ -5,6 +5,7 @@ import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
 import { AtBadge, AtIcon, AtList, AtListItem, AtTag } from "taro-ui";
 import bg from '/src/static/images/my/headerbg.png'
+import user from '/src/static/images/my/user.png'
 import "./index.scss"
 
 export type PersonalProps = {
@@ -42,7 +43,7 @@ const Personal: React.FC = () => {
             <View className='content'>
                 <View className='member-card'>
                     <View style={{ display: 'flex' }}>
-                        <Image className='avatar' src={currentUser ? currentUser!.avator! : 'https://wx.qlogo.cn/mmopen/vi_32/Hx7MFkCEmZVHziaTTiaHSiaCs4ApnH5CD0nYOhOg1nYUUMYtxMXkL6L4VL5icRfO5w4LGzW5ib0FZicwj2MficyYfZgCw/132'} ></Image>
+                        <Image className='avatar' src={currentUser ? currentUser!.avator! : user} ></Image>
                         <View style={{ display: 'flex', marginLeft: 10, flexDirection: 'column', justifyContent: 'space-evenly' }}>
                             {currentUser &&
                                 <>
@@ -56,7 +57,7 @@ const Personal: React.FC = () => {
                             }
                             {!currentUser &&
                                 <>
-                                    <View className='wenyue-font' style={{ fontSize: 20 }} onClick={() => dispatch({ type: "user/login" })}>轻点登录</View>
+                                    <View className='wenyue-font' style={{ fontSize: 18 }} onClick={() => dispatch({ type: "user/login" })}>轻点登录</View>
                                     {/* <AtTag onClick={() => dispatch({ type: "user/login" })} active type='primary' className='login-button'>点击登录</AtTag> */}
                                 </>
                             }
@@ -65,17 +66,17 @@ const Personal: React.FC = () => {
                     <View className='row' style={{ marginTop: 20 }}>
                         <View className='grid'>
                             {/* <Image src={require('../../static/images/my/me_icon_points.png')}></Image> */}
-                            <View className='value'>63</View>
+                            <View className='value'>{currentUser ? 63 : '***'}</View>
                             <View className='title'>积分商城</View>
                         </View>
                         <View className='grid' hover-className='opacity-6'>
                             {/* <Image src={require('../../static/images/my/me_icon_quan.png')}></Image> */}
-                            <View className='value'>0</View>
+                            <View className='value'>{currentUser ? 0 : '***'}</View>
                             <View className='title'>喜茶劵</View>
                         </View>
                         <View className='grid'>
                             {/* <Image src={require('../../static/images/my/me_icon_wallet.png')}></Image> */}
-                            <View className='value'>0.00</View>
+                            <View className='value'>{currentUser ? 0.00 : '***'}</View>
                             <View className='title'>钱包</View>
                         </View>
                     </View>

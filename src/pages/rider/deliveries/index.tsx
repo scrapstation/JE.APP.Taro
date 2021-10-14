@@ -1,10 +1,10 @@
 import { Text, View } from "@tarojs/components";
 import React from "react";
-import { SearchRiderDeliveryTaskResponse } from "../../../../src/api/client";
-import { AtButton, AtTabBar } from "taro-ui";
+import { RiderDeliveringTasksItemResponse } from "../../../../src/api/client";
+import { AtButton } from "taro-ui";
 
 export type DeliveriesProps = {
-    deliveries: SearchRiderDeliveryTaskResponse[],
+    deliveries: RiderDeliveringTasksItemResponse[],
 };
 const Deliveries: React.FC<DeliveriesProps> = (props) => {
     return (

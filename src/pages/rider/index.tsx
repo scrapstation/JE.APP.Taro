@@ -3,13 +3,13 @@ import { API } from "../../../src/api";
 import { AtMessage, AtTabBar } from "taro-ui";
 import Deliveries from "./deliveries";
 import Personal from "./personal";
-import Taro from '@tarojs/taro';
-import { SearchRiderDeliveryTaskRequest, SearchRiderDeliveryTaskResponse } from "../../../src/api/client";
+import Taro, { usePullDownRefresh } from '@tarojs/taro';
+import { RiderDeliveringTasksItemResponse } from "../../../src/api/client";
 import './index.scss'
 
 const Rider: React.FC = () => {
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
-    const [deliveries, setDeliveries] = useState<SearchRiderDeliveryTaskResponse[]>([])
+    const [deliveries, setDeliveries] = useState<RiderDeliveringTasksItemResponse[]>([])
     const handleTabbarClick = async (index) => {
         if (index == 1) {
             await handleScan()
@@ -20,7 +20,7 @@ const Rider: React.FC = () => {
 
     const handleScan = async () => {
         const scanResult = await Taro.scanCode({ onlyFromCamera: true, scanType: ['qrCode'] })
-        // await API.riderClient.taskOrder(scanResult.result)
+        await API.riderClient.taskOrder(scanResult.result)
         Taro.atMessage({
             'message': '接单成功，赶快去配送吧',
             'type': 'info',
@@ -30,13 +30,25 @@ const Rider: React.FC = () => {
     }
 
     const fetchTasks = async () => {
-        const tasks = await API.riderClient.searchDelivery(new SearchRiderDeliveryTaskRequest({ pageIndex: 1, pageSize: 20 }))
-        setDeliveries(tasks.list!)
+        const tasks = await API.riderClient.getAllDeliveringTasks()
+        setDeliveries(tasks)
     }
 
     useEffect(() => {
         fetchTasks()
     }, [])
+
+    usePullDownRefresh(async () => {
+        await fetchTasks();
+        setTimeout(() => {
+            Taro.atMessage({
+                'message': '刷新成功',
+                'type': 'info',
+                duration: 500
+            })
+            Taro.stopPullDownRefresh()
+        }, 500)
+    })
     return (
         <>
             <AtMessage />

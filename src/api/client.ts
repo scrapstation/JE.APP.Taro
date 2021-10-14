@@ -835,8 +835,55 @@ export class RiderClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
+    getSummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetSummaryResponse> {
+        let url_ = this.baseUrl + "/api/Rider/summary";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetSummary(_response);
+        });
+    }
+
+    protected processGetSummary(response: AxiosResponse): Promise<RiderGetSummaryResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = RiderGetSummaryResponse.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<RiderGetSummaryResponse>(<any>null);
+    }
+
     taskOrder(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Rider/task_order?";
+        let url_ = this.baseUrl + "/api/Rider/take_order?";
         if (orderId === null)
             throw new Error("The parameter 'orderId' cannot be null.");
         else if (orderId !== undefined)
@@ -886,12 +933,11 @@ export class RiderClient {
         return Promise.resolve<boolean>(<any>null);
     }
 
-    complateDelivery(deliveryId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Rider/complate_delivery?";
-        if (deliveryId === null)
-            throw new Error("The parameter 'deliveryId' cannot be null.");
-        else if (deliveryId !== undefined)
-            url_ += "deliveryId=" + encodeURIComponent("" + deliveryId) + "&";
+    complateDelivery(deliveryId: string , cancelToken?: CancelToken | undefined): Promise<boolean> {
+        let url_ = this.baseUrl + "/api/Rider/delivery/{deliveryId}/complate";
+        if (deliveryId === undefined || deliveryId === null)
+            throw new Error("The parameter 'deliveryId' must be defined.");
+        url_ = url_.replace("{deliveryId}", encodeURIComponent("" + deliveryId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -937,8 +983,62 @@ export class RiderClient {
         return Promise.resolve<boolean>(<any>null);
     }
 
+    getAllDeliveringTasks(  cancelToken?: CancelToken | undefined): Promise<RiderDeliveringTasksItemResponse[]> {
+        let url_ = this.baseUrl + "/api/Rider/delivering_tasks";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAllDeliveringTasks(_response);
+        });
+    }
+
+    protected processGetAllDeliveringTasks(response: AxiosResponse): Promise<RiderDeliveringTasksItemResponse[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(RiderDeliveringTasksItemResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<RiderDeliveringTasksItemResponse[]>(<any>null);
+    }
+
     searchDelivery(req: SearchRiderDeliveryTaskRequest , cancelToken?: CancelToken | undefined): Promise<PagedResultOfSearchRiderDeliveryTaskResponse> {
-        let url_ = this.baseUrl + "/api/Rider/search";
+        let url_ = this.baseUrl + "/api/Rider/search_tasks";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(req);
@@ -2424,6 +2524,125 @@ export interface ITransactionNotifyResource {
     nonce?: string | undefined;
 }
 
+export class RiderGetSummaryResponse implements IRiderGetSummaryResponse {
+    todayTaskCount!: number;
+    todayExpectedIncome!: number;
+    totalIncome!: number;
+    balance!: number;
+
+    constructor(data?: IRiderGetSummaryResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.todayTaskCount = _data["todayTaskCount"];
+            this.todayExpectedIncome = _data["todayExpectedIncome"];
+            this.totalIncome = _data["totalIncome"];
+            this.balance = _data["balance"];
+        }
+    }
+
+    static fromJS(data: any): RiderGetSummaryResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new RiderGetSummaryResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["todayTaskCount"] = this.todayTaskCount;
+        data["todayExpectedIncome"] = this.todayExpectedIncome;
+        data["totalIncome"] = this.totalIncome;
+        data["balance"] = this.balance;
+        return data; 
+    }
+}
+
+export interface IRiderGetSummaryResponse {
+    todayTaskCount: number;
+    todayExpectedIncome: number;
+    totalIncome: number;
+    balance: number;
+}
+
+export class RiderDeliveringTasksItemResponse implements IRiderDeliveringTasksItemResponse {
+    id!: string;
+    orderCreateTime!: Date;
+    simpleAddress?: string | undefined;
+    fullAddress?: string | undefined;
+    houseNumber?: string | undefined;
+    name?: string | undefined;
+    mobile?: string | undefined;
+    status!: DeliveryStatusEnum;
+
+    constructor(data?: IRiderDeliveringTasksItemResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.orderCreateTime = _data["orderCreateTime"] ? new Date(_data["orderCreateTime"].toString()) : <any>undefined;
+            this.simpleAddress = _data["simpleAddress"];
+            this.fullAddress = _data["fullAddress"];
+            this.houseNumber = _data["houseNumber"];
+            this.name = _data["name"];
+            this.mobile = _data["mobile"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): RiderDeliveringTasksItemResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new RiderDeliveringTasksItemResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["orderCreateTime"] = this.orderCreateTime ? this.orderCreateTime.toISOString() : <any>undefined;
+        data["simpleAddress"] = this.simpleAddress;
+        data["fullAddress"] = this.fullAddress;
+        data["houseNumber"] = this.houseNumber;
+        data["name"] = this.name;
+        data["mobile"] = this.mobile;
+        data["status"] = this.status;
+        return data; 
+    }
+}
+
+export interface IRiderDeliveringTasksItemResponse {
+    id: string;
+    orderCreateTime: Date;
+    simpleAddress?: string | undefined;
+    fullAddress?: string | undefined;
+    houseNumber?: string | undefined;
+    name?: string | undefined;
+    mobile?: string | undefined;
+    status: DeliveryStatusEnum;
+}
+
+export enum DeliveryStatusEnum {
+    InDelivery = "InDelivery",
+    Transferred = "Transferred",
+    Canceled = "Canceled",
+    Complated = "Complated",
+}
+
 export class PagedResultOfSearchRiderDeliveryTaskResponse implements IPagedResultOfSearchRiderDeliveryTaskResponse {
     list?: SearchRiderDeliveryTaskResponse[] | undefined;
     pageSize!: number;
@@ -2558,13 +2777,6 @@ export interface ISearchRiderDeliveryTaskResponse {
     houseNumber?: string | undefined;
     latitude: number;
     longitude: number;
-}
-
-export enum DeliveryStatusEnum {
-    InDelivery = "InDelivery",
-    Transferred = "Transferred",
-    Canceled = "Canceled",
-    Complated = "Complated",
 }
 
 export class SearchRiderDeliveryTaskRequest extends QueryModel implements ISearchRiderDeliveryTaskRequest {

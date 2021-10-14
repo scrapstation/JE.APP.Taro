@@ -1,10 +1,10 @@
 export default {
   pages: ['pages/index/index', 'pages/order/index', 'pages/rider/index', 'pages/order/detail/index', 'pages/payment/index', 'pages/payment/remark/index', 'pages/consignee/index', 'pages/personal/index', 'pages/consignee/add/index'],
   window: {
-    backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'WeChat',
     navigationBarTextStyle: 'black',
+    backgroundColor: '#f8f8f8',
   },
   tabBar: {
     color: '#999999',

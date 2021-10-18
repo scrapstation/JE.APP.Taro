@@ -59,24 +59,27 @@ const Rider: React.FC = () => {
     return (
         <>
             <AtMessage />
-            <View style={{ marginBottom: 120 }}>
-                {currentPageIndex == 0 &&
-                    <Deliveries deliveries={deliveries} />
-                }
-                {currentPageIndex == 2 &&
-                    <Personal summary={summary} />
-                }
+            <View style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+                <View style={{ flex: 1 }}>
+                    {currentPageIndex == 0 &&
+                        <Deliveries deliveries={deliveries} />
+                    }
+                    {currentPageIndex == 2 &&
+                        <Personal summary={summary} />
+                    }
+                    <View style={{ height: 120 }}></View>
+                </View>
+                <AtTabBar
+                    fixed
+                    tabList={[
+                        { title: '当前配送', iconType: 'bullet-list', text: 'new' },
+                        { title: '接单', iconType: 'camera' },
+                        { title: '我的', iconType: 'folder', text: '100', max: 99 }
+                    ]}
+                    onClick={(index) => handleTabbarClick(index)}
+                    current={currentPageIndex}
+                />
             </View>
-            <AtTabBar
-                fixed
-                tabList={[
-                    { title: '当前配送', iconType: 'bullet-list', text: 'new' },
-                    { title: '接单', iconType: 'camera' },
-                    { title: '我的', iconType: 'folder', text: '100', max: 99 }
-                ]}
-                onClick={(index) => handleTabbarClick(index)}
-                current={currentPageIndex}
-            />
         </>
     )
 }

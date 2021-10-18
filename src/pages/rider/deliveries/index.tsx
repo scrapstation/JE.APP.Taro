@@ -2,6 +2,7 @@ import { Text, View } from "@tarojs/components";
 import React from "react";
 import { RiderDeliveringTasksItemResponse } from "../../../../src/api/client";
 import { AtButton } from "taro-ui";
+import moment from "moment";
 
 export type DeliveriesProps = {
     deliveries: RiderDeliveringTasksItemResponse[],
@@ -16,8 +17,8 @@ const Deliveries: React.FC<DeliveriesProps> = (props) => {
                             · · ·
                         </View>
                         <View style={{ marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>还剩<Text style={{ color: 'red' }}> 8 </Text>分钟</View>
-                            <View>#8952</View>
+                            <View>已下单<Text style={{ color: 'red' }}> {moment().diff(x.orderCreateTime, 'minutes')} </Text>分钟</View>
+                            {/* <View>#8952</View> */}
                         </View>
                         <View style={{ fontSize: 18, marginTop: 10, fontWeight: 'bold' }}>
                             {x.simpleAddress}{x.houseNumber}

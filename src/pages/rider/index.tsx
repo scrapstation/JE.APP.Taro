@@ -4,12 +4,14 @@ import { AtMessage, AtTabBar } from "taro-ui";
 import Deliveries from "./deliveries";
 import Personal from "./personal";
 import Taro, { usePullDownRefresh } from '@tarojs/taro';
-import { RiderDeliveringTasksItemResponse } from "../../../src/api/client";
+import { RiderDeliveringTasksItemResponse, RiderGetSummaryResponse } from "../../../src/api/client";
 import './index.scss'
+import { View } from "@tarojs/components";
 
 const Rider: React.FC = () => {
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [deliveries, setDeliveries] = useState<RiderDeliveringTasksItemResponse[]>([])
+    const [summary, setSummary] = useState<RiderGetSummaryResponse>(new RiderGetSummaryResponse())
     const handleTabbarClick = async (index) => {
         if (index == 1) {
             await handleScan()
@@ -34,8 +36,13 @@ const Rider: React.FC = () => {
         setDeliveries(tasks)
     }
 
+    const fetchSummary = async () => {
+        setSummary(await API.riderClient.getSummary())
+    }
+
     useEffect(() => {
         fetchTasks()
+        fetchSummary()
     }, [])
 
     usePullDownRefresh(async () => {
@@ -52,12 +59,14 @@ const Rider: React.FC = () => {
     return (
         <>
             <AtMessage />
-            {currentPageIndex == 0 &&
-                <Deliveries deliveries={deliveries} />
-            }
-            {currentPageIndex == 2 &&
-                <Personal />
-            }
+            <View style={{ marginBottom: 120 }}>
+                {currentPageIndex == 0 &&
+                    <Deliveries deliveries={deliveries} />
+                }
+                {currentPageIndex == 2 &&
+                    <Personal summary={summary} />
+                }
+            </View>
             <AtTabBar
                 fixed
                 tabList={[

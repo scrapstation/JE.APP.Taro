@@ -36,6 +36,11 @@ const Rider: React.FC = () => {
         setDeliveries(tasks)
     }
 
+    const handleComplateDelivery = async (deliveryId: string) => {
+        await API.riderClient.complateDelivery(deliveryId)
+        await fetchTasks()
+    }
+
     const fetchSummary = async () => {
         setSummary(await API.riderClient.getSummary())
     }
@@ -62,7 +67,7 @@ const Rider: React.FC = () => {
             <View style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
                 <View style={{ flex: 1 }}>
                     {currentPageIndex == 0 &&
-                        <Deliveries deliveries={deliveries} />
+                        <Deliveries deliveries={deliveries} onComplateDelivery={handleComplateDelivery} />
                     }
                     {currentPageIndex == 2 &&
                         <Personal summary={summary} />
@@ -72,9 +77,9 @@ const Rider: React.FC = () => {
                 <AtTabBar
                     fixed
                     tabList={[
-                        { title: '当前配送', iconType: 'bullet-list', text: 'new' },
+                        { title: '当前配送', iconType: 'bullet-list' },
                         { title: '接单', iconType: 'camera' },
-                        { title: '我的', iconType: 'folder', text: '100', max: 99 }
+                        { title: '我的', iconType: 'folder' }
                     ]}
                     onClick={(index) => handleTabbarClick(index)}
                     current={currentPageIndex}

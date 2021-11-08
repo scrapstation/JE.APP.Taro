@@ -1,5 +1,15 @@
 export default {
-  pages: ['pages/index/index', 'pages/order/index', 'pages/rider/index', 'pages/order/detail/index', 'pages/payment/index', 'pages/payment/remark/index', 'pages/consignee/index', 'pages/personal/index', 'pages/consignee/add/index'],
+  pages: [
+    'pages/rider/index',
+    'pages/index/index',
+    'pages/order/index',
+    'pages/order/detail/index',
+    'pages/payment/index',
+    'pages/payment/remark/index',
+    'pages/consignee/index',
+    'pages/personal/index',
+    'pages/consignee/add/index'
+  ],
   window: {
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'WeChat',

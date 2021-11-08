@@ -5,12 +5,9 @@ import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
 import { AtBadge, AtIcon, AtList, AtListItem, AtTag } from "taro-ui";
 import bg from '/src/static/images/my/headerbg.png'
-import user from '/src/static/images/my/user.png'
+import defaultUserAvator from '/src/static/images/my/user.png'
 import "./index.scss"
 
-export type PersonalProps = {
-    user: UserModelState;
-};
 
 const renderListItem = (title: string, path: string, desc: string, showArrow: boolean) => {
     return (<Navigator url={path} style={{ padding: '20px 20px' }}>
@@ -43,7 +40,7 @@ const Personal: React.FC = () => {
             <View className='content'>
                 <View className='member-card'>
                     <View style={{ display: 'flex' }}>
-                        <Image className='avatar' src={currentUser ? currentUser!.avator! : user} ></Image>
+                        <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator} ></Image>
                         <View style={{ display: 'flex', marginLeft: 10, flexDirection: 'column', justifyContent: 'space-evenly' }}>
                             {currentUser &&
                                 <>

@@ -9,7 +9,7 @@ import './index.scss'
 import { View } from "@tarojs/components";
 
 const Rider: React.FC = () => {
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [currentPageIndex, setCurrentPageIndex] = useState(2);
     const [deliveries, setDeliveries] = useState<RiderDeliveringTasksItemResponse[]>([])
     const [summary, setSummary] = useState<RiderGetSummaryResponse>(new RiderGetSummaryResponse())
     const handleTabbarClick = async (index) => {

@@ -14,16 +14,13 @@ const Personal: React.FC<PersonalProps> = (props) => {
     const { currentUser, isLogin } = useSelector<ConnectState, UserModelState>(x => x.user)
     return (
         <View className="main">
-            <View className="rider-info">
-                <View className="top">
-                    <View className="base-info">
-                        <View className="nickname">汤姆可</View>
-                        <View className="viptips">消费满1元可升至VIP.2</View>
-                    </View>
-                    <View>
-                        <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator} ></Image>
-                    </View>
+            <View className="rider-info-card">
+                <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator} ></Image>
+                <View className="base-info">
+                    <View className="nickname">汤姆可</View>
+                    <View className="viptips">消费满1元可升至VIP.2</View>
                 </View>
+                {/* <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator} ></Image> */}
             </View>
             {/* <View style={{ marginBottom: 20 }}>
                 今日收入: {props.summary.todayExpectedIncome}元

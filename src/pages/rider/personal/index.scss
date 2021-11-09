@@ -1,32 +1,30 @@
 .main{
-    margin-top: 100px;
-    .rider-info{
-        height: 200px;
-        background-color: #fff;
+    margin-top: 50px;
+    .rider-info-card{
+        background-color: #ffffff;
         margin: 0 35px;
         padding: 25px;
         border-radius: 20px;
         box-shadow: 4px 4px 20px #f3f3f3;
-        .top{
             display: flex;
-            justify-content: space-between;
+            align-items: center;
             .base-info{
+                flex: 1;
+                margin-left: 15px;
                 .nickname{
-                    font-size: 40px;
+                    font-size: 28px;
                     font-weight: bold;
                 }
                 .viptips{
                     margin-top: 4px;
                     color:#888;
-                    font-size: 24px;
+                    font-size: 22px;
                 }
             }
             .avatar {
-                margin-top: -70px;
-                width: 180px;
-                height: 180px;
+                width: 80px;
+                height: 80px;
                 border-radius: 100%;
             }
-        }
     }
 }

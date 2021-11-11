@@ -6,25 +6,51 @@
         padding: 25px;
         border-radius: 20px;
         box-shadow: 4px 4px 20px #f3f3f3;
+        display: flex;
+        align-items: center;
+        .base-info{
+            flex: 1;
+            margin-left: 15px;
+            .nickname{
+                font-size: 28px;
+                font-weight: bold;
+            }
+            .viptips{
+                margin-top: 4px;
+                color:#888;
+                font-size: 22px;
+            }
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 100%;
+        }
+        .level{
+            color: gold;
+            width: 60px;
+            height: 60px;
+        }
+    }
+    .account-info{
+        margin: 40px 35px 0px 35px;
+        display: flex;
+        > view {
+            width: 25%;
+            text-align: center;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            .base-info{
-                flex: 1;
-                margin-left: 15px;
-                .nickname{
-                    font-size: 28px;
-                    font-weight: bold;
-                }
-                .viptips{
-                    margin-top: 4px;
-                    color:#888;
-                    font-size: 22px;
-                }
+            :first-child{
+                font-family: 'neutra';
+                font-size: 36px;
+                font-weight: bold;
+                line-height: 42px;
             }
-            .avatar {
-                width: 80px;
-                height: 80px;
-                border-radius: 100%;
+            :nth-child(2){
+                font-size: 24px;
+                color:#888;
             }
+        }
     }
 }

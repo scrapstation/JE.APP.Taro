@@ -6,6 +6,8 @@ import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
 import './index.scss'
 import defaultUserAvator from '/src/static/images/my/user.png'
+import lv1Svg from '/src/static/images/my/rider/level-1.svg'
+import NumberMotion from "./components/NumberMotion";
 
 export type PersonalProps = {
     summary: RiderGetSummaryResponse
@@ -17,20 +19,29 @@ const Personal: React.FC<PersonalProps> = (props) => {
             <View className="rider-info-card">
                 <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator} ></Image>
                 <View className="base-info">
-                    <View className="nickname">汤姆可</View>
-                    <View className="viptips">消费满1元可升至VIP.2</View>
+                    <View className="nickname">Hi,汤姆可</View>
+                    <View className="viptips">今天是你在戴夫小卖部的第67天</View>
                 </View>
-                {/* <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator} ></Image> */}
+                <Image className='level' src={lv1Svg} ></Image>
             </View>
-            {/* <View style={{ marginBottom: 20 }}>
-                今日收入: {props.summary.todayExpectedIncome}元
+            <View className="account-info">
+                <View>
+                    <View> ￥<NumberMotion number={98} /> </View>
+                    <View> 今日收入 </View>
+                </View>
+                <View>
+                    <View> ￥<NumberMotion number={8487} /> </View>
+                    <View>  钱包 </View>
+                </View>
+                <View>
+                    <View> <NumberMotion number={0} /> </View>
+                    <View>  今日配送 </View>
+                </View>
+                <View>
+                    <View> <NumberMotion number={987} /> </View>
+                    <View>  累计配送 </View>
+                </View>
             </View>
-            <View>
-                今日配送：{props.summary.todayTaskCount}单
-            </View>
-            <View>
-                累计收入：{props.summary.totalIncome}单
-            </View> */}
         </View>
     )
 }

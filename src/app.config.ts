@@ -1,7 +1,7 @@
 export default {
   pages: [
-    'pages/rider/index',
     'pages/index/index',
+    'pages/rider/index',
     'pages/order/index',
     'pages/order/detail/index',
     'pages/payment/index',

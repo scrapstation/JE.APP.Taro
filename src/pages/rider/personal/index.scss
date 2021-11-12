@@ -1,8 +1,9 @@
 .main{
-    margin-top: 50px;
+    > view{
+        margin: 40px 35px 0px 35px;
+    }
     .rider-info-card{
         background-color: #ffffff;
-        margin: 0 35px;
         padding: 25px;
         border-radius: 20px;
         box-shadow: 4px 4px 20px #f3f3f3;
@@ -33,7 +34,6 @@
         }
     }
     .account-info{
-        margin: 40px 35px 0px 35px;
         display: flex;
         > view {
             width: 25%;
@@ -50,6 +50,36 @@
             :nth-child(2){
                 font-size: 24px;
                 color:#888;
+            }
+        }
+    }
+    .service-card{
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        .title{
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .services{
+            margin-top: 30px;
+            display: flex;
+            flex-direction: row;
+            > view{
+                width: 25%;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                :first-child{
+                    width: 50px;
+                    height: 50px;
+                }
+                :nth-child(2){
+                    margin-top: 20px;
+                    font-size: 24px;
+                    color:#888;
+                }
             }
         }
     }

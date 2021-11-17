@@ -3,7 +3,7 @@ import { useDidShow } from "@tarojs/taro"
 import moment from "moment"
 import { useState } from "react"
 import { API } from "../../../src/api"
-import { SearchOrderRequest, OrderResponse, StatusEnum } from "../../../src/api/client"
+import { SearchOrderRequest, OrderResponse, StatusEnumOfOrder } from "../../../src/api/client"
 import './index.scss'
 import Taro from '@tarojs/taro';
 import tryFetch from "../../../src/utils/tryfetch"
@@ -45,7 +45,7 @@ const Order: React.FC = () => {
                 </View>
                 <View style={{ display: "flex", justifyContent: 'flex-end', marginTop: 20 }}>
                     {
-                        order.status === StatusEnum.PendingPayment &&
+                        order.status === StatusEnumOfOrder.PendingPayment &&
                         <>
                             <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#999", borderRadius: 2, border: "1px solid #999" }} onClick={() => cancelOrder(order.id)}>取消订单</Button>
                             <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#DBA871", borderRadius: 2, border: "1px solid #DBA871" }} onClick={() => { pay(order.id) }}>去支付</Button>
@@ -53,7 +53,7 @@ const Order: React.FC = () => {
                     }
                     {
 
-                        order.status !== StatusEnum.PendingPayment &&
+                        order.status !== StatusEnumOfOrder.PendingPayment &&
                         <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#DBA871", borderRadius: 2, border: "1px solid #DBA871" }}>再来一单</Button>
                     }
                 </View>

@@ -1,9 +1,8 @@
-import { Button, Image, Text, View } from "@tarojs/components";
+import { Image, Text, View } from "@tarojs/components";
 import React, { useState } from "react";
 import { RiderDeliveringTasksItemResponse } from "../../../../src/api/client";
-import { AtButton, AtModal, AtModalAction, AtModalContent, AtModalHeader } from "taro-ui";
+import { AtButton, AtModal } from "taro-ui";
 import moment from "moment";
-import { API } from "../../../../src/api";
 import empty from '/src/static/images/my/rider/empty.svg'
 import './index.scss'
 

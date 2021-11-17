@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ConnectState } from "src/models/connect";
 import { UserModelState } from "src/models/user";
-import { AtBadge, AtIcon, AtList, AtListItem, AtTag } from "taro-ui";
+import { AtBadge, AtIcon } from "taro-ui";
 import bg from '/src/static/images/my/headerbg.png'
 import defaultUserAvator from '/src/static/images/my/user.png'
 import "./index.scss"

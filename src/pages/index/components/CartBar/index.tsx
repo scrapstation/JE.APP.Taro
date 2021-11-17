@@ -1,5 +1,5 @@
 import { View, Image, Button } from "@tarojs/components"
-import React, { useEffect } from "react";
+import React from "react";
 import { CardItem } from "../..";
 import CartPopup, { CartPopupRefs } from "./CartPopup";
 import "./index.scss"

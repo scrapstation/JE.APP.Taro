@@ -1,7 +1,7 @@
 import { Button, View } from "@tarojs/components";
 import { useState } from "react";
 import { AtTag, AtTextarea } from "taro-ui";
-import Taro, { navigateBack, useDidShow, useReady, useResize, useRouter } from '@tarojs/taro';
+import Taro, { navigateBack, useReady, useRouter } from '@tarojs/taro';
 
 const Remark: React.FC = () => {
     const router = useRouter()

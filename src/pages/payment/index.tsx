@@ -1,7 +1,7 @@
 import { Button, Image, Text, View } from "@tarojs/components";
 import { useState } from "react";
 import { API } from '../../api/index';
-import { ConsigneeItemResponse, CreateOrderItem, CreateOrderRequest } from "../../../src/api/client";
+import { ConsigneeItemResponse, CreateOrderRequest, ItemOfCreateOrderRequest } from "../../../src/api/client";
 import { AtIcon } from "taro-ui";
 import Taro, { navigateBack, navigateTo, switchTab, useDidShow, useReady } from '@tarojs/taro';
 import styles from './index.module.scss'
@@ -69,7 +69,7 @@ const Payment: React.FC = () => {
     const pay = async () => {
         const orderId = await tryFetch(API.orderClient.create(new CreateOrderRequest({
             consigneeId: consignee.id,
-            createOrderItems: cart.map((x) => new CreateOrderItem({ skuId: x.skuId, quantity: x.number })),
+            createOrderItems: cart.map((x) => new ItemOfCreateOrderRequest({ skuId: x.skuId, quantity: x.number })),
             remark: remark
         })), true)
         const payinfo = await tryFetch(API.orderClient.pay(orderId), true)

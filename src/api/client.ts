@@ -306,11 +306,11 @@ export class ConsigneeClient {
         return Promise.resolve<boolean>(<any>null);
     }
 
-    delete(consigneeId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
+    delete(consigneeId: string , cancelToken?: CancelToken | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/Consignee?";
-        if (consigneeId === null)
-            throw new Error("The parameter 'consigneeId' cannot be null.");
-        else if (consigneeId !== undefined)
+        if (consigneeId === undefined || consigneeId === null)
+            throw new Error("The parameter 'consigneeId' must be defined and cannot be null.");
+        else
             url_ += "consigneeId=" + encodeURIComponent("" + consigneeId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -671,11 +671,11 @@ export class OrderClient {
         return Promise.resolve<string>(<any>null);
     }
 
-    cancel(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
+    cancel(orderId: string , cancelToken?: CancelToken | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/Order?";
-        if (orderId === null)
-            throw new Error("The parameter 'orderId' cannot be null.");
-        else if (orderId !== undefined)
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined and cannot be null.");
+        else
             url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -722,11 +722,11 @@ export class OrderClient {
         return Promise.resolve<boolean>(<any>null);
     }
 
-    pay(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<PaymentResponse> {
+    pay(orderId: string , cancelToken?: CancelToken | undefined): Promise<PaymentResponse> {
         let url_ = this.baseUrl + "/api/Order/pay?";
-        if (orderId === null)
-            throw new Error("The parameter 'orderId' cannot be null.");
-        else if (orderId !== undefined)
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined and cannot be null.");
+        else
             url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -882,11 +882,11 @@ export class RiderClient {
         return Promise.resolve<RiderGetSummaryResponse>(<any>null);
     }
 
-    taskOrder(orderId: string | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
+    taskOrder(orderId: string , cancelToken?: CancelToken | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/Rider/take_order?";
-        if (orderId === null)
-            throw new Error("The parameter 'orderId' cannot be null.");
-        else if (orderId !== undefined)
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined and cannot be null.");
+        else
             url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1088,15 +1088,15 @@ export class RiderClient {
         return Promise.resolve<PagedResultOfSearchRiderDeliveryTaskResponse>(<any>null);
     }
 
-    updateLocation(latitude: number | undefined, longitude: number | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
+    updateLocation(latitude: number, longitude: number , cancelToken?: CancelToken | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/Rider?";
-        if (latitude === null)
-            throw new Error("The parameter 'latitude' cannot be null.");
-        else if (latitude !== undefined)
+        if (latitude === undefined || latitude === null)
+            throw new Error("The parameter 'latitude' must be defined and cannot be null.");
+        else
             url_ += "latitude=" + encodeURIComponent("" + latitude) + "&";
-        if (longitude === null)
-            throw new Error("The parameter 'longitude' cannot be null.");
-        else if (longitude !== undefined)
+        if (longitude === undefined || longitude === null)
+            throw new Error("The parameter 'longitude' must be defined and cannot be null.");
+        else
             url_ += "longitude=" + encodeURIComponent("" + longitude) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1408,7 +1408,7 @@ export interface IGetWechatUserInfo {
 export class CategoryReponse implements ICategoryReponse {
     id!: string;
     name?: string | undefined;
-    products?: ProductReponse[] | undefined;
+    products?: ProductOfCategoryReponse[] | undefined;
 
     constructor(data?: ICategoryReponse) {
         if (data) {
@@ -1426,7 +1426,7 @@ export class CategoryReponse implements ICategoryReponse {
             if (Array.isArray(_data["products"])) {
                 this.products = [] as any;
                 for (let item of _data["products"])
-                    this.products!.push(ProductReponse.fromJS(item));
+                    this.products!.push(ProductOfCategoryReponse.fromJS(item));
             }
         }
     }
@@ -1454,20 +1454,20 @@ export class CategoryReponse implements ICategoryReponse {
 export interface ICategoryReponse {
     id: string;
     name?: string | undefined;
-    products?: ProductReponse[] | undefined;
+    products?: ProductOfCategoryReponse[] | undefined;
 }
 
-export class ProductReponse implements IProductReponse {
+export class ProductOfCategoryReponse implements IProductOfCategoryReponse {
     id!: string;
     name?: string | undefined;
     price!: number;
     imgUrl?: string | undefined;
     description?: string | undefined;
     isMultiSku!: boolean;
-    attributes?: AttributeResponse[] | undefined;
-    skus?: SkuReponse[] | undefined;
+    attributes?: AttributeOfProductOfCategoryReponse[] | undefined;
+    skus?: SkuOfProductOfCategoryReponse[] | undefined;
 
-    constructor(data?: IProductReponse) {
+    constructor(data?: IProductOfCategoryReponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1487,19 +1487,19 @@ export class ProductReponse implements IProductReponse {
             if (Array.isArray(_data["attributes"])) {
                 this.attributes = [] as any;
                 for (let item of _data["attributes"])
-                    this.attributes!.push(AttributeResponse.fromJS(item));
+                    this.attributes!.push(AttributeOfProductOfCategoryReponse.fromJS(item));
             }
             if (Array.isArray(_data["skus"])) {
                 this.skus = [] as any;
                 for (let item of _data["skus"])
-                    this.skus!.push(SkuReponse.fromJS(item));
+                    this.skus!.push(SkuOfProductOfCategoryReponse.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): ProductReponse {
+    static fromJS(data: any): ProductOfCategoryReponse {
         data = typeof data === 'object' ? data : {};
-        let result = new ProductReponse();
+        let result = new ProductOfCategoryReponse();
         result.init(data);
         return result;
     }
@@ -1526,23 +1526,23 @@ export class ProductReponse implements IProductReponse {
     }
 }
 
-export interface IProductReponse {
+export interface IProductOfCategoryReponse {
     id: string;
     name?: string | undefined;
     price: number;
     imgUrl?: string | undefined;
     description?: string | undefined;
     isMultiSku: boolean;
-    attributes?: AttributeResponse[] | undefined;
-    skus?: SkuReponse[] | undefined;
+    attributes?: AttributeOfProductOfCategoryReponse[] | undefined;
+    skus?: SkuOfProductOfCategoryReponse[] | undefined;
 }
 
-export class AttributeResponse implements IAttributeResponse {
+export class AttributeOfProductOfCategoryReponse implements IAttributeOfProductOfCategoryReponse {
     id!: string;
     name?: string | undefined;
-    attributeItems?: AttributeItemResponse[] | undefined;
+    attributeItems?: ItemOfAttributeOfProductOfCategoryReponse[] | undefined;
 
-    constructor(data?: IAttributeResponse) {
+    constructor(data?: IAttributeOfProductOfCategoryReponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1558,14 +1558,14 @@ export class AttributeResponse implements IAttributeResponse {
             if (Array.isArray(_data["attributeItems"])) {
                 this.attributeItems = [] as any;
                 for (let item of _data["attributeItems"])
-                    this.attributeItems!.push(AttributeItemResponse.fromJS(item));
+                    this.attributeItems!.push(ItemOfAttributeOfProductOfCategoryReponse.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AttributeResponse {
+    static fromJS(data: any): AttributeOfProductOfCategoryReponse {
         data = typeof data === 'object' ? data : {};
-        let result = new AttributeResponse();
+        let result = new AttributeOfProductOfCategoryReponse();
         result.init(data);
         return result;
     }
@@ -1583,17 +1583,17 @@ export class AttributeResponse implements IAttributeResponse {
     }
 }
 
-export interface IAttributeResponse {
+export interface IAttributeOfProductOfCategoryReponse {
     id: string;
     name?: string | undefined;
-    attributeItems?: AttributeItemResponse[] | undefined;
+    attributeItems?: ItemOfAttributeOfProductOfCategoryReponse[] | undefined;
 }
 
-export class AttributeItemResponse implements IAttributeItemResponse {
+export class ItemOfAttributeOfProductOfCategoryReponse implements IItemOfAttributeOfProductOfCategoryReponse {
     id!: string;
     name?: string | undefined;
 
-    constructor(data?: IAttributeItemResponse) {
+    constructor(data?: IItemOfAttributeOfProductOfCategoryReponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1609,9 +1609,9 @@ export class AttributeItemResponse implements IAttributeItemResponse {
         }
     }
 
-    static fromJS(data: any): AttributeItemResponse {
+    static fromJS(data: any): ItemOfAttributeOfProductOfCategoryReponse {
         data = typeof data === 'object' ? data : {};
-        let result = new AttributeItemResponse();
+        let result = new ItemOfAttributeOfProductOfCategoryReponse();
         result.init(data);
         return result;
     }
@@ -1624,18 +1624,18 @@ export class AttributeItemResponse implements IAttributeItemResponse {
     }
 }
 
-export interface IAttributeItemResponse {
+export interface IItemOfAttributeOfProductOfCategoryReponse {
     id: string;
     name?: string | undefined;
 }
 
-export class SkuReponse implements ISkuReponse {
+export class SkuOfProductOfCategoryReponse implements ISkuOfProductOfCategoryReponse {
     id!: string;
     price!: number;
     inventory!: number;
     attributeItemIds?: string[] | undefined;
 
-    constructor(data?: ISkuReponse) {
+    constructor(data?: ISkuOfProductOfCategoryReponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1657,9 +1657,9 @@ export class SkuReponse implements ISkuReponse {
         }
     }
 
-    static fromJS(data: any): SkuReponse {
+    static fromJS(data: any): SkuOfProductOfCategoryReponse {
         data = typeof data === 'object' ? data : {};
-        let result = new SkuReponse();
+        let result = new SkuOfProductOfCategoryReponse();
         result.init(data);
         return result;
     }
@@ -1678,7 +1678,7 @@ export class SkuReponse implements ISkuReponse {
     }
 }
 
-export interface ISkuReponse {
+export interface ISkuOfProductOfCategoryReponse {
     id: string;
     price: number;
     inventory: number;
@@ -1920,8 +1920,8 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
     externalId?: string | undefined;
     amount!: number;
     actualPayment!: number;
-    status!: StatusEnum;
-    orderItems?: OrderItemVo[] | undefined;
+    status!: StatusEnumOfOrder;
+    orderItems?: OrderItemVoOfOrderResponse[] | undefined;
     expireTime!: Date;
 
     constructor(data?: IOrderResponse) {
@@ -1939,7 +1939,7 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
             if (Array.isArray(_data["orderItems"])) {
                 this.orderItems = [] as any;
                 for (let item of _data["orderItems"])
-                    this.orderItems!.push(OrderItemVo.fromJS(item));
+                    this.orderItems!.push(OrderItemVoOfOrderResponse.fromJS(item));
             }
             this.expireTime = _data["expireTime"] ? new Date(_data["expireTime"].toString()) : <any>undefined;
         }
@@ -1975,12 +1975,12 @@ export interface IOrderResponse extends IAuditFields {
     externalId?: string | undefined;
     amount: number;
     actualPayment: number;
-    status: StatusEnum;
-    orderItems?: OrderItemVo[] | undefined;
+    status: StatusEnumOfOrder;
+    orderItems?: OrderItemVoOfOrderResponse[] | undefined;
     expireTime: Date;
 }
 
-export enum StatusEnum {
+export enum StatusEnumOfOrder {
     PendingPayment = "PendingPayment",
     PendingPack = "PendingPack",
     Packing = "Packing",
@@ -1990,7 +1990,7 @@ export enum StatusEnum {
     Completed = "Completed",
 }
 
-export class OrderItemVo implements IOrderItemVo {
+export class OrderItemVoOfOrderResponse implements IOrderItemVoOfOrderResponse {
     snapshotName?: string | undefined;
     imgUrl?: string | undefined;
     price!: number;
@@ -1998,7 +1998,7 @@ export class OrderItemVo implements IOrderItemVo {
     quantity!: number;
     snapshotAttributeItemNames?: string | undefined;
 
-    constructor(data?: IOrderItemVo) {
+    constructor(data?: IOrderItemVoOfOrderResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2018,9 +2018,9 @@ export class OrderItemVo implements IOrderItemVo {
         }
     }
 
-    static fromJS(data: any): OrderItemVo {
+    static fromJS(data: any): OrderItemVoOfOrderResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new OrderItemVo();
+        let result = new OrderItemVoOfOrderResponse();
         result.init(data);
         return result;
     }
@@ -2037,7 +2037,7 @@ export class OrderItemVo implements IOrderItemVo {
     }
 }
 
-export interface IOrderItemVo {
+export interface IOrderItemVoOfOrderResponse {
     snapshotName?: string | undefined;
     imgUrl?: string | undefined;
     price: number;
@@ -2224,7 +2224,7 @@ export interface IFilter {
 }
 
 export class CreateOrderRequest implements ICreateOrderRequest {
-    createOrderItems?: CreateOrderItem[] | undefined;
+    createOrderItems?: ItemOfCreateOrderRequest[] | undefined;
     consigneeId!: string;
     remark?: string | undefined;
 
@@ -2242,7 +2242,7 @@ export class CreateOrderRequest implements ICreateOrderRequest {
             if (Array.isArray(_data["createOrderItems"])) {
                 this.createOrderItems = [] as any;
                 for (let item of _data["createOrderItems"])
-                    this.createOrderItems!.push(CreateOrderItem.fromJS(item));
+                    this.createOrderItems!.push(ItemOfCreateOrderRequest.fromJS(item));
             }
             this.consigneeId = _data["consigneeId"];
             this.remark = _data["remark"];
@@ -2270,16 +2270,16 @@ export class CreateOrderRequest implements ICreateOrderRequest {
 }
 
 export interface ICreateOrderRequest {
-    createOrderItems?: CreateOrderItem[] | undefined;
+    createOrderItems?: ItemOfCreateOrderRequest[] | undefined;
     consigneeId: string;
     remark?: string | undefined;
 }
 
-export class CreateOrderItem implements ICreateOrderItem {
+export class ItemOfCreateOrderRequest implements IItemOfCreateOrderRequest {
     skuId!: string;
     quantity!: number;
 
-    constructor(data?: ICreateOrderItem) {
+    constructor(data?: IItemOfCreateOrderRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2295,9 +2295,9 @@ export class CreateOrderItem implements ICreateOrderItem {
         }
     }
 
-    static fromJS(data: any): CreateOrderItem {
+    static fromJS(data: any): ItemOfCreateOrderRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateOrderItem();
+        let result = new ItemOfCreateOrderRequest();
         result.init(data);
         return result;
     }
@@ -2310,7 +2310,7 @@ export class CreateOrderItem implements ICreateOrderItem {
     }
 }
 
-export interface ICreateOrderItem {
+export interface IItemOfCreateOrderRequest {
     skuId: string;
     quantity: number;
 }
@@ -2372,7 +2372,7 @@ export interface IPaymentResponse {
 }
 
 export class WechatTransactionResponse implements IWechatTransactionResponse {
-    code!: CodeEnum;
+    code!: CodeEnumOfWechatTransactionResponse;
     message?: string | undefined;
 
     constructor(data?: IWechatTransactionResponse) {
@@ -2407,11 +2407,11 @@ export class WechatTransactionResponse implements IWechatTransactionResponse {
 }
 
 export interface IWechatTransactionResponse {
-    code: CodeEnum;
+    code: CodeEnumOfWechatTransactionResponse;
     message?: string | undefined;
 }
 
-export enum CodeEnum {
+export enum CodeEnumOfWechatTransactionResponse {
     SUCCESS = "SUCCESS",
     FAILURE = "FAILURE",
 }
@@ -2421,7 +2421,7 @@ export class TransactionNotifyRequest implements ITransactionNotifyRequest {
     create_time!: Date;
     resource_type?: string | undefined;
     event_type?: string | undefined;
-    resource?: TransactionNotifyResource | undefined;
+    resource?: TransactionNotifyResourceOfTransactionNotifyRequest | undefined;
     summary?: string | undefined;
 
     constructor(data?: ITransactionNotifyRequest) {
@@ -2439,7 +2439,7 @@ export class TransactionNotifyRequest implements ITransactionNotifyRequest {
             this.create_time = _data["create_time"] ? new Date(_data["create_time"].toString()) : <any>undefined;
             this.resource_type = _data["resource_type"];
             this.event_type = _data["event_type"];
-            this.resource = _data["resource"] ? TransactionNotifyResource.fromJS(_data["resource"]) : <any>undefined;
+            this.resource = _data["resource"] ? TransactionNotifyResourceOfTransactionNotifyRequest.fromJS(_data["resource"]) : <any>undefined;
             this.summary = _data["summary"];
         }
     }
@@ -2468,18 +2468,18 @@ export interface ITransactionNotifyRequest {
     create_time: Date;
     resource_type?: string | undefined;
     event_type?: string | undefined;
-    resource?: TransactionNotifyResource | undefined;
+    resource?: TransactionNotifyResourceOfTransactionNotifyRequest | undefined;
     summary?: string | undefined;
 }
 
-export class TransactionNotifyResource implements ITransactionNotifyResource {
+export class TransactionNotifyResourceOfTransactionNotifyRequest implements ITransactionNotifyResourceOfTransactionNotifyRequest {
     algorithm?: string | undefined;
     ciphertext?: string | undefined;
     associated_data?: string | undefined;
     original_type?: string | undefined;
     nonce?: string | undefined;
 
-    constructor(data?: ITransactionNotifyResource) {
+    constructor(data?: ITransactionNotifyResourceOfTransactionNotifyRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2498,9 +2498,9 @@ export class TransactionNotifyResource implements ITransactionNotifyResource {
         }
     }
 
-    static fromJS(data: any): TransactionNotifyResource {
+    static fromJS(data: any): TransactionNotifyResourceOfTransactionNotifyRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new TransactionNotifyResource();
+        let result = new TransactionNotifyResourceOfTransactionNotifyRequest();
         result.init(data);
         return result;
     }
@@ -2516,7 +2516,7 @@ export class TransactionNotifyResource implements ITransactionNotifyResource {
     }
 }
 
-export interface ITransactionNotifyResource {
+export interface ITransactionNotifyResourceOfTransactionNotifyRequest {
     algorithm?: string | undefined;
     ciphertext?: string | undefined;
     associated_data?: string | undefined;
@@ -2580,7 +2580,7 @@ export class RiderDeliveringTasksItemResponse implements IRiderDeliveringTasksIt
     houseNumber?: string | undefined;
     name?: string | undefined;
     mobile?: string | undefined;
-    status!: DeliveryStatusEnum;
+    status!: DeliveryStatusEnumOfDeliveryHistory;
 
     constructor(data?: IRiderDeliveringTasksItemResponse) {
         if (data) {
@@ -2633,10 +2633,10 @@ export interface IRiderDeliveringTasksItemResponse {
     houseNumber?: string | undefined;
     name?: string | undefined;
     mobile?: string | undefined;
-    status: DeliveryStatusEnum;
+    status: DeliveryStatusEnumOfDeliveryHistory;
 }
 
-export enum DeliveryStatusEnum {
+export enum DeliveryStatusEnumOfDeliveryHistory {
     InDelivery = "InDelivery",
     Transferred = "Transferred",
     Canceled = "Canceled",
@@ -2706,7 +2706,7 @@ export interface IPagedResultOfSearchRiderDeliveryTaskResponse {
 export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTaskResponse {
     id!: string;
     orderId!: string;
-    status!: DeliveryStatusEnum;
+    status!: DeliveryStatusEnumOfDeliveryHistory;
     name?: string | undefined;
     mobile?: string | undefined;
     avator?: string | undefined;
@@ -2768,7 +2768,7 @@ export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTask
 export interface ISearchRiderDeliveryTaskResponse {
     id: string;
     orderId: string;
-    status: DeliveryStatusEnum;
+    status: DeliveryStatusEnumOfDeliveryHistory;
     name?: string | undefined;
     mobile?: string | undefined;
     avator?: string | undefined;

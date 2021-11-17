@@ -6,7 +6,7 @@ import { useState } from "react"
 import tryFetch from "../../../../src/utils/tryfetch"
 import { AtCountdown, AtDivider } from "taro-ui"
 import { API } from "../../../../src/api"
-import { OrderResponse, StatusEnum } from "../../../../src/api/client"
+import { OrderResponse, StatusEnumOfOrder } from "../../../../src/api/client"
 import getStatusText from "../common"
 import './index.scss'
 import Taro from '@tarojs/taro';
@@ -42,11 +42,11 @@ const OrderDetail: React.FC = () => {
                 <View className="">
                     <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
                         {getStatusText(order.status)}
-                        {order.status === StatusEnum.PendingPayment && ` ￥${order.amount}`}
+                        {order.status === StatusEnumOfOrder.PendingPayment && ` ￥${order.amount}`}
                     </Text>
                 </View>
                 <View style={{ marginTop: 5 }}>
-                    {order.status == StatusEnum.PendingPayment &&
+                    {order.status == StatusEnumOfOrder.PendingPayment &&
                         <View>
                             <AtCountdown
                                 className="at-countdown"
@@ -58,16 +58,16 @@ const OrderDetail: React.FC = () => {
                             <Text style={{ color: '#999' }}>后订单将会自动取消</Text>
                         </View>
                     }
-                    {order.status !== StatusEnum.PendingPayment && <Text style={{ color: '#999', fontSize: 12 }}>感谢您的支持，欢迎再次光临</Text>}
+                    {order.status !== StatusEnumOfOrder.PendingPayment && <Text style={{ color: '#999', fontSize: 12 }}>感谢您的支持，欢迎再次光临</Text>}
                 </View>
                 <View style={{ marginTop: 10 }}>
-                    {order.status == StatusEnum.PendingPayment &&
+                    {order.status == StatusEnumOfOrder.PendingPayment &&
                         <>
                             <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#999", borderRadius: 2, border: "1px solid #999" }} onClick={() => { }}>取消订单</Button>
                             <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#DBA871", borderRadius: 2, border: "1px solid #DBA871" }} onClick={() => pay(order.id)}>去支付</Button>
                         </>
                     }
-                    {order.status !== StatusEnum.PendingPayment &&
+                    {order.status !== StatusEnumOfOrder.PendingPayment &&
                         <>
                             <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#DBA871", borderRadius: 2, border: "1px solid #DBA871" }} onClick={() => { }}>再来一单</Button>
                         </>

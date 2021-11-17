@@ -2,7 +2,7 @@ import { Button, ScrollView, View } from "@tarojs/components";
 import { useState } from "react";
 import { API } from '../../api/index';
 import { ConsigneeItemResponse } from "../../../src/api/client";
-import { AtButton, AtDivider, AtIcon } from "taro-ui";
+import { AtDivider, AtIcon } from "taro-ui";
 import './index.scss'
 import Taro, { navigateBack, useDidShow } from '@tarojs/taro';
 

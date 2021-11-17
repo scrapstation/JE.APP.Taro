@@ -1,6 +1,6 @@
 import { View, Image, ScrollView } from "@tarojs/components";
 import React, { PropsWithoutRef, RefAttributes } from "react";
-import { useImperativeHandle, useRef, forwardRef, useState } from "react";
+import { useImperativeHandle, useState } from "react";
 import { CardItem } from "src/pages/index";
 import { AtFloatLayout } from "taro-ui";
 import Action from "../../Action";

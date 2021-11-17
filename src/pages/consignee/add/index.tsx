@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CreateConsigneeRequest, ICreateConsigneeRequest, ModifyConsigneeRequest } from '../../../api/client';
 import { AtButton, AtCheckbox, AtDivider, AtInput } from 'taro-ui';
 import styles from './index.module.scss';
-import Taro, { useDidShow, useReady, useRouter } from '@tarojs/taro';
+import Taro, { useReady, useRouter } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { API } from '../../../api';
 

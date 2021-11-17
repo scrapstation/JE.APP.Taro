@@ -2,7 +2,7 @@ import { View, ScrollView, Image } from '@tarojs/components';
 import Taro, { useDidHide, useDidShow } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { API } from '../../api/index';
-import { CategoryReponse, ProductReponse } from 'src/api/client';
+import { CategoryReponse, ProductOfCategoryReponse } from 'src/api/client';
 import './index.scss';
 import Action from './components/Action';
 import CartBar from './components/CartBar';
@@ -25,7 +25,7 @@ const Index: React.FC = () => {
   const [currentCategoryId, setCurrentCategoryId] = useState<string>('');
   const [productsScrollTop, setProductsScrollTop] = useState<number>(0);
   const [cart, setCart] = useState<CardItem[]>([]);
-  const [productModal, setProductModal] = useState<{ visible: boolean, product: ProductReponse | null }>({
+  const [productModal, setProductModal] = useState<{ visible: boolean, product: ProductOfCategoryReponse | null }>({
     visible: false,
     product: null
   });

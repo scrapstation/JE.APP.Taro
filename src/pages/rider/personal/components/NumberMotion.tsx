@@ -16,7 +16,7 @@ const NumberMotion: React.FC<NumberMotionProps> = (props) => {
                     } else {
                         setNumber(x => x + Math.floor(props.number / 20))
                     }
-                }, 50 * index)
+                }, 25 * index)
             }
         }
     }, [])

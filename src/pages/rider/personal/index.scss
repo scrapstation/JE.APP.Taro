@@ -1,86 +1,103 @@
-.main{
-    > view{
-        margin: 40px 35px 0px 35px;
+.main {
+  .bg {
+    z-index: -1;
+    position: relative;
+    .mask {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(to top, #f8f8f8 0%, #f8f8f833 30%, #f8f8f833 70%, #f8f8f8 100%);
+      color: #fff;
     }
-    .rider-info-card{
-        background-color: #ffffff;
-        padding: 25px;
-        border-radius: 20px;
-        box-shadow: 4px 4px 20px #f3f3f3;
+  }
+  .content {
+    margin-top: -100px;
+    > view {
+      margin: 40px 35px 0px 35px;
+    }
+    .rider-info-card {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 4px 4px 20px #f3f3f3;
+      display: flex;
+      align-items: center;
+      .base-info {
+        flex: 1;
+        margin-left: 15px;
+        .nickname {
+          font-size: 28px;
+          font-weight: bold;
+        }
+        .viptips {
+          margin-top: 4px;
+          color: #888;
+          font-size: 22px;
+        }
+      }
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 100%;
+      }
+      .level {
+        color: gold;
+        width: 60px;
+        height: 60px;
+      }
+    }
+    .account-info {
+      display: flex;
+      > view {
+        width: 25%;
+        text-align: center;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        .base-info{
-            flex: 1;
-            margin-left: 15px;
-            .nickname{
-                font-size: 28px;
-                font-weight: bold;
-            }
-            .viptips{
-                margin-top: 4px;
-                color:#888;
-                font-size: 22px;
-            }
+        :first-child {
+          font-family: 'neutra';
+          font-size: 36px;
+          font-weight: bold;
+          line-height: 42px;
         }
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 100%;
+        :nth-child(2) {
+          font-size: 24px;
+          color: #888;
         }
-        .level{
-            color: gold;
-            width: 60px;
-            height: 60px;
-        }
+      }
     }
-    .account-info{
+    .service-card {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      .title {
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .services {
+        margin-top: 30px;
         display: flex;
+        flex-direction: row;
         > view {
-            width: 25%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            :first-child{
-                font-family: 'neutra';
-                font-size: 36px;
-                font-weight: bold;
-                line-height: 42px;
-            }
-            :nth-child(2){
-                font-size: 24px;
-                color:#888;
-            }
+          width: 25%;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          :first-child {
+            width: 50px;
+            height: 50px;
+          }
+          :nth-child(2) {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #888;
+          }
         }
+      }
     }
-    .service-card{
-        background-color: #ffffff;
-        padding: 25px;
-        border-radius: 10px;
-        .title{
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .services{
-            margin-top: 30px;
-            display: flex;
-            flex-direction: row;
-            > view{
-                width: 25%;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                :first-child{
-                    width: 50px;
-                    height: 50px;
-                }
-                :nth-child(2){
-                    margin-top: 20px;
-                    font-size: 24px;
-                    color:#888;
-                }
-            }
-        }
-    }
+  }
 }

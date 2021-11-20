@@ -825,6 +825,64 @@ export class OrderClient {
     }
 }
 
+export class RiderAccountClient {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+        this.instance = instance ? instance : axios.create();
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+    }
+
+    getSummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetSummaryResponse> {
+        let url_ = this.baseUrl + "/api/RiderAccount/summary";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetSummary(_response);
+        });
+    }
+
+    protected processGetSummary(response: AxiosResponse): Promise<RiderGetSummaryResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = RiderGetSummaryResponse.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<RiderGetSummaryResponse>(<any>null);
+    }
+}
+
 export class RiderClient {
     private instance: AxiosInstance;
     private baseUrl: string;
@@ -1037,18 +1095,18 @@ export class RiderClient {
         return Promise.resolve<RiderDeliveringTasksItemResponse[]>(<any>null);
     }
 
-    searchDelivery(req: SearchRiderDeliveryTaskRequest , cancelToken?: CancelToken | undefined): Promise<PagedResultOfSearchRiderDeliveryTaskResponse> {
-        let url_ = this.baseUrl + "/api/Rider/search_tasks";
+    loadDeliveryHistory(referenceId: string | null , cancelToken?: CancelToken | undefined): Promise<LoadRiderDeliveryHistoryResponse[]> {
+        let url_ = this.baseUrl + "/api/Rider/delivering_history/load?";
+        if (referenceId === undefined)
+            throw new Error("The parameter 'referenceId' must be defined.");
+        else if(referenceId !== null)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(req);
-
         let options_ = <AxiosRequestConfig>{
-            data: content_,
             method: "POST",
             url: url_,
             headers: {
-                "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             cancelToken
@@ -1061,11 +1119,11 @@ export class RiderClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processSearchDelivery(_response);
+            return this.processLoadDeliveryHistory(_response);
         });
     }
 
-    protected processSearchDelivery(response: AxiosResponse): Promise<PagedResultOfSearchRiderDeliveryTaskResponse> {
+    protected processLoadDeliveryHistory(response: AxiosResponse): Promise<LoadRiderDeliveryHistoryResponse[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1079,13 +1137,20 @@ export class RiderClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = PagedResultOfSearchRiderDeliveryTaskResponse.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(LoadRiderDeliveryHistoryResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return result200;
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<PagedResultOfSearchRiderDeliveryTaskResponse>(<any>null);
+        return Promise.resolve<LoadRiderDeliveryHistoryResponse[]>(<any>null);
     }
 
     updateLocation(latitude: number, longitude: number , cancelToken?: CancelToken | undefined): Promise<boolean> {
@@ -2643,80 +2708,20 @@ export enum DeliveryStatusEnumOfDeliveryHistory {
     Complated = "Complated",
 }
 
-export class PagedResultOfSearchRiderDeliveryTaskResponse implements IPagedResultOfSearchRiderDeliveryTaskResponse {
-    list?: SearchRiderDeliveryTaskResponse[] | undefined;
-    pageSize!: number;
-    pageIndex!: number;
-    recordCount!: number;
-    pageCount!: number;
-
-    constructor(data?: IPagedResultOfSearchRiderDeliveryTaskResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["list"])) {
-                this.list = [] as any;
-                for (let item of _data["list"])
-                    this.list!.push(SearchRiderDeliveryTaskResponse.fromJS(item));
-            }
-            this.pageSize = _data["pageSize"];
-            this.pageIndex = _data["pageIndex"];
-            this.recordCount = _data["recordCount"];
-            this.pageCount = _data["pageCount"];
-        }
-    }
-
-    static fromJS(data: any): PagedResultOfSearchRiderDeliveryTaskResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfSearchRiderDeliveryTaskResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.list)) {
-            data["list"] = [];
-            for (let item of this.list)
-                data["list"].push(item.toJSON());
-        }
-        data["pageSize"] = this.pageSize;
-        data["pageIndex"] = this.pageIndex;
-        data["recordCount"] = this.recordCount;
-        data["pageCount"] = this.pageCount;
-        return data; 
-    }
-}
-
-export interface IPagedResultOfSearchRiderDeliveryTaskResponse {
-    list?: SearchRiderDeliveryTaskResponse[] | undefined;
-    pageSize: number;
-    pageIndex: number;
-    recordCount: number;
-    pageCount: number;
-}
-
-export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTaskResponse {
+export class LoadRiderDeliveryHistoryResponse implements ILoadRiderDeliveryHistoryResponse {
     id!: string;
     orderId!: string;
     status!: DeliveryStatusEnumOfDeliveryHistory;
     name?: string | undefined;
     mobile?: string | undefined;
-    avator?: string | undefined;
     simpleAddress?: string | undefined;
     fullAddress?: string | undefined;
     houseNumber?: string | undefined;
-    latitude!: number;
-    longitude!: number;
+    commission!: number;
+    settledCommission?: number | undefined;
+    settledTime!: Date;
 
-    constructor(data?: ISearchRiderDeliveryTaskResponse) {
+    constructor(data?: ILoadRiderDeliveryHistoryResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2732,18 +2737,18 @@ export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTask
             this.status = _data["status"];
             this.name = _data["name"];
             this.mobile = _data["mobile"];
-            this.avator = _data["avator"];
             this.simpleAddress = _data["simpleAddress"];
             this.fullAddress = _data["fullAddress"];
             this.houseNumber = _data["houseNumber"];
-            this.latitude = _data["latitude"];
-            this.longitude = _data["longitude"];
+            this.commission = _data["commission"];
+            this.settledCommission = _data["settledCommission"];
+            this.settledTime = _data["settledTime"] ? new Date(_data["settledTime"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): SearchRiderDeliveryTaskResponse {
+    static fromJS(data: any): LoadRiderDeliveryHistoryResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchRiderDeliveryTaskResponse();
+        let result = new LoadRiderDeliveryHistoryResponse();
         result.init(data);
         return result;
     }
@@ -2755,55 +2760,28 @@ export class SearchRiderDeliveryTaskResponse implements ISearchRiderDeliveryTask
         data["status"] = this.status;
         data["name"] = this.name;
         data["mobile"] = this.mobile;
-        data["avator"] = this.avator;
         data["simpleAddress"] = this.simpleAddress;
         data["fullAddress"] = this.fullAddress;
         data["houseNumber"] = this.houseNumber;
-        data["latitude"] = this.latitude;
-        data["longitude"] = this.longitude;
+        data["commission"] = this.commission;
+        data["settledCommission"] = this.settledCommission;
+        data["settledTime"] = this.settledTime ? this.settledTime.toISOString() : <any>undefined;
         return data; 
     }
 }
 
-export interface ISearchRiderDeliveryTaskResponse {
+export interface ILoadRiderDeliveryHistoryResponse {
     id: string;
     orderId: string;
     status: DeliveryStatusEnumOfDeliveryHistory;
     name?: string | undefined;
     mobile?: string | undefined;
-    avator?: string | undefined;
     simpleAddress?: string | undefined;
     fullAddress?: string | undefined;
     houseNumber?: string | undefined;
-    latitude: number;
-    longitude: number;
-}
-
-export class SearchRiderDeliveryTaskRequest extends QueryModel implements ISearchRiderDeliveryTaskRequest {
-
-    constructor(data?: ISearchRiderDeliveryTaskRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-    }
-
-    static fromJS(data: any): SearchRiderDeliveryTaskRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new SearchRiderDeliveryTaskRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface ISearchRiderDeliveryTaskRequest extends IQueryModel {
+    commission: number;
+    settledCommission?: number | undefined;
+    settledTime: Date;
 }
 
 export class ShoppingCartInfoResponse implements IShoppingCartInfoResponse {

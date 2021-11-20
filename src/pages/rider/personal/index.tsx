@@ -1,5 +1,5 @@
 import { Image, Navigator, View } from '@tarojs/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RiderGetSummaryResponse } from 'src/api/client';
 import { ConnectState } from 'src/models/connect';
@@ -12,6 +12,7 @@ import settlementSvg from '/src/static/images/my/rider/settlement.svg';
 import riderBg from '/src/static/images/my/rider/riderBg.png';
 import NumberMotion from './components/NumberMotion';
 import { AtIcon } from 'taro-ui';
+import { API } from '../../../../src/api';
 
 export type PersonalProps = {
   summary: RiderGetSummaryResponse;
@@ -30,6 +31,13 @@ const renderListItem = (title: string, path: string, desc: string, showArrow: bo
 };
 const Personal: React.FC<PersonalProps> = (props) => {
   const { currentUser, isLogin } = useSelector<ConnectState, UserModelState>((x) => x.user);
+  useEffect(() => {
+    const load = async () => {
+      const result = await API.riderClient.loadDeliveryHistory(null);
+      console.log(result);
+    };
+    load();
+  }, []);
   return (
     <View className='main'>
       <View className='bg'>

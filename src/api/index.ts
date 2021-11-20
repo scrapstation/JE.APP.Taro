@@ -19,8 +19,8 @@ axios.interceptors.request.use(
   }
 );
 
-const apiurl1 = 'https://api-dev-daveshop-wechat.chinacloudsites.cn';
-const apiurl = 'http://localhost:4888';
+const apiurl = 'https://api-dev-daveshop-wechat.chinacloudsites.cn';
+const apiurl1 = 'http://localhost:4888';
 export const API = {
   commodityClient: new CategoryClient(apiurl, axios),
   authClient: new AuthClient(apiurl, axios),

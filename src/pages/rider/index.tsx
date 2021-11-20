@@ -3,7 +3,7 @@ import { API } from '../../../src/api';
 import { AtMessage, AtTabBar } from 'taro-ui';
 import Deliveries from './deliveries';
 import Personal from './personal';
-import Taro, { usePullDownRefresh } from '@tarojs/taro';
+import Taro, { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import { RiderDeliveringTasksItemResponse, RiderGetSummaryResponse } from '../../../src/api/client';
 import './index.scss';
 import { View } from '@tarojs/components';

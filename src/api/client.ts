@@ -2719,7 +2719,8 @@ export class LoadRiderDeliveryHistoryResponse implements ILoadRiderDeliveryHisto
     houseNumber?: string | undefined;
     commission!: number;
     settledCommission?: number | undefined;
-    settledTime!: Date;
+    settledTime?: Date | undefined;
+    createdOn!: Date;
 
     constructor(data?: ILoadRiderDeliveryHistoryResponse) {
         if (data) {
@@ -2743,6 +2744,7 @@ export class LoadRiderDeliveryHistoryResponse implements ILoadRiderDeliveryHisto
             this.commission = _data["commission"];
             this.settledCommission = _data["settledCommission"];
             this.settledTime = _data["settledTime"] ? new Date(_data["settledTime"].toString()) : <any>undefined;
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
         }
     }
 
@@ -2766,6 +2768,7 @@ export class LoadRiderDeliveryHistoryResponse implements ILoadRiderDeliveryHisto
         data["commission"] = this.commission;
         data["settledCommission"] = this.settledCommission;
         data["settledTime"] = this.settledTime ? this.settledTime.toISOString() : <any>undefined;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         return data; 
     }
 }
@@ -2781,7 +2784,8 @@ export interface ILoadRiderDeliveryHistoryResponse {
     houseNumber?: string | undefined;
     commission: number;
     settledCommission?: number | undefined;
-    settledTime: Date;
+    settledTime?: Date | undefined;
+    createdOn: Date;
 }
 
 export class ShoppingCartInfoResponse implements IShoppingCartInfoResponse {

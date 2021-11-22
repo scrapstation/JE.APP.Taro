@@ -1,6 +1,6 @@
 import { API } from '@/api';
 import { DeliveryStatusEnumOfDeliveryHistory, LoadRiderDeliveryHistoryResponse } from '@/api/client';
-import { Text, View } from '@tarojs/components';
+import { Picker, Text, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import moment from 'moment';
@@ -11,6 +11,8 @@ import './index.scss';
 const DeliveriesHistory: React.FC = () => {
   const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
   const [deliveriesHistorys, setDeliveriesHistorys] = useState<LoadRiderDeliveryHistoryResponse[]>([]);
+  const [dateRange, setDateRange] = useState();
+  const [isAbnormal, setIsAbnormal] = useState<boolean>(false);
   const getSettlementColor = (history: LoadRiderDeliveryHistoryResponse) => {
     if (history.settledTime == null) {
       return '#faad14';
@@ -53,6 +55,12 @@ const DeliveriesHistory: React.FC = () => {
         break;
     }
   };
+
+  const onDateSelected = (dates: { start: string | undefined; end: string | undefined }) => {
+    console.log(dates.start);
+    console.log(dates.end);
+  };
+
   const load = async (referenceId: string | null) => {
     try {
       setLoadStatus('loading');
@@ -76,15 +84,18 @@ const DeliveriesHistory: React.FC = () => {
       setLoadStatus('more');
     }
   };
+
   useEffect(() => {
     load(null);
   }, []);
+
   useReachBottom(() => {
     if (loadStatus == 'noMore') {
       return;
     }
     load([...deliveriesHistorys].pop()?.id || null);
   });
+
   usePullDownRefresh(async () => {
     setTimeout(async () => {
       await load(null);
@@ -126,7 +137,17 @@ const DeliveriesHistory: React.FC = () => {
   };
   return (
     <View className='main'>
-      <AtCalendar />
+      <View style={{ margin: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+        <Picker mode='date' value={'2021-11-22'} fields={'month'} onChange={() => {}}>
+          <View>
+            <Text style={{ fontSize: 32 }}>11</Text>月
+          </View>
+        </Picker>
+        <AtTag customStyle={{ color: isAbnormal ? '' : '#faad14', borderColor: isAbnormal ? '' : '#faad14' }} active={isAbnormal} onClick={() => setIsAbnormal(!isAbnormal)} type='primary'>
+          仅显示异常订单
+        </AtTag>
+      </View>
+      {/* <AtCalendar isMultiSelect onSelectDate={(dates) => onDateSelected(dates.value)} /> */}
       {deliveriesHistorys.map((x) => renderHistoryItem(x))}
       <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>
     </View>

@@ -1,5 +1,5 @@
 import { API } from '@/api';
-import { DeliveryStatusEnumOfDeliveryHistory, LoadRiderDeliveryHistoryResponse } from '@/api/client';
+import { DeliveryStatusEnumOfDeliveryHistory, LoadRiderDeliveryHistoryRequest, LoadRiderDeliveryHistoryResponse } from '@/api/client';
 import { Picker, Text, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
@@ -12,7 +12,8 @@ const DeliveriesHistory: React.FC = () => {
   const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
   const [deliveriesHistorys, setDeliveriesHistorys] = useState<LoadRiderDeliveryHistoryResponse[]>([]);
   const [dateRange, setDateRange] = useState();
-  const [isAbnormal, setIsAbnormal] = useState<boolean>(false);
+  const [isDisputed, setIsDisputed] = useState<boolean>(false);
+  const [timeRange, setTimeRange] = useState<{ startDate: Date; endDate: Date }>({ startDate: moment().startOf('month').toDate(), endDate: moment().add(1, 'M').startOf('month').toDate() });
   const getSettlementColor = (history: LoadRiderDeliveryHistoryResponse) => {
     if (history.settledTime == null) {
       return '#faad14';
@@ -64,7 +65,7 @@ const DeliveriesHistory: React.FC = () => {
   const load = async (referenceId: string | null) => {
     try {
       setLoadStatus('loading');
-      const result = await API.riderClient.loadDeliveryHistory(referenceId);
+      const result = await API.riderClient.loadDeliveryHistory(new LoadRiderDeliveryHistoryRequest({ referenceId: referenceId ?? undefined, startTime: timeRange.startDate, endTime: timeRange.endDate, isDisputed: isDisputed }));
       if (result.length == 0) {
         setLoadStatus('noMore');
         return;
@@ -86,9 +87,11 @@ const DeliveriesHistory: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log(moment().startOf('month').toDate());
     load(null);
   }, []);
 
+  useEffect(() => {}, []);
   useReachBottom(() => {
     if (loadStatus == 'noMore') {
       return;
@@ -143,7 +146,7 @@ const DeliveriesHistory: React.FC = () => {
             <Text style={{ fontSize: 32 }}>11</Text>月
           </View>
         </Picker>
-        <AtTag customStyle={{ color: isAbnormal ? '' : '#faad14', borderColor: isAbnormal ? '' : '#faad14' }} active={isAbnormal} onClick={() => setIsAbnormal(!isAbnormal)} type='primary'>
+        <AtTag customStyle={{ color: isDisputed ? '' : '#faad14', borderColor: isDisputed ? '' : '#faad14' }} active={isDisputed} onClick={() => setIsDisputed(!isDisputed)} type='primary'>
           仅显示异常订单
         </AtTag>
       </View>

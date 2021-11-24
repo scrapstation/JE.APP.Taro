@@ -1095,18 +1095,18 @@ export class RiderClient {
         return Promise.resolve<RiderDeliveringTasksItemResponse[]>(<any>null);
     }
 
-    loadDeliveryHistory(referenceId: string | null , cancelToken?: CancelToken | undefined): Promise<LoadRiderDeliveryHistoryResponse[]> {
-        let url_ = this.baseUrl + "/api/Rider/delivering_history/load?";
-        if (referenceId === undefined)
-            throw new Error("The parameter 'referenceId' must be defined.");
-        else if(referenceId !== null)
-            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+    loadDeliveryHistory(req: LoadRiderDeliveryHistoryRequest , cancelToken?: CancelToken | undefined): Promise<LoadRiderDeliveryHistoryResponse[]> {
+        let url_ = this.baseUrl + "/api/Rider/delivering_history/load";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(req);
+
         let options_ = <AxiosRequestConfig>{
+            data: content_,
             method: "POST",
             url: url_,
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             cancelToken
@@ -2786,6 +2786,54 @@ export interface ILoadRiderDeliveryHistoryResponse {
     settledCommission?: number | undefined;
     settledTime?: Date | undefined;
     createdOn: Date;
+}
+
+export class LoadRiderDeliveryHistoryRequest implements ILoadRiderDeliveryHistoryRequest {
+    referenceId?: string | undefined;
+    startTime!: Date;
+    endTime!: Date;
+    isDisputed!: boolean;
+
+    constructor(data?: ILoadRiderDeliveryHistoryRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.startTime = _data["startTime"] ? new Date(_data["startTime"].toString()) : <any>undefined;
+            this.endTime = _data["endTime"] ? new Date(_data["endTime"].toString()) : <any>undefined;
+            this.isDisputed = _data["isDisputed"];
+        }
+    }
+
+    static fromJS(data: any): LoadRiderDeliveryHistoryRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoadRiderDeliveryHistoryRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["startTime"] = this.startTime ? this.startTime.toISOString() : <any>undefined;
+        data["endTime"] = this.endTime ? this.endTime.toISOString() : <any>undefined;
+        data["isDisputed"] = this.isDisputed;
+        return data; 
+    }
+}
+
+export interface ILoadRiderDeliveryHistoryRequest {
+    referenceId?: string | undefined;
+    startTime: Date;
+    endTime: Date;
+    isDisputed: boolean;
 }
 
 export class ShoppingCartInfoResponse implements IShoppingCartInfoResponse {

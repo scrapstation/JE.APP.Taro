@@ -1,18 +1,19 @@
 import { API } from '@/api';
 import { DeliveryStatusEnumOfDeliveryHistory, LoadRiderDeliveryHistoryRequest, LoadRiderDeliveryHistoryResponse } from '@/api/client';
-import { Picker, Text, View } from '@tarojs/components';
+import { Image, Picker, Text, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { AtCalendar, AtIcon, AtLoadMore, AtTag } from 'taro-ui';
+import empty from '/src/static/images/my/rider/empty.svg';
 import './index.scss';
 
 const DeliveriesHistory: React.FC = () => {
   const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
   const [deliveriesHistorys, setDeliveriesHistorys] = useState<LoadRiderDeliveryHistoryResponse[]>([]);
-  const [dateRange, setDateRange] = useState();
   const [isDisputed, setIsDisputed] = useState<boolean>(false);
+  const [test, setTest] = useState(moment());
   const [timeRange, setTimeRange] = useState<{ startDate: Date; endDate: Date }>({ startDate: moment().startOf('month').toDate(), endDate: moment().add(1, 'M').startOf('month').toDate() });
   const getSettlementColor = (history: LoadRiderDeliveryHistoryResponse) => {
     if (history.settledTime == null) {
@@ -62,46 +63,49 @@ const DeliveriesHistory: React.FC = () => {
     console.log(dates.end);
   };
 
-  const load = async (referenceId: string | null) => {
+  const load = async () => {
     try {
       setLoadStatus('loading');
-      const result = await API.riderClient.loadDeliveryHistory(new LoadRiderDeliveryHistoryRequest({ referenceId: referenceId ?? undefined, startTime: timeRange.startDate, endTime: timeRange.endDate, isDisputed: isDisputed }));
-      if (result.length == 0) {
-        setLoadStatus('noMore');
-        return;
-      }
-      if (referenceId) {
-        await new Promise<void>((reslove, _) => {
-          setTimeout(() => {
-            reslove();
-          }, 300);
-        });
-        setDeliveriesHistorys([...deliveriesHistorys, ...result]);
-      } else {
-        setDeliveriesHistorys(result);
-      }
-      setLoadStatus('more');
+      const result = await API.riderClient.loadDeliveryHistory(new LoadRiderDeliveryHistoryRequest({ referenceId: undefined, startTime: timeRange.startDate, endTime: timeRange.endDate, isDisputed: isDisputed }));
+      setDeliveriesHistorys(result);
+      setLoadStatus(result.length < 10 ? 'noMore' : 'more');
     } catch {
       setLoadStatus('more');
     }
   };
 
+  const loadMore = async (referenceId) => {
+    setLoadStatus('loading');
+    await new Promise<void>((reslove, _) => {
+      setTimeout(() => {
+        reslove();
+      }, 300);
+    });
+    const moreData = await API.riderClient.loadDeliveryHistory(new LoadRiderDeliveryHistoryRequest({ referenceId: referenceId ?? undefined, startTime: timeRange.startDate, endTime: timeRange.endDate, isDisputed: isDisputed }));
+    setLoadStatus(moreData.length < 10 ? 'noMore' : 'more');
+    setDeliveriesHistorys([...deliveriesHistorys, ...moreData]);
+  };
+
   useEffect(() => {
     console.log(moment().startOf('month').toDate());
-    load(null);
+    load();
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log('changed');
+    load();
+  }, [isDisputed, timeRange]);
+
   useReachBottom(() => {
     if (loadStatus == 'noMore') {
       return;
     }
-    load([...deliveriesHistorys].pop()?.id || null);
+    loadMore([...deliveriesHistorys].pop()?.id);
   });
 
   usePullDownRefresh(async () => {
     setTimeout(async () => {
-      await load(null);
+      await load();
       Taro.stopPullDownRefresh();
     }, 300);
   });
@@ -140,19 +144,34 @@ const DeliveriesHistory: React.FC = () => {
   };
   return (
     <View className='main'>
-      <View style={{ margin: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
-        <Picker mode='date' value={'2021-11-22'} fields={'month'} onChange={() => {}}>
-          <View>
-            <Text style={{ fontSize: 32 }}>11</Text>月
-          </View>
-        </Picker>
-        <AtTag customStyle={{ color: isDisputed ? '' : '#faad14', borderColor: isDisputed ? '' : '#faad14' }} active={isDisputed} onClick={() => setIsDisputed(!isDisputed)} type='primary'>
-          仅显示异常订单
-        </AtTag>
+      <View style={{ padding: 10 }}>
+        <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+          <Picker
+            mode='date'
+            value={moment(timeRange.startDate).format('YYYY-MM-DD')}
+            fields={'month'}
+            onChange={(v) => {
+              setTimeRange({ startDate: moment(v.detail.value).startOf('month').toDate(), endDate: moment(v.detail.value).add(1, 'M').startOf('month').toDate() });
+            }}
+          >
+            <View>
+              <Text style={{ fontSize: 32 }}>{timeRange.startDate.getMonth() + 1}</Text>月
+            </View>
+          </Picker>
+          <AtTag customStyle={{ color: isDisputed ? '' : '#faad14', borderColor: isDisputed ? '' : '#faad14' }} active={isDisputed} onClick={() => setIsDisputed(!isDisputed)} type='primary'>
+            仅显示异常订单
+          </AtTag>
+        </View>
       </View>
       {/* <AtCalendar isMultiSelect onSelectDate={(dates) => onDateSelected(dates.value)} /> */}
       {deliveriesHistorys.map((x) => renderHistoryItem(x))}
-      <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>
+      {deliveriesHistorys.length == 0 && (
+        <View style={{ marginTop: 100, textAlign: 'center' }}>
+          <Image src={empty} style={{ width: 80, height: 80 }} />
+          <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
+        </View>
+      )}
+      {deliveriesHistorys.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
     </View>
   );
 };

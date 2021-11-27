@@ -95,7 +95,7 @@ const Personal: React.FC<PersonalProps> = (props) => {
         <View style={{ backgroundColor: '#fff', borderRadius: 5 }}>
           {renderListItem('结算记录', '/pages/rider/index', '满30即可结算', true)}
           {renderListItem('配送历史', '', '争议订单(1)', true)}
-          {renderListItem('技术支持', '', 'LIMO科技', true)}
+          {renderListItem('技术支持', '', '', true)}
           {renderListItem('关于我们', '', ' ', true)}
         </View>
       </View>

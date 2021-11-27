@@ -66,7 +66,7 @@ const Personal: React.FC = () => {
             <View className='grid' hover-className='opacity-6'>
               {/* <Image src={require('../../static/images/my/me_icon_quan.png')}></Image> */}
               <View className='value'>{currentUser ? 0 : '***'}</View>
-              <View className='title'>喜茶劵</View>
+              <View className='title'>戴夫劵</View>
             </View>
             <View className='grid'>
               {/* <Image src={require('../../static/images/my/me_icon_wallet.png')}></Image> */}
@@ -80,8 +80,8 @@ const Personal: React.FC = () => {
       <View style={{ backgroundColor: '#fff', marginBottom: 20 }}>
         {renderListItem('兑换中心', '/pages/rider/index', '积分换购', true)}
         {renderListItem('联系客服', '', '7*24在线客服', true)}
-        {renderListItem('技术支持', '', 'LIMO科技', true)}
-        {renderListItem('关于我们', '', '几个青年的创业故事', true)}
+        {renderListItem('技术支持', '', '', true)}
+        {renderListItem('关于我们', '', '创业故事', true)}
         {renderListItem('退出登陆', '', '', false)}
       </View>
     </View>

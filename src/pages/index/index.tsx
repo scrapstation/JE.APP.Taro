@@ -8,6 +8,9 @@ import Action from './components/Action';
 import CartBar from './components/CartBar';
 import ProductModal from './components/ProductModal';
 import { AtIcon } from 'taro-ui';
+import { useDispatch, useSelector } from 'react-redux';
+import { ConnectState } from '@/models/connect';
+import { UserModelState } from '@/models/user';
 
 export type CardItem = {
   productId: string;
@@ -28,6 +31,8 @@ const Index: React.FC = () => {
     visible: false,
     product: null,
   });
+  const dispatch = useDispatch();
+  const { isLogin } = useSelector<ConnectState, UserModelState>((x) => x.user);
   useDidShow(() => {
     setCart(Taro.getStorageSync('cart') || []);
   });
@@ -133,7 +138,10 @@ const Index: React.FC = () => {
     setCart(cartTemp);
   };
 
-  const toPaymentPage = () => {
+  const toPaymentPage = async () => {
+    if (!isLogin) {
+      await dispatch({ type: 'user/login' });
+    }
     Taro.navigateTo({ url: '/pages/payment/index' });
   };
 

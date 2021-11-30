@@ -31,13 +31,6 @@ const renderListItem = (title: string, path: string, desc: string, showArrow: bo
 };
 const Personal: React.FC<PersonalProps> = (props) => {
   const { currentUser, isLogin } = useSelector<ConnectState, UserModelState>((x) => x.user);
-  useEffect(() => {
-    const load = async () => {
-      const result = await API.riderClient.loadDeliveryHistory(null);
-      console.log(result);
-    };
-    load();
-  }, []);
   return (
     <View className='main'>
       <View className='bg'>
@@ -94,7 +87,7 @@ const Personal: React.FC<PersonalProps> = (props) => {
       </View> */}
         <View style={{ backgroundColor: '#fff', borderRadius: 5 }}>
           {renderListItem('结算记录', '/pages/rider/index', '满30即可结算', true)}
-          {renderListItem('配送历史', '', '争议订单(1)', true)}
+          {renderListItem('配送历史', '/pages/rider/deliveries-history/index', '争议订单(1)', true)}
           {renderListItem('技术支持', '', '', true)}
           {renderListItem('关于我们', '', ' ', true)}
         </View>

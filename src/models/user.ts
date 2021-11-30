@@ -32,14 +32,19 @@ const user: UserModelType = {
   },
   effects: {
     *login(_, { call, put }) {
-      const getLoginInfo = async () => {
-        const [wechatLoginResult, userProfile] = await Promise.all([Taro.login({}), Taro.getUserProfile({ desc: '用于完善会员资料' })]);
-        const apiLoginResult = await API.authClient.auth(new GetWechatUserInfo({ code: wechatLoginResult.code, rawData: userProfile.rawData, signature: userProfile.signature }));
-        return apiLoginResult.token;
-      };
-      const token = yield call(getLoginInfo);
-      Taro.setStorageSync('token', token);
-      yield put({ type: 'saveLogin' });
+      try {
+        const getLoginInfo = async () => {
+          const [wechatLoginResult, userProfile] = await Promise.all([Taro.login({}), Taro.getUserProfile({ desc: '用于完善会员资料' })]);
+          const apiLoginResult = await API.authClient.auth(new GetWechatUserInfo({ code: wechatLoginResult.code, rawData: userProfile.rawData, signature: userProfile.signature }));
+          return apiLoginResult.token;
+        };
+        const token = yield call(getLoginInfo);
+        Taro.setStorageSync('token', token);
+        yield put({ type: 'saveLogin' });
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject();
+      }
     },
     *getCurrentUserInfo(_, { call, put }) {
       const getUserInfo = async () => await API.accountClient.getAccountInfo();

@@ -73,11 +73,12 @@ const Order: React.FC = () => {
               </Button>
             </>
           )}
-          {order.status !== StatusEnumOfOrder.PendingPayment && (
+          {/* TODO暂不支持 */}
+          {/* {order.status !== StatusEnumOfOrder.PendingPayment && (
             <Button type='primary' size='mini' style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: '#DBA871', borderRadius: 2, border: '1px solid #DBA871' }}>
               再来一单
             </Button>
-          )}
+          )} */}
         </View>
       </View>
     );

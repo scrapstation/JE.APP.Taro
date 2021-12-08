@@ -24,7 +24,6 @@ const Personal: React.FC = () => {
   const dispatch = useDispatch();
   const { currentUser, isLogin } = useSelector<ConnectState, UserModelState>((x) => x.user);
   useEffect(() => {
-    console.log(useEffect);
     if (isLogin) {
       dispatch({ type: 'user/getCurrentUserInfo' });
     }

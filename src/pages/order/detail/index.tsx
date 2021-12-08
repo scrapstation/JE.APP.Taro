@@ -16,7 +16,6 @@ const OrderDetail: React.FC = () => {
   const [isReady, setIsReady] = useState<boolean>(false);
   const [order, setOrder] = useState<OrderResponse>(new OrderResponse());
   useReady(async () => {
-    console.log(OrderResponse.fromJS(JSON.parse(router.params.order!)));
     setOrder(OrderResponse.fromJS(JSON.parse(router.params.order!)));
     setIsReady(true);
   });

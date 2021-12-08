@@ -16,7 +16,7 @@ export class AccountClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     getAccountInfo(  cancelToken?: CancelToken | undefined): Promise<AccountInfoResponse> {
@@ -74,7 +74,7 @@ export class AuthClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     auth(model: GetWechatUserInfo , cancelToken?: CancelToken | undefined): Promise<WechatAuthResponse> {
@@ -136,7 +136,7 @@ export class CategoryClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     getAllCategory(  cancelToken?: CancelToken | undefined): Promise<CategoryReponse[]> {
@@ -201,7 +201,7 @@ export class ConsigneeClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     create(req: CreateConsigneeRequest , cancelToken?: CancelToken | undefined): Promise<boolean> {
@@ -516,11 +516,11 @@ export class OrderClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
-    search(request: SearchOrderRequest , cancelToken?: CancelToken | undefined): Promise<PagedResultOfOrderResponse> {
-        let url_ = this.baseUrl + "/api/Order/search";
+    loadOrder(request: LoadOrderRequest , cancelToken?: CancelToken | undefined): Promise<OrderResponse[]> {
+        let url_ = this.baseUrl + "/api/Order/order/load";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -543,11 +543,11 @@ export class OrderClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processSearch(_response);
+            return this.processLoadOrder(_response);
         });
     }
 
-    protected processSearch(response: AxiosResponse): Promise<PagedResultOfOrderResponse> {
+    protected processLoadOrder(response: AxiosResponse): Promise<OrderResponse[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -561,13 +561,20 @@ export class OrderClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = PagedResultOfOrderResponse.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OrderResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return result200;
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<PagedResultOfOrderResponse>(<any>null);
+        return Promise.resolve<OrderResponse[]>(<any>null);
     }
 
     getById(orderId: string , cancelToken?: CancelToken | undefined): Promise<OrderResponse> {
@@ -832,7 +839,7 @@ export class RiderAccountClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     getSummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetSummaryResponse> {
@@ -890,7 +897,7 @@ export class RiderClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     getSummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetSummaryResponse> {
@@ -1216,7 +1223,7 @@ export class ShoppingCartClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
     }
 
     get(  cancelToken?: CancelToken | undefined): Promise<ShoppingCartInfoResponse> {
@@ -1880,66 +1887,6 @@ export interface IConsigneeItemResponse extends ICreateConsigneeRequest {
     id: string;
 }
 
-export class PagedResultOfOrderResponse implements IPagedResultOfOrderResponse {
-    list?: OrderResponse[] | undefined;
-    pageSize!: number;
-    pageIndex!: number;
-    recordCount!: number;
-    pageCount!: number;
-
-    constructor(data?: IPagedResultOfOrderResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["list"])) {
-                this.list = [] as any;
-                for (let item of _data["list"])
-                    this.list!.push(OrderResponse.fromJS(item));
-            }
-            this.pageSize = _data["pageSize"];
-            this.pageIndex = _data["pageIndex"];
-            this.recordCount = _data["recordCount"];
-            this.pageCount = _data["pageCount"];
-        }
-    }
-
-    static fromJS(data: any): PagedResultOfOrderResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfOrderResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.list)) {
-            data["list"] = [];
-            for (let item of this.list)
-                data["list"].push(item.toJSON());
-        }
-        data["pageSize"] = this.pageSize;
-        data["pageIndex"] = this.pageIndex;
-        data["recordCount"] = this.recordCount;
-        data["pageCount"] = this.pageCount;
-        return data; 
-    }
-}
-
-export interface IPagedResultOfOrderResponse {
-    list?: OrderResponse[] | undefined;
-    pageSize: number;
-    pageIndex: number;
-    recordCount: number;
-    pageCount: number;
-}
-
 export class AuditFields implements IAuditFields {
     createdOn?: Date | undefined;
     lastModifiedOn?: Date | undefined;
@@ -2111,13 +2058,10 @@ export interface IOrderItemVoOfOrderResponse {
     snapshotAttributeItemNames?: string | undefined;
 }
 
-export class QueryModel implements IQueryModel {
-    pageIndex!: number;
-    pageSize!: number;
-    sorts?: Sort[] | undefined;
-    filters?: Filter[] | undefined;
+export class LoadOrderRequest implements ILoadOrderRequest {
+    referenceId?: string | undefined;
 
-    constructor(data?: IQueryModel) {
+    constructor(data?: ILoadOrderRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2128,164 +2072,26 @@ export class QueryModel implements IQueryModel {
 
     init(_data?: any) {
         if (_data) {
-            this.pageIndex = _data["pageIndex"];
-            this.pageSize = _data["pageSize"];
-            if (Array.isArray(_data["sorts"])) {
-                this.sorts = [] as any;
-                for (let item of _data["sorts"])
-                    this.sorts!.push(Sort.fromJS(item));
-            }
-            if (Array.isArray(_data["filters"])) {
-                this.filters = [] as any;
-                for (let item of _data["filters"])
-                    this.filters!.push(Filter.fromJS(item));
-            }
+            this.referenceId = _data["referenceId"];
         }
     }
 
-    static fromJS(data: any): QueryModel {
+    static fromJS(data: any): LoadOrderRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new QueryModel();
+        let result = new LoadOrderRequest();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["pageIndex"] = this.pageIndex;
-        data["pageSize"] = this.pageSize;
-        if (Array.isArray(this.sorts)) {
-            data["sorts"] = [];
-            for (let item of this.sorts)
-                data["sorts"].push(item.toJSON());
-        }
-        if (Array.isArray(this.filters)) {
-            data["filters"] = [];
-            for (let item of this.filters)
-                data["filters"].push(item.toJSON());
-        }
+        data["referenceId"] = this.referenceId;
         return data; 
     }
 }
 
-export interface IQueryModel {
-    pageIndex: number;
-    pageSize: number;
-    sorts?: Sort[] | undefined;
-    filters?: Filter[] | undefined;
-}
-
-export class SearchOrderRequest extends QueryModel implements ISearchOrderRequest {
-    keyword?: string | undefined;
-
-    constructor(data?: ISearchOrderRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.keyword = _data["keyword"];
-        }
-    }
-
-    static fromJS(data: any): SearchOrderRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new SearchOrderRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["keyword"] = this.keyword;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface ISearchOrderRequest extends IQueryModel {
-    keyword?: string | undefined;
-}
-
-export class Sort implements ISort {
-    field?: string | undefined;
-    desc!: boolean;
-
-    constructor(data?: ISort) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.desc = _data["desc"];
-        }
-    }
-
-    static fromJS(data: any): Sort {
-        data = typeof data === 'object' ? data : {};
-        let result = new Sort();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["desc"] = this.desc;
-        return data; 
-    }
-}
-
-export interface ISort {
-    field?: string | undefined;
-    desc: boolean;
-}
-
-export class Filter implements IFilter {
-    field?: string | undefined;
-    value?: any | undefined;
-
-    constructor(data?: IFilter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.field = _data["field"];
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): Filter {
-        data = typeof data === 'object' ? data : {};
-        let result = new Filter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["field"] = this.field;
-        data["value"] = this.value;
-        return data; 
-    }
-}
-
-export interface IFilter {
-    field?: string | undefined;
-    value?: any | undefined;
+export interface ILoadOrderRequest {
+    referenceId?: string | undefined;
 }
 
 export class CreateOrderRequest implements ICreateOrderRequest {

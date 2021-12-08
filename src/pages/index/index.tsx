@@ -62,7 +62,6 @@ const Index: React.FC = () => {
           size: true,
         },
         (data) => {
-          console.log(data.height);
           reslove(data.height);
         }
       ).exec();
@@ -81,12 +80,6 @@ const Index: React.FC = () => {
         return position;
       })
     );
-    console.log('positions', positions);
-    console.log(
-      'positions',
-      positions.map((x) => x.top)
-    );
-    console.log('positions', positions);
     setProductPosition(positions);
   };
 

@@ -32,7 +32,7 @@
   },
   "devConfig": {
     "genClient": {
-      "input": "http://localhost:4888/swagger/v1/swagger.json",
+      "input": "https://api-dev-daveshop-wechat.chinacloudsites.cn/swagger/v1/swagger.json",
       "output": "src/api/client.ts",
       "operationgenerationmode": "MultipleClientsFromPathSegments"
     }

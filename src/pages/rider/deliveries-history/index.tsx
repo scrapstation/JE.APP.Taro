@@ -58,11 +58,6 @@ const DeliveriesHistory: React.FC = () => {
     }
   };
 
-  const onDateSelected = (dates: { start: string | undefined; end: string | undefined }) => {
-    console.log(dates.start);
-    console.log(dates.end);
-  };
-
   const load = async () => {
     try {
       setLoadStatus('loading');
@@ -87,12 +82,10 @@ const DeliveriesHistory: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(moment().startOf('month').toDate());
     load();
   }, []);
 
   useEffect(() => {
-    console.log('changed');
     load();
   }, [isDisputed, timeRange]);
 
@@ -165,7 +158,7 @@ const DeliveriesHistory: React.FC = () => {
       </View>
       {/* <AtCalendar isMultiSelect onSelectDate={(dates) => onDateSelected(dates.value)} /> */}
       {deliveriesHistorys.map((x) => renderHistoryItem(x))}
-      {deliveriesHistorys.length == 0 && (
+      {deliveriesHistorys.length == 0 && loadStatus != 'loading' && (
         <View style={{ marginTop: 100, textAlign: 'center' }}>
           <Image src={empty} style={{ width: 80, height: 80 }} />
           <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>

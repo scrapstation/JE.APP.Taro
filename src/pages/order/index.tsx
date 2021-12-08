@@ -1,9 +1,9 @@
 import { Button, Image, View } from '@tarojs/components';
-import { useDidShow } from '@tarojs/taro';
+import { useDidShow, useReachBottom } from '@tarojs/taro';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { API } from '../../../src/api';
-import { SearchOrderRequest, OrderResponse, StatusEnumOfOrder } from '../../../src/api/client';
+import { LoadOrderRequest, OrderResponse, StatusEnumOfOrder } from '../../../src/api/client';
 import './index.scss';
 import Taro from '@tarojs/taro';
 import tryFetch from '../../../src/utils/tryfetch';
@@ -11,29 +11,80 @@ import getStatusText from './common';
 import { useDispatch, useSelector } from 'react-redux';
 import { ConnectState } from '@/models/connect';
 import { UserModelState } from '@/models/user';
+import { AtLoadMore } from 'taro-ui';
+import empty from '/src/static/images/my/rider/empty.svg';
 
 const Order: React.FC = () => {
+  const didMountRef = useRef(false);
   const [orders, setOrders] = useState<OrderResponse[]>([]);
-
   const dispatch = useDispatch();
   const { isLogin } = useSelector<ConnectState, UserModelState>((x) => x.user);
+  const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
 
   const init = async () => {
-    if (!isLogin) {
-      dispatch({ type: 'user/login' });
-    } else {
-      const queryedOrders = await API.orderClient.search(new SearchOrderRequest({ pageIndex: 1, pageSize: 20 }));
-      setOrders(queryedOrders.list || []);
+    try {
+      setLoadStatus('loading');
+      const queryedOrders = await API.orderClient.loadOrder(new LoadOrderRequest());
+      setLoadStatus(queryedOrders.length < 10 ? 'noMore' : 'more');
+      setOrders(queryedOrders);
+    } catch (error) {
+      setLoadStatus('more');
     }
   };
+
+  const loadOrder = async () => {
+    const queryedOrders = await API.orderClient.loadOrder(new LoadOrderRequest({ referenceId: [...orders].pop()?.id }));
+    setLoadStatus(queryedOrders.length < 10 ? 'noMore' : 'more');
+    setOrders([...orders, ...queryedOrders]);
+  };
+
+  useReachBottom(() => {
+    if (loadStatus == 'more') {
+      loadOrder();
+    }
+  });
+
   useEffect(() => {
-    init();
+    if (didMountRef.current) {
+      if (isLogin) {
+        init();
+      }
+    } else {
+      didMountRef.current = true;
+    }
   }, [isLogin]);
+
+  useEffect(() => {
+    if (!isLogin) {
+      dispatch({ type: 'user/login' });
+    }
+  }, []);
+
+  useDidShow(() => {
+    if (isLogin) {
+      init();
+    }
+  });
+
   const toOrderDetail = (order: OrderResponse) => {
     Taro.navigateTo({
       url: `/pages/order/detail/index?order=${JSON.stringify(order)}`,
     });
   };
+
+  const renderLoadStatus = () => {
+    switch (loadStatus) {
+      case 'loading':
+        return <AtLoadMore customStyle={{ height: 30 }} status={'loading'} />;
+      case 'more':
+        return <AtLoadMore customStyle={{ height: 'unset' }} noMoreText='加载更多' status={'noMore'} />;
+      case 'noMore':
+        return <AtLoadMore customStyle={{ height: 'unset' }} noMoreText='我是有底线的~' status={'noMore'} />;
+      default:
+        break;
+    }
+  };
+
   const renderOrderItem = (order: OrderResponse) => {
     return (
       <View style={{ display: 'flex', flexDirection: 'column', marginTop: 10, padding: 10, backgroundColor: '#FFF' }}>
@@ -87,8 +138,7 @@ const Order: React.FC = () => {
     const result = await Taro.showModal({ content: '取消订单后,退款及优惠券将原路退回，可能出现退款延迟到账' });
     if (result.confirm) {
       await tryFetch(API.orderClient.cancel(orderId), true);
-      const queryedOrders = await tryFetch(API.orderClient.search(new SearchOrderRequest({ pageIndex: 1, pageSize: 20 })), true);
-      setOrders(queryedOrders.list || []);
+      init();
     }
   };
   const pay = async (orderId: string) => {
@@ -106,11 +156,17 @@ const Order: React.FC = () => {
     );
   };
   return (
-    <View style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+    <View>
       {orders.map((order) => {
         return renderOrderItem(order);
       })}
-      <View style={{ margin: '20px auto', color: '#999', fontSize: 12 }}>没有更多了~</View>
+      {orders.length == 0 && loadStatus != 'loading' && (
+        <View style={{ marginTop: 100, textAlign: 'center' }}>
+          <Image src={empty} style={{ width: 80, height: 80 }} />
+          <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
+        </View>
+      )}
+      {orders.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
     </View>
   );
 };

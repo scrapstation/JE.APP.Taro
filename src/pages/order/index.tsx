@@ -1,4 +1,4 @@
-import { Button, Image, View } from '@tarojs/components';
+import { Button, Image, Text, View } from '@tarojs/components';
 import { useDidShow, useReachBottom } from '@tarojs/taro';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
@@ -45,6 +45,7 @@ const Order: React.FC = () => {
   });
 
   useEffect(() => {
+    // 兼容首次Effect不执行init（与useDidShow重复）
     if (didMountRef.current) {
       if (isLogin) {
         init();
@@ -54,14 +55,10 @@ const Order: React.FC = () => {
     }
   }, [isLogin]);
 
-  useEffect(() => {
-    if (!isLogin) {
-      dispatch({ type: 'user/login' });
-    }
-  }, []);
-
   useDidShow(() => {
+    console.log('show');
     if (isLogin) {
+      console.log('showInit');
       init();
     }
   });
@@ -156,17 +153,29 @@ const Order: React.FC = () => {
     );
   };
   return (
-    <View>
-      {orders.map((order) => {
-        return renderOrderItem(order);
-      })}
-      {orders.length == 0 && loadStatus != 'loading' && (
-        <View style={{ marginTop: 100, textAlign: 'center' }}>
-          <Image src={empty} style={{ width: 80, height: 80 }} />
-          <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
+    <View style={{ height: '100%' }}>
+      {!isLogin && (
+        <View style={{ height: '100%', alignItems: 'center', boxSizing: 'border-box', paddingBottom: 200, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+          <Text style={{ color: '#8a8a8a', marginBottom: 10 }}>您还没有登录，登陆后可查看您的订单</Text>
+          <Button type='primary' style={{ padding: '0 40px', fontSize: 16, borderRadius: 3, backgroundColor: '#dba871' }} onClick={() => dispatch({ type: 'user/login' })}>
+            现在登录
+          </Button>
         </View>
       )}
-      {orders.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
+      {isLogin && (
+        <>
+          {orders.map((order) => {
+            return renderOrderItem(order);
+          })}
+          {orders.length == 0 && loadStatus != 'loading' && (
+            <View style={{ marginTop: 100, textAlign: 'center' }}>
+              <Image src={empty} style={{ width: 80, height: 80 }} />
+              <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
+            </View>
+          )}
+          {orders.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
+        </>
+      )}
     </View>
   );
 };

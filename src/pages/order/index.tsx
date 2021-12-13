@@ -1,5 +1,5 @@
 import { Button, Image, Text, View } from '@tarojs/components';
-import { useDidShow, useReachBottom } from '@tarojs/taro';
+import { useDidShow, useReachBottom, useReady } from '@tarojs/taro';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { API } from '../../../src/api';
@@ -21,6 +21,14 @@ const Order: React.FC = () => {
   const { isLogin } = useSelector<ConnectState, UserModelState>((x) => x.user);
   const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
 
+  useReady(() => {
+    init();
+    Taro.eventCenter.on('refreshOrderList', () => {
+      if (isLogin) {
+        init();
+      }
+    });
+  });
   const init = async () => {
     try {
       setLoadStatus('loading');
@@ -55,13 +63,13 @@ const Order: React.FC = () => {
     }
   }, [isLogin]);
 
-  useDidShow(() => {
-    console.log('show');
-    if (isLogin) {
-      console.log('showInit');
-      init();
-    }
-  });
+  // useDidShow(() => {
+  //   console.log('show');
+  //   if (isLogin) {
+  //     console.log('showInit');
+  //     init();
+  //   }
+  // });
 
   const toOrderDetail = (order: OrderResponse) => {
     Taro.navigateTo({
@@ -84,12 +92,10 @@ const Order: React.FC = () => {
 
   const renderOrderItem = (order: OrderResponse) => {
     return (
-      <View style={{ display: 'flex', flexDirection: 'column', marginTop: 10, padding: 10, backgroundColor: '#FFF' }}>
+      <View onClick={() => toOrderDetail(order)} style={{ display: 'flex', flexDirection: 'column', marginTop: 10, padding: 10, backgroundColor: '#FFF' }}>
         <View style={{ display: 'flex', justifyContent: 'space-between' }}>
           <View style={{ fontSize: 14 }}>{moment(order.createdOn).format('YYYY-MM-DD HH:mm:ss')}</View>
-          <View style={{ fontSize: 14, color: '#999' }} onClick={() => toOrderDetail(order)}>
-            {getStatusText(order.status)}
-          </View>
+          <View style={{ fontSize: 14, color: '#999' }}>{getStatusText(order.status)}</View>
         </View>
         <View style={{ display: 'flex', marginTop: 20 }}>
           <View style={{ flex: 1, width: '70%', display: 'flex', overflow: 'auto', marginRight: 20 }}>
@@ -106,7 +112,15 @@ const Order: React.FC = () => {
         <View style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
           {order.status === StatusEnumOfOrder.PendingPayment && (
             <>
-              <Button type='primary' size='mini' style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: '#999', borderRadius: 2, border: '1px solid #999' }} onClick={() => cancelOrder(order.id)}>
+              <Button
+                type='primary'
+                size='mini'
+                style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: '#999', borderRadius: 2, border: '1px solid #999' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  cancelOrder(order.id);
+                }}
+              >
                 取消订单
               </Button>
               <Button

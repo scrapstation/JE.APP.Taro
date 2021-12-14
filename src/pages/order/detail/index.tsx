@@ -37,7 +37,7 @@ const OrderDetail: React.FC = () => {
     return (
       <>
         <View className=''>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
             {getStatusText(order.status)}
             {order.status === StatusEnumOfOrder.PendingPayment && ` ￥${order.amount}`}
           </Text>
@@ -54,7 +54,7 @@ const OrderDetail: React.FC = () => {
                   getOrder(order.id);
                 }}
               />
-              <Text style={{ color: '#999' }}>后订单将会自动取消</Text>
+              <Text style={{ color: '#999', fontSize: 12 }}>后订单将会自动取消</Text>
             </View>
           )}
           {order.status !== StatusEnumOfOrder.PendingPayment && <Text style={{ color: '#999', fontSize: 12 }}>感谢您的支持，欢迎再次光临</Text>}

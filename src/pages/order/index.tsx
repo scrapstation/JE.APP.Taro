@@ -1,5 +1,5 @@
 import { Button, Image, Text, View } from '@tarojs/components';
-import { useDidShow, useReachBottom, useReady } from '@tarojs/taro';
+import { useDidShow, usePullDownRefresh, useReachBottom, useReady } from '@tarojs/taro';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { API } from '../../../src/api';
@@ -28,6 +28,13 @@ const Order: React.FC = () => {
         init();
       }
     });
+  });
+
+  usePullDownRefresh(async () => {
+    await init();
+    setTimeout(() => {
+      Taro.stopPullDownRefresh();
+    }, 200);
   });
   const init = async () => {
     try {
@@ -84,7 +91,7 @@ const Order: React.FC = () => {
       case 'more':
         return <AtLoadMore customStyle={{ height: 'unset' }} noMoreText='加载更多' status={'noMore'} />;
       case 'noMore':
-        return <AtLoadMore customStyle={{ height: 'unset' }} noMoreText='我是有底线的~' status={'noMore'} />;
+        return <AtLoadMore customStyle={{ height: 'unset', color: '#ccc' }} noMoreText='我是有底线的~' status={'noMore'} />;
       default:
         break;
     }

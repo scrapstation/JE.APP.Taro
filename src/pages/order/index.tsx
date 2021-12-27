@@ -11,7 +11,7 @@ import getStatusText from './common';
 import { useDispatch, useSelector } from 'react-redux';
 import { ConnectState } from '@/models/connect';
 import { UserModelState } from '@/models/user';
-import { AtLoadMore } from 'taro-ui';
+import { AtIcon, AtLoadMore } from 'taro-ui';
 import empty from '/src/static/images/my/rider/empty.svg';
 
 const Order: React.FC = () => {
@@ -86,12 +86,9 @@ const Order: React.FC = () => {
 
   const renderLoadStatus = () => {
     switch (loadStatus) {
-      case 'loading':
-        return <AtLoadMore customStyle={{ height: 30 }} status={'loading'} />;
-      case 'more':
-        return <AtLoadMore customStyle={{ height: 'unset' }} noMoreText='加载更多' status={'noMore'} />;
       case 'noMore':
-        return <AtLoadMore customStyle={{ height: 'unset', color: '#ccc' }} noMoreText='我是有底线的~' status={'noMore'} />;
+        return <View style={{ margin: '30px 0', fontSize: 13, color: '#999' }}>没有更多了~</View>;
+      // <AtLoadMore customStyle={{ height: 'unset', fontSize: 13, color: '#999' }} noMoreText='没有更多了' status={'noMore'} />;
       default:
         break;
     }
@@ -99,12 +96,18 @@ const Order: React.FC = () => {
 
   const renderOrderItem = (order: OrderResponse) => {
     return (
-      <View onClick={() => toOrderDetail(order)} style={{ display: 'flex', flexDirection: 'column', marginTop: 10, padding: 10, backgroundColor: '#FFF' }}>
+      <View onClick={() => toOrderDetail(order)} style={{ display: 'flex', flexDirection: 'column', margin: '8px 8px 0', borderRadius: 8, padding: '16px 16px 24px', backgroundColor: '#FFF' }}>
         <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <View style={{ fontSize: 14 }}>{moment(order.createdOn).format('YYYY-MM-DD HH:mm:ss')}</View>
-          <View style={{ fontSize: 14, color: '#999' }}>{getStatusText(order.status)}</View>
+          <View>
+            <View style={{ fontSize: 14, color: '#343434' }}>北京上地华联店</View>
+            <View style={{ fontSize: 11, color: '#999' }}>{moment(order.createdOn).format('YYYY-MM-DD HH:mm:ss')}</View>
+          </View>
+          <View style={{ fontSize: 12, color: '#5d5d5d' }}>
+            <Text style={{ verticalAlign: 'middle' }}>{getStatusText(order.status)}</Text>
+            <AtIcon value='chevron-right' size={16}></AtIcon>
+          </View>
         </View>
-        <View style={{ display: 'flex', marginTop: 20 }}>
+        <View style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
           <View style={{ flex: 1, width: '70%', display: 'flex', overflow: 'auto', marginRight: 20 }}>
             {order.orderItems &&
               order.orderItems!.map((orderItem) => {
@@ -112,7 +115,9 @@ const Order: React.FC = () => {
               })}
           </View>
           <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            <View>￥{order.actualPayment}</View>
+            <View className='neutra-font' style={{ color: '#343434', fontSize: 16, fontWeight: 500 }}>
+              ￥{order.actualPayment}
+            </View>
             <View style={{ fontSize: 12, color: '#999' }}>共{order.orderItems?.length || 0}件</View>
           </View>
         </View>

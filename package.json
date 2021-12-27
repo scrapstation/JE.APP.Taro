@@ -28,11 +28,11 @@
     "dev:qq": "npm run build:qq -- --watch",
     "dev:jd": "npm run build:jd -- --watch",
     "dev:quickapp": "npm run build:quickapp -- --watch",
-    "pull-api": "echo 'Sync Api From %npm_package_devConfig_genClient_input%' && nswag openapi2tsclient /input:%npm_package_devConfig_genClient_input% /output:%npm_package_devConfig_genClient_output% /template:axios"
+    "pull-api": "echo 'Sync Api From %npm_package_config_api-client_input%' && nswag openapi2tsclient /input:%npm_package_config_api-client_input% /output:%npm_package_config_api-client_output% /template:axios"
   },
-  "devConfig": {
-    "genClient": {
-      "input": "https://api-dev-daveshop-wechat.chinacloudsites.cn/swagger/v1/swagger.json",
+  "config": {
+    "api-client": {
+      "input": "http://localhost:4888/swagger/v1/swagger.json",
       "output": "src/api/client.ts",
       "operationgenerationmode": "MultipleClientsFromPathSegments"
     }

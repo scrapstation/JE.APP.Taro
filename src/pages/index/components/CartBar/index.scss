@@ -6,7 +6,7 @@
   z-index: 995;
   height: 100rpx;
   background-color: #f0f0f1;
-  border-bottom: 2rpx solid #c8c7cc;
+  border-bottom: 1rpx solid #cecece;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -46,9 +46,9 @@
       }
 
       .badge {
-        background-color: #DBA871;
+        background-color: #dba871;
         font-size: 24rpx;
-        color: #FFF;
+        color: #fff;
         line-height: 1rem;
         width: 1rem;
         text-align: center;
@@ -68,8 +68,8 @@
 
   .right {
     margin: 0;
-    color: #FFF;
-    background-color: #DBA871;
+    color: #fff;
+    background-color: #dba871;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,5 +79,5 @@
   }
 }
 button::after {
-    border-radius: 0;
+  border-radius: 0;
 }

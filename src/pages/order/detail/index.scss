@@ -9,3 +9,27 @@ page {
     }
   }
 }
+
+.main {
+  > view {
+    border-radius: 16px;
+    margin: 20px;
+    background-color: #fff;
+    padding: 30px;
+  }
+  .info {
+    .item {
+      font-size: 28px;
+      > view {
+        margin-top: 10px;
+        color: #999;
+        .title {
+          margin-right: 5px;
+        }
+        .value {
+          color: #666;
+        }
+      }
+    }
+  }
+}

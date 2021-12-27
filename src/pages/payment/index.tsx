@@ -86,6 +86,7 @@ const Payment: React.FC = () => {
         paySign: payinfo.paySign!,
       });
     } finally {
+      Taro.removeStorage({ key: 'cart' });
       Taro.eventCenter.trigger('refreshOrderList');
       await switchTab({
         url: `/pages/order/index`,

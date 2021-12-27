@@ -37,7 +37,7 @@ const OrderDetail: React.FC = () => {
     return (
       <>
         <View className=''>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+          <Text style={{ fontSize: 20 }}>
             {getStatusText(order.status)}
             {order.status === StatusEnumOfOrder.PendingPayment && ` ￥${order.amount}`}
           </Text>
@@ -57,7 +57,7 @@ const OrderDetail: React.FC = () => {
               <Text style={{ color: '#999', fontSize: 12 }}>后订单将会自动取消</Text>
             </View>
           )}
-          {order.status !== StatusEnumOfOrder.PendingPayment && <Text style={{ color: '#999', fontSize: 12 }}>感谢您的支持，欢迎再次光临</Text>}
+          {order.status !== StatusEnumOfOrder.PendingPayment && <Text style={{ color: '#999', fontSize: 14 }}>感谢您的支持，欢迎再次光临</Text>}
         </View>
         <View style={{ marginTop: 10 }}>
           {order.status == StatusEnumOfOrder.PendingPayment && (
@@ -70,12 +70,6 @@ const OrderDetail: React.FC = () => {
               </Button>
             </>
           )}
-          {/* TODO: 暂不支持 */}
-          {/* {order.status !== StatusEnumOfOrder.PendingPayment &&
-                        <>
-                            <Button type="primary" size="mini" style={{ margin: '0 0 0 5px', backgroundColor: '#fff', color: "#DBA871", borderRadius: 2, border: "1px solid #DBA871" }} onClick={() => { }}>再来一单</Button>
-                        </>
-                    } */}
         </View>
       </>
     );
@@ -86,14 +80,14 @@ const OrderDetail: React.FC = () => {
       return (
         <View style={{ display: 'flex', flexWrap: 'wrap', marginTop: 5, marginBottom: 5 }}>
           <View style={{ display: 'flex', alignItems: 'center' }}>
-            <Image lazyLoad mode='aspectFill' src={item.imgUrl!} style={{ width: 64, height: 64 }}></Image>
+            <Image lazyLoad mode='aspectFill' src={item.imgUrl!} style={{ width: 64, height: 64, borderRadius: 8 }}></Image>
           </View>
           <View style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', overflow: 'auto', wordWrap: 'break-word', marginLeft: 10 }}>
-            <View style={{ fontSize: 16 }}>{item.snapshotName}</View>
-            <View style={{ fontSize: 14, color: '#999' }}>{item.snapshotAttributeItemNames}</View>
+            <View style={{ fontSize: 14 }}>{item.snapshotName}</View>
+            <View style={{ fontSize: 12, color: '#999' }}>{item.snapshotAttributeItemNames}</View>
           </View>
           <View style={{ minWidth: 40, textAlign: 'right' }}>
-            <View style={{ fontSize: 16, fontWeight: 'bold' }}>￥{item.price}</View>
+            <View style={{ fontSize: 16 }}>￥{item.price}</View>
             <View style={{ fontSize: 14, color: '#999' }}>x{item.quantity}</View>
           </View>
         </View>
@@ -103,36 +97,33 @@ const OrderDetail: React.FC = () => {
   return (
     <>
       {isReady && (
-        <>
-          <View style={{ margin: 10 }}>
-            <View style={{ textAlign: 'center', backgroundColor: '#FFF', padding: 20 }}>{renderStatusArea(order)}</View>
-          </View>
-          <View style={{ margin: 10 }}>
-            <View style={{ backgroundColor: '#FFF', padding: 10, display: 'flex', flexDirection: 'column' }}>
-              {renderOrderItems(order)}
-              <View style={{ overflow: 'auto', marginTop: 20 }}>
-                <Text style={{ fontSize: 14, float: 'right' }}>
-                  共 {order.orderItems!.reduce((arr, x) => arr + x.quantity, 0)} 件商品，合计 ￥{order.actualPayment}
-                </Text>
-              </View>
+        <View className='main'>
+          <View style={{ textAlign: 'center' }}>{renderStatusArea(order)}</View>
+          <View style={{ display: 'flex', flexDirection: 'column' }}>
+            {renderOrderItems(order)}
+            <View style={{ overflow: 'auto', marginTop: 20 }}>
+              <Text style={{ fontSize: 16, float: 'right' }}>
+                共 {order.orderItems!.reduce((arr, x) => arr + x.quantity, 0)} 件商品，合计 ￥{order.actualPayment}
+              </Text>
             </View>
           </View>
-          <View style={{ backgroundColor: '#FFF', margin: 10, padding: 0 }}>
-            <View style={{ margin: 10, display: 'inline-block' }}>订单信息</View>
-            <AtDivider height={0.5} customStyle={{ margin: '0 15px', width: 'unset' }} lineColor='#fafafa'></AtDivider>
-            <View style={{ lineHeight: '24px', margin: 10, fontSize: 12, display: 'inline-block' }}>
-              <View>
-                <Text style={{ color: '#999' }}>下单时间: </Text>7/29 9:49
-              </View>
-              <View>
-                <Text style={{ color: '#999' }}>订单编号: </Text>84616798487919
-              </View>
-              <View>
-                <Text style={{ color: '#999' }}>备注信息: </Text>的味道
-              </View>
+          <View className='info'>
+            <View style={{ display: 'inline-block' }}>订单信息</View>
+            <AtDivider height={0.5} customStyle={{ margin: '10px 0', width: 'unset' }} lineColor='#fafafa'></AtDivider>
+            <View className='item'>
+              {[
+                { title: '下单时间', value: moment(order.createdOn).format('YYYY/MM/DD HH:mm:ss') },
+                { title: '订单编号', value: order.externalId },
+                { title: '备注信息', value: order.remark },
+              ].map((item) => (
+                <View>
+                  <Text className='title'>{item.title}: </Text>
+                  <Text className='value'>{item.value}</Text>
+                </View>
+              ))}
             </View>
           </View>
-        </>
+        </View>
       )}
     </>
   );

@@ -103,12 +103,13 @@ page {
     .product {
       display: flex;
       align-items: center;
-      margin-bottom: 40rpx;
-      height: 154px;
+      margin-bottom: 33px;
+      height: 186px;
 
       .image {
-        width: 138rpx;
-        height: 138rpx;
+        border-radius: 8px;
+        width: 180px;
+        height: 180px;
       }
 
       .content {

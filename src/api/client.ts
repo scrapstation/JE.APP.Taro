@@ -16,7 +16,7 @@ export class AccountClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getAccountInfo(  cancelToken?: CancelToken | undefined): Promise<AccountInfoResponse> {
@@ -74,7 +74,7 @@ export class AuthClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     auth(model: GetWechatUserInfo , cancelToken?: CancelToken | undefined): Promise<WechatAuthResponse> {
@@ -136,7 +136,7 @@ export class CategoryClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getAllCategory(  cancelToken?: CancelToken | undefined): Promise<CategoryReponse[]> {
@@ -201,7 +201,7 @@ export class ConsigneeClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     create(req: CreateConsigneeRequest , cancelToken?: CancelToken | undefined): Promise<boolean> {
@@ -516,7 +516,7 @@ export class OrderClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     loadOrder(request: LoadOrderRequest , cancelToken?: CancelToken | undefined): Promise<OrderResponse[]> {
@@ -839,7 +839,7 @@ export class RiderAccountClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getSummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetSummaryResponse> {
@@ -897,7 +897,7 @@ export class RiderClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     getSummary(  cancelToken?: CancelToken | undefined): Promise<RiderGetSummaryResponse> {
@@ -1223,7 +1223,7 @@ export class ShoppingCartClient {
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api-dev-daveshop-wechat.chinacloudsites.cn";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
     }
 
     get(  cancelToken?: CancelToken | undefined): Promise<ShoppingCartInfoResponse> {
@@ -1935,6 +1935,7 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
     status!: StatusEnumOfOrder;
     orderItems?: OrderItemVoOfOrderResponse[] | undefined;
     expireTime!: Date;
+    remark?: string | undefined;
 
     constructor(data?: IOrderResponse) {
         super(data);
@@ -1954,6 +1955,7 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
                     this.orderItems!.push(OrderItemVoOfOrderResponse.fromJS(item));
             }
             this.expireTime = _data["expireTime"] ? new Date(_data["expireTime"].toString()) : <any>undefined;
+            this.remark = _data["remark"];
         }
     }
 
@@ -1977,6 +1979,7 @@ export class OrderResponse extends AuditFields implements IOrderResponse {
                 data["orderItems"].push(item.toJSON());
         }
         data["expireTime"] = this.expireTime ? this.expireTime.toISOString() : <any>undefined;
+        data["remark"] = this.remark;
         super.toJSON(data);
         return data; 
     }
@@ -1990,6 +1993,7 @@ export interface IOrderResponse extends IAuditFields {
     status: StatusEnumOfOrder;
     orderItems?: OrderItemVoOfOrderResponse[] | undefined;
     expireTime: Date;
+    remark?: string | undefined;
 }
 
 export enum StatusEnumOfOrder {

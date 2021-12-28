@@ -1,7 +1,7 @@
 import { Button, Image, Text, View } from '@tarojs/components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { API } from '../../api/index';
-import { ConsigneeItemResponse, CreateOrderRequest, ItemOfCreateOrderRequest } from '../../../src/api/client';
+import { CalculateOrderFeeRequest, CalculateOrderFeeResponse, ConsigneeItemResponse, CreateOrderRequest, ItemOfCalculateOrderFeeRequest, ItemOfCreateOrderRequest } from '../../../src/api/client';
 import { AtIcon } from 'taro-ui';
 import Taro, { navigateBack, navigateTo, switchTab, useDidShow, useReady } from '@tarojs/taro';
 import styles from './index.module.scss';
@@ -15,6 +15,7 @@ const Payment: React.FC = () => {
   const [bottomUnsafeHeight, setBottomUnsafeHeight] = useState<number>(0);
   const [cart, setCart] = useState<CardItem[]>([]);
   const [remark, setRemark] = useState<string>('');
+  const [calculateOrderFee, setCalculateOrderFee] = useState<CalculateOrderFeeResponse>(new CalculateOrderFeeResponse());
 
   useDidShow(() => {
     const storedCart: CardItem[] = Taro.getStorageSync('cart') || [];
@@ -24,6 +25,16 @@ const Payment: React.FC = () => {
     }
     setCart(storedCart);
   });
+
+  useEffect(() => {
+    const calculateOrderFee = async () => {
+      const result = await API.orderClient.calculateOrderFee(new CalculateOrderFeeRequest({ orderItems: cart.map((x) => new ItemOfCalculateOrderFeeRequest({ skuId: x.skuId, quantity: x.number })) }));
+      setCalculateOrderFee(result);
+    };
+    if (cart.length > 0) {
+      calculateOrderFee();
+    }
+  }, [cart]);
   useReady(() => {
     Taro.eventCenter.on('selectConsignee', handleConsigneeChange);
     Taro.eventCenter.on('submitRemark', handleSubmitRemark);
@@ -151,7 +162,7 @@ const Payment: React.FC = () => {
             </View>
             <View style={{ marginTop: 20, marginBottom: 20 }}>
               <Text style={{ fontSize: 16 }}>配送费</Text>
-              <Text style={{ fontSize: 14, float: 'right' }}>￥2</Text>
+              <Text style={{ fontSize: 14, float: 'right' }}>￥{calculateOrderFee.deliveryFee}</Text>
             </View>
             <View style={{ marginTop: 20, marginBottom: 20 }}>
               <Text style={{ fontSize: 16 }}>优惠券</Text>
@@ -183,7 +194,7 @@ const Payment: React.FC = () => {
         <View style={{ backgroundColor: '#FFF', display: 'flex', alignItems: 'center' }}>
           <View style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
             <Text style={{ marginRight: 5, fontSize: 12, color: '#999' }}>合计</Text>
-            <Text style={{ marginRight: 20, fontWeight: 'bold' }}>￥21</Text>
+            <Text style={{ marginRight: 20, fontWeight: 'bold' }}>￥{calculateOrderFee.totalFee}</Text>
           </View>
           <Button type='primary' style={{ backgroundColor: '#DBA871', color: '#fff', borderRadius: 0, width: 100 }} className={styles.btn} onClick={() => pay()}>
             支付

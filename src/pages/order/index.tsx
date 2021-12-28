@@ -116,7 +116,7 @@ const Order: React.FC = () => {
           </View>
           <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
             <View className='neutra-font' style={{ color: '#343434', fontSize: 16, fontWeight: 500 }}>
-              ￥{order.actualPayment}
+              ￥{order.amount}
             </View>
             <View style={{ fontSize: 12, color: '#999' }}>共{order.orderItems?.length || 0}件</View>
           </View>

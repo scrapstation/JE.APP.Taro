@@ -103,7 +103,7 @@ const OrderDetail: React.FC = () => {
             {renderOrderItems(order)}
             <View style={{ overflow: 'auto', marginTop: 20 }}>
               <Text style={{ fontSize: 16, float: 'right' }}>
-                共 {order.orderItems!.reduce((arr, x) => arr + x.quantity, 0)} 件商品，合计 ￥{order.actualPayment}
+                共 {order.orderItems!.reduce((arr, x) => arr + x.quantity, 0)} 件商品，合计 ￥{order.amount}
               </Text>
             </View>
           </View>
@@ -117,8 +117,8 @@ const OrderDetail: React.FC = () => {
                 { title: '备注信息', value: order.remark },
               ].map((item) => (
                 <View>
-                  <Text className='title'>{item.title}: </Text>
-                  <Text className='value'>{item.value}</Text>
+                  <View className='title'>{item.title}: </View>
+                  <View className='value'>{item.value}</View>
                 </View>
               ))}
             </View>

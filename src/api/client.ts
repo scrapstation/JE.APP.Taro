@@ -627,6 +627,57 @@ export class OrderClient {
         return Promise.resolve<OrderResponse>(<any>null);
     }
 
+    calculateOrderFee(req: CalculateOrderFeeRequest , cancelToken?: CancelToken | undefined): Promise<CalculateOrderFeeResponse> {
+        let url_ = this.baseUrl + "/api/Order/calculate-order-fee";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(req);
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCalculateOrderFee(_response);
+        });
+    }
+
+    protected processCalculateOrderFee(response: AxiosResponse): Promise<CalculateOrderFeeResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = CalculateOrderFeeResponse.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<CalculateOrderFeeResponse>(<any>null);
+    }
+
     create(req: CreateOrderRequest , cancelToken?: CancelToken | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Order";
         url_ = url_.replace(/[?&]$/, "");
@@ -2096,6 +2147,134 @@ export class LoadOrderRequest implements ILoadOrderRequest {
 
 export interface ILoadOrderRequest {
     referenceId?: string | undefined;
+}
+
+export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
+    totalFee!: number;
+    wareFee!: number;
+    deliveryFee!: number;
+
+    constructor(data?: ICalculateOrderFeeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalFee = _data["totalFee"];
+            this.wareFee = _data["wareFee"];
+            this.deliveryFee = _data["deliveryFee"];
+        }
+    }
+
+    static fromJS(data: any): CalculateOrderFeeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CalculateOrderFeeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalFee"] = this.totalFee;
+        data["wareFee"] = this.wareFee;
+        data["deliveryFee"] = this.deliveryFee;
+        return data; 
+    }
+}
+
+export interface ICalculateOrderFeeResponse {
+    totalFee: number;
+    wareFee: number;
+    deliveryFee: number;
+}
+
+export class CalculateOrderFeeRequest implements ICalculateOrderFeeRequest {
+    orderItems?: ItemOfCalculateOrderFeeRequest[] | undefined;
+
+    constructor(data?: ICalculateOrderFeeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["orderItems"])) {
+                this.orderItems = [] as any;
+                for (let item of _data["orderItems"])
+                    this.orderItems!.push(ItemOfCalculateOrderFeeRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CalculateOrderFeeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CalculateOrderFeeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.orderItems)) {
+            data["orderItems"] = [];
+            for (let item of this.orderItems)
+                data["orderItems"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICalculateOrderFeeRequest {
+    orderItems?: ItemOfCalculateOrderFeeRequest[] | undefined;
+}
+
+export class ItemOfCalculateOrderFeeRequest implements IItemOfCalculateOrderFeeRequest {
+    skuId!: string;
+    quantity!: number;
+
+    constructor(data?: IItemOfCalculateOrderFeeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.skuId = _data["skuId"];
+            this.quantity = _data["quantity"];
+        }
+    }
+
+    static fromJS(data: any): ItemOfCalculateOrderFeeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new ItemOfCalculateOrderFeeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["skuId"] = this.skuId;
+        data["quantity"] = this.quantity;
+        return data; 
+    }
+}
+
+export interface IItemOfCalculateOrderFeeRequest {
+    skuId: string;
+    quantity: number;
 }
 
 export class CreateOrderRequest implements ICreateOrderRequest {

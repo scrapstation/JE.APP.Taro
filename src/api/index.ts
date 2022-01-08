@@ -1,7 +1,7 @@
 import axios from 'axios';
 import mpAdapter from 'axios-miniprogram-adapter';
 import Taro from '@tarojs/taro';
-import { CategoryClient, AuthClient, ConsigneeClient, AccountClient, ShoppingCartClient, OrderClient, RiderClient } from './client';
+import { CategoryClient, AuthClient, ConsigneeClient, AccountClient, ShoppingCartClient, OrderClient, RiderClient, StoreClient } from './client';
 
 // @ts-ignore
 axios.defaults.adapter = mpAdapter;
@@ -30,4 +30,5 @@ export const API = {
   categoryClient: new CategoryClient(apiurl, axios),
   shoppingCartClient: new ShoppingCartClient(apiurl, axios),
   riderClient: new RiderClient(apiurl, axios),
+  storeClient: new StoreClient(apiurl, axios),
 };

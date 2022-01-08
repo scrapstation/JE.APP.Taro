@@ -1376,6 +1376,67 @@ export class ShoppingCartClient {
     }
 }
 
+export class StoreClient {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+        this.instance = instance ? instance : axios.create();
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+    }
+
+    getStoreById(storeId: string , cancelToken?: CancelToken | undefined): Promise<StoreInfoResponse> {
+        let url_ = this.baseUrl + "/api/Store/{storeId}";
+        if (storeId === undefined || storeId === null)
+            throw new Error("The parameter 'storeId' must be defined.");
+        url_ = url_.replace("{storeId}", encodeURIComponent("" + storeId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetStoreById(_response);
+        });
+    }
+
+    protected processGetStoreById(response: AxiosResponse): Promise<StoreInfoResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StoreInfoResponse.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StoreInfoResponse>(<any>null);
+    }
+}
+
 export class AccountInfoResponse implements IAccountInfoResponse {
     nickName?: string | undefined;
     avator?: string | undefined;
@@ -2150,6 +2211,7 @@ export interface ILoadOrderRequest {
 }
 
 export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
+    freeDeliveryPrice!: number;
     totalFee!: number;
     wareFee!: number;
     deliveryFee!: number;
@@ -2165,6 +2227,7 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
 
     init(_data?: any) {
         if (_data) {
+            this.freeDeliveryPrice = _data["freeDeliveryPrice"];
             this.totalFee = _data["totalFee"];
             this.wareFee = _data["wareFee"];
             this.deliveryFee = _data["deliveryFee"];
@@ -2180,6 +2243,7 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["freeDeliveryPrice"] = this.freeDeliveryPrice;
         data["totalFee"] = this.totalFee;
         data["wareFee"] = this.wareFee;
         data["deliveryFee"] = this.deliveryFee;
@@ -2188,6 +2252,7 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
 }
 
 export interface ICalculateOrderFeeResponse {
+    freeDeliveryPrice: number;
     totalFee: number;
     wareFee: number;
     deliveryFee: number;
@@ -2971,6 +3036,79 @@ export interface IModifyShoppingCartItemRequest {
     productId: string;
     quantity?: number | undefined;
     isSelected?: boolean | undefined;
+}
+
+export class StoreInfoResponse implements IStoreInfoResponse {
+    id!: string;
+    name?: string | undefined;
+    no?: string | undefined;
+    autoStartTime!: string;
+    autoCloseTime!: string;
+    status!: StatusEnumOfStore;
+    freeDeliveryPrice!: number;
+    latitude!: number;
+    longitude!: number;
+
+    constructor(data?: IStoreInfoResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.no = _data["no"];
+            this.autoStartTime = _data["autoStartTime"];
+            this.autoCloseTime = _data["autoCloseTime"];
+            this.status = _data["status"];
+            this.freeDeliveryPrice = _data["freeDeliveryPrice"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+        }
+    }
+
+    static fromJS(data: any): StoreInfoResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new StoreInfoResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["no"] = this.no;
+        data["autoStartTime"] = this.autoStartTime;
+        data["autoCloseTime"] = this.autoCloseTime;
+        data["status"] = this.status;
+        data["freeDeliveryPrice"] = this.freeDeliveryPrice;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        return data; 
+    }
+}
+
+export interface IStoreInfoResponse {
+    id: string;
+    name?: string | undefined;
+    no?: string | undefined;
+    autoStartTime: string;
+    autoCloseTime: string;
+    status: StatusEnumOfStore;
+    freeDeliveryPrice: number;
+    latitude: number;
+    longitude: number;
+}
+
+export enum StatusEnumOfStore {
+    Open = "Open",
+    Closed = "Closed",
 }
 
 export class ApiException extends Error {

@@ -1,8 +1,8 @@
 import { View, ScrollView, Image } from '@tarojs/components';
 import Taro, { useDidHide, useDidShow } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
-import { API } from '../../api/index';
-import { CategoryReponse, ProductOfCategoryReponse } from 'src/api/client';
+import { API } from '../../../src/api';
+import { CategoryReponse, ProductOfCategoryReponse, StoreInfoResponse } from '../../../src/api/client';
 import './index.scss';
 import Action from './components/Action';
 import CartBar from './components/CartBar';
@@ -11,6 +11,7 @@ import { AtIcon } from 'taro-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { ConnectState } from '@/models/connect';
 import { UserModelState } from '@/models/user';
+import haversine from 'haversine-distance';
 
 export type CardItem = {
   productId: string;
@@ -138,12 +139,24 @@ const Index: React.FC = () => {
     Taro.navigateTo({ url: '/pages/payment/index' });
   };
 
+  const [store, setStore] = useState<StoreInfoResponse>(new StoreInfoResponse());
+  const [location, setLocation] = useState<Taro.getLocation.SuccessCallbackResult | undefined>();
+  useEffect(() => {
+    const fetchStore = async () => {
+      const locationResult = await Taro.getLocation({ type: 'wgs84' });
+      setLocation(locationResult);
+      const result = await API.storeClient.getStoreById('B1FD5A56-93A4-59A4-33E0-3A01161DD34D');
+      setStore(result);
+    };
+    fetchStore();
+  }, []);
+
   return (
     <View className='container'>
       <View className='store'>
         <View className='title'>
           <View className='address'>
-            传媒大学店
+            {store.name} {location && haversine([location.latitude, location.longitude], [store.latitude, store.longitude]).toFixed(0)}m
             {[1, 2, 3].map((_) => (
               <AtIcon value='star-2' size='16' color='#DBA871'></AtIcon>
             ))}

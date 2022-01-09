@@ -1,7 +1,7 @@
 import axios from 'axios';
 import mpAdapter from 'axios-miniprogram-adapter';
 import Taro from '@tarojs/taro';
-import { CategoryClient, AuthClient, ConsigneeClient, AccountClient, ShoppingCartClient, OrderClient, RiderClient, StoreClient } from './client';
+import { AuthClient, ConsigneeClient, AccountClient, ShoppingCartClient, OrderClient, RiderClient, StoreClient } from './client';
 
 // @ts-ignore
 axios.defaults.adapter = mpAdapter;
@@ -19,15 +19,13 @@ axios.interceptors.request.use(
   }
 );
 
-const apiurl = 'https://api-dev-daveshop-wechat.chinacloudsites.cn';
-const apiurl1 = 'http://localhost:4888';
+const apiurl1 = 'https://api-dev-daveshop-wechat.chinacloudsites.cn';
+const apiurl = 'http://localhost:4888';
 export const API = {
-  commodityClient: new CategoryClient(apiurl, axios),
   authClient: new AuthClient(apiurl, axios),
   consigneeClient: new ConsigneeClient(apiurl, axios),
   accountClient: new AccountClient(apiurl, axios),
   orderClient: new OrderClient(apiurl, axios),
-  categoryClient: new CategoryClient(apiurl, axios),
   shoppingCartClient: new ShoppingCartClient(apiurl, axios),
   riderClient: new RiderClient(apiurl, axios),
   storeClient: new StoreClient(apiurl, axios),

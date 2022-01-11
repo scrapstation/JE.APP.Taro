@@ -9,9 +9,10 @@ page {
   flex-direction: column;
 }
 .store {
-  margin-left: 30rpx;
-  padding-top: 88rpx;
-  height: 176rpx;
+  margin-bottom: 10px;
+  margin-left: 30px;
+  padding-top: 88px;
+  height: 176px;
   width: 100%;
   box-sizing: border-box;
   display: -ms-flexbox;
@@ -39,10 +40,9 @@ page {
     padding-bottom: 100px;
 
     .menu-item {
-      padding: 30rpx 20rpx;
+      padding: 30rpx 23rpx;
       display: flex;
       flex-direction: column;
-      align-items: center;
       font-size: 26rpx;
       color: #999;
       overflow: hidden;
@@ -186,4 +186,29 @@ page {
     align-items: center;
     font-size: 36rpx;
   }
+}
+
+.test {
+  -ms-flex-align: center;
+  align-items: center;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex: 1;
+  flex: 1;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.test1 {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  color: #999;
+  display: flex;
+  display: -webkit-box;
+  flex: 1;
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 38px;
+  text-overflow: ellipsis;
+  word-break: break-all;
 }

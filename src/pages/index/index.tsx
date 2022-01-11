@@ -1,4 +1,4 @@
-import { View, ScrollView, Image } from '@tarojs/components';
+import { View, ScrollView, Image, Swiper, SwiperItem, Text } from '@tarojs/components';
 import Taro, { useDidHide, useDidShow } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { API } from '../../../src/api';
@@ -158,11 +158,27 @@ const Index: React.FC = () => {
 
   return (
     <View className='container'>
-      <View className='store'>
-        <View className='title'>
-          <View style={{ fontSize: 17 }}>{store.name}</View>
-          <View style={{ marginTop: 5, fontSize: 13, color: '#999' }}> 距离您{location && haversine([location.latitude, location.longitude], [store.latitude, store.longitude]).toFixed(0)}m</View>
+      <View style={{ boxShadow: '0 1px 2px 0 rgba(0,0,0,.06)', zIndex: 1 }}>
+        <View className='store'>
+          <View className='title'>
+            <View style={{ fontSize: 17 }}>{store.name}</View>
+            <View style={{ marginTop: 5, fontSize: 13, color: '#999' }}> 距离您{location && haversine([location.latitude, location.longitude], [store.latitude, store.longitude]).toFixed(0)}m</View>
+          </View>
         </View>
+        <Swiper autoplay vertical circular style={{ height: 20, paddingLeft: 15 }}>
+          <SwiperItem className='test'>
+            <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
+            <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>
+          </SwiperItem>
+          <SwiperItem className='test'>
+            <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
+            <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>
+          </SwiperItem>
+          <SwiperItem className='test'>
+            <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
+            <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>
+          </SwiperItem>
+        </Swiper>
       </View>
       <View className='main'>
         <ScrollView className='menu-bar' enableFlex scrollY scrollWithAnimation scrollIntoView={`menu-${menuCurrentCategoryId}`}>

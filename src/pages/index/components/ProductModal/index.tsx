@@ -1,13 +1,13 @@
 import { View, Image, Swiper, SwiperItem, ScrollView, Button } from '@tarojs/components';
 import { useEffect, useState } from 'react';
-import { ProductOfCategoryReponse } from '../../../../../src/api/client';
+import { ProductOfCategoryInfoVoOfStoreInfoResponse } from '../../../../../src/api/client';
 import { AtModal } from 'taro-ui';
 import { CardItem } from '../..';
 import Action from '../Action';
 import styles from './index.module.scss';
 
 export type ProductModalProps = {
-  product: ProductOfCategoryReponse;
+  product: ProductOfCategoryInfoVoOfStoreInfoResponse;
   onClose: () => void;
   onAddToCart: (cartItem: CardItem) => void;
 };

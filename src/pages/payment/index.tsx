@@ -126,7 +126,7 @@ const Payment: React.FC = () => {
                 <AtIcon className={styles.loading} customStyle={{ lineHeight: '40px' }} value='loading' size='30' color='#999'></AtIcon>
               </View>
             )}
-            {!consigneeLoading && (
+            {!consigneeLoading && consignee?.id && (
               <>
                 <View style={{ flex: 1 }}>
                   <View className={styles.address}>{`${consignee.simpleAddress} ${consignee.houseNumber}`}</View>
@@ -135,6 +135,12 @@ const Payment: React.FC = () => {
                 <View>
                   <AtIcon value='chevron-right' size='24' color='#C8C8C8' onClick={() => {}}></AtIcon>
                 </View>
+              </>
+            )}
+            {!consigneeLoading && !consignee?.id && (
+              <>
+                <View style={{ fontWeight: 'bold' }}>请填写收货地址</View>
+                <AtIcon size={16} value='chevron-right' color='#C8C8C8' onClick={() => {}}></AtIcon>
               </>
             )}
           </View>

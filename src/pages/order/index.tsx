@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ConnectState } from '@/models/connect';
 import { UserModelState } from '@/models/user';
 import { AtIcon, AtLoadMore } from 'taro-ui';
-import empty from '/src/static/images/my/rider/empty.svg';
+import Empty from '@/components/Empty';
 
 const Order: React.FC = () => {
   const didMountRef = useRef(false);
@@ -193,12 +193,7 @@ const Order: React.FC = () => {
           {orders.map((order) => {
             return renderOrderItem(order);
           })}
-          {orders.length == 0 && loadStatus != 'loading' && (
-            <View style={{ marginTop: 100, textAlign: 'center' }}>
-              <Image src={empty} style={{ width: 80, height: 80 }} />
-              <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
-            </View>
-          )}
+          {orders.length == 0 && loadStatus != 'loading' && <Empty text='您还没有订单哦' />}
           {orders.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
         </>
       )}

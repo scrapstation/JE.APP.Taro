@@ -1,13 +1,13 @@
 import { API } from '@/api';
 import { DeliveryStatusEnumOfDeliveryHistory, LoadRiderDeliveryHistoryRequest, LoadRiderDeliveryHistoryResponse } from '@/api/client';
-import { Image, Picker, Text, View } from '@tarojs/components';
+import { Picker, Text, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { AtCalendar, AtIcon, AtLoadMore, AtTag } from 'taro-ui';
-import empty from '/src/static/images/my/rider/empty.svg';
+import { AtLoadMore, AtTag } from 'taro-ui';
 import './index.scss';
+import Empty from '@/components/Empty';
 
 const DeliveriesHistory: React.FC = () => {
   const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
@@ -158,12 +158,7 @@ const DeliveriesHistory: React.FC = () => {
       </View>
       {/* <AtCalendar isMultiSelect onSelectDate={(dates) => onDateSelected(dates.value)} /> */}
       {deliveriesHistorys.map((x) => renderHistoryItem(x))}
-      {deliveriesHistorys.length == 0 && loadStatus != 'loading' && (
-        <View style={{ marginTop: 100, textAlign: 'center' }}>
-          <Image src={empty} style={{ width: 80, height: 80 }} />
-          <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
-        </View>
-      )}
+      {deliveriesHistorys.length == 0 && loadStatus != 'loading' && <Empty text='暂无记录, 快去接单吧' />}
       {deliveriesHistorys.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
     </View>
   );

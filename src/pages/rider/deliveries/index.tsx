@@ -1,11 +1,10 @@
-import { Image, Text, View } from '@tarojs/components';
+import { Text, View } from '@tarojs/components';
 import React, { useState } from 'react';
 import { AtButton, AtModal } from 'taro-ui';
 import moment from 'moment';
-import empty from '/src/static/images/my/rider/empty.svg';
 import './index.scss';
-import { useReachBottom } from '@tarojs/taro';
 import { RiderDeliveringTasksItemResponse } from '@/api/client';
+import Empty from '@/components/Empty';
 
 export type DeliveriesProps = {
   deliveries: RiderDeliveringTasksItemResponse[];
@@ -23,12 +22,7 @@ const Deliveries: React.FC<DeliveriesProps> = (props) => {
   return (
     <View>
       <AtModal isOpened={complateDeliveryModal.visable} title='送达确认' cancelText='取消' confirmText='确认' onClose={() => setComplateDeliveryModalVisable({ visable: false, text: '', deliveryId: '' })} onCancel={() => setComplateDeliveryModalVisable({ visable: false, text: '', deliveryId: '' })} onConfirm={() => complateDelivery()} content={complateDeliveryModal.text} className='modal' />
-      {props.deliveries.length == 0 && (
-        <View style={{ marginTop: 100, textAlign: 'center' }}>
-          <Image src={empty} style={{ width: 80, height: 80 }} />
-          <View style={{ color: '#8a8a8a' }}>空空如也~ 快去接单吧</View>
-        </View>
-      )}
+      {props.deliveries.length == 0 && <Empty text='暂无记录, 快去接单吧' />}
       {props.deliveries.map((x) => {
         return (
           <View style={{ margin: 15, borderRadius: 5, backgroundColor: '#fff', padding: 15, boxShadow: '4px 4px 20px #f3f3f3' }}>

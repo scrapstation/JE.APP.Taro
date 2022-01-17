@@ -9,6 +9,7 @@ import { ConnectState } from '@/models/connect';
 import { UserModelState } from '@/models/user';
 import haversine from 'haversine-distance';
 import ProductList from './components/ProductList';
+import PageLoading from '@/components/PageLoading';
 
 export type CardItem = {
   productId: string;
@@ -20,6 +21,7 @@ export type CardItem = {
   mark?: string;
 };
 const Index: React.FC = () => {
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
   const [location, setLocation] = useState<Taro.getLocation.SuccessCallbackResult | undefined>();
   const [store, setStore] = useState<BaseInfoVoOfStoreInfoResponse>(new BaseInfoVoOfStoreInfoResponse());
   const [categories, setCategories] = useState<Array<CategoryInfoVoOfStoreInfoResponse>>([]);
@@ -31,11 +33,15 @@ const Index: React.FC = () => {
       const data = await API.storeClient.getStoreById('B1FD5A56-93A4-59A4-33E0-3A01161DD34D');
       setCategories(data.categoryInfo!);
       setStore(data.baseInfo!);
+      setTimeout(() => {
+        setIsPageLoading(false);
+      }, 1000);
     };
     fetchCategories();
   }, []);
   return (
     <View className='container'>
+      {isPageLoading && <PageLoading />}
       <View style={{ boxShadow: '0 1px 2px 0 rgba(0,0,0,.06)', zIndex: 1 }}>
         <View className='store'>
           <View className='title'>

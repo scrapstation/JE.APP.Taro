@@ -26,6 +26,10 @@ const config = {
   // },
   mini: {
     postcss: {
+      autoprefixer: {
+        enable: false,
+        config: {},
+      },
       pxtransform: {
         enable: true,
         config: {
@@ -59,7 +63,7 @@ const config = {
     staticDirectory: 'static',
     postcss: {
       autoprefixer: {
-        enable: true,
+        enable: false,
         config: {},
       },
       cssModules: {

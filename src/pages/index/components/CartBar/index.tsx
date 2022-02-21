@@ -1,4 +1,5 @@
 import { View, Image, Button } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import React from 'react';
 import { CardItem } from '../..';
 import CartPopup, { CartPopupRefs } from './CartPopup';
@@ -13,7 +14,8 @@ export type CartBarProps = {
   onDetail: () => void;
 };
 
-const test = (e) => {
+const test = async (e) => {
+  console.log(await Taro.login({}));
   console.log(e);
 };
 const CartBar: React.FC<CartBarProps> = (props) => {

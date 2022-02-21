@@ -1,4 +1,4 @@
-import { View, Image, Navigator } from '@tarojs/components';
+import { View, Image, Navigator, Button, ButtonProps } from '@tarojs/components';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ConnectState } from 'src/models/connect';
@@ -7,6 +7,8 @@ import { AtBadge, AtIcon } from 'taro-ui';
 import bg from '/src/static/images/my/headerbg.png';
 import defaultUserAvator from '/src/static/images/my/user.png';
 import './index.scss';
+import Taro from '@tarojs/taro';
+import { API } from '@/api';
 
 const renderListItem = (title: string, path: string, desc: string, showArrow: boolean) => {
   return (
@@ -28,11 +30,36 @@ const Personal: React.FC = () => {
       dispatch({ type: 'user/getCurrentUserInfo' });
     }
   }, [isLogin]);
+
+  useEffect(() => {
+    const login = async () => {
+      console.log(await Taro.login({}));
+    };
+    login();
+  });
+
+  const test = async (e) => {
+    const openIdCode = await Taro.login({});
+    await API.authClient.auth(openIdCode.code, e.detail.code);
+  };
+
+  const test1 = () => {
+    Taro.navigateTo({
+      url: `/pages/login/index`,
+    });
+  };
+
   return (
     <View className='container'>
       <View className='header-img'>
         <Image style={{ width: '100%' }} src={bg} mode='widthFix'></Image>
       </View>
+      <Button type='primary' openType={'getPhoneNumber'} onGetPhoneNumber={(e) => test(e)} className='right'>
+        结算1
+      </Button>
+      <Button type='primary' onClick={(e) => test1()}>
+        结算1
+      </Button>
       <View className='content'>
         <View className='member-card'>
           <View style={{ display: 'flex' }}>

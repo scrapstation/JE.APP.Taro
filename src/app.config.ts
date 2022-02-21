@@ -10,7 +10,8 @@ export default {
     'pages/payment/remark/index',
     'pages/consignee/index',
     'pages/personal/index',
-    'pages/consignee/add/index'
+    'pages/consignee/add/index',
+    'pages/login/index',
   ],
   permission: {
     "scope.userLocation": {

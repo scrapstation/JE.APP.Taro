@@ -131,7 +131,7 @@ const ProductList: React.FC<ProductListProps> = (props) => {
   };
   const toPaymentPage = async () => {
     if (!isLogin) {
-      await dispatch({ type: 'user/login' });
+      Taro.navigateTo({ url: '/pages/login/index' });
     }
     Taro.navigateTo({ url: '/pages/payment/index' });
   };

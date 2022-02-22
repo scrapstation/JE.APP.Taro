@@ -14,16 +14,11 @@ export type CartBarProps = {
   onDetail: () => void;
 };
 
-const test = async (e) => {
-  console.log(await Taro.login({}));
-  console.log(e);
-};
 const CartBar: React.FC<CartBarProps> = (props) => {
   const cartPopupRef = React.createRef<CartPopupRefs>();
   return (
     <View>
       <View className='cart-bar'>
-        {/* <uni-transition :mode-class="['slide-bottom']" :show="!!cartNum" :styles="cartBarStyles"> */}
         <View className='left'>
           <View className='detail-action' onClick={() => cartPopupRef.current?.open()}>
             <Image src={require('../../../../static/images/index/icon_shopping_bag.png')} className='shopbag-btn'></Image>
@@ -31,13 +26,9 @@ const CartBar: React.FC<CartBarProps> = (props) => {
           </View>
           <View className='price'>￥{props.cart.reduce((arr, x) => arr + x.skuPrice * x.number, 0)}</View>
         </View>
-        <Button type='primary' openType={'getPhoneNumber'} onGetPhoneNumber={(e) => test(e)} className='right'>
-          结算1
-        </Button>
         <Button type='primary' className='right' onClick={() => props.onPay()}>
           结算
         </Button>
-        {/* </uni-transtion> */}
       </View>
       <CartPopup ref={cartPopupRef} cart={props.cart} onAdd={(item) => props.onAdd(item)} onMinus={(skuId) => props.onMinus(skuId)} onClear={() => props.onClear()} />
     </View>

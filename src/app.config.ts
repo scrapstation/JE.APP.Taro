@@ -1,8 +1,6 @@
 export default {
   pages: [
-    'pages/login/index',
     'pages/index/index',
-    'pages/test/index',
     'pages/rider/deliveries-history/index',
     'pages/rider/index',
     'pages/order/index',
@@ -12,6 +10,7 @@ export default {
     'pages/consignee/index',
     'pages/personal/index',
     'pages/consignee/add/index',
+    'pages/login/index',
   ],
   permission: {
     "scope.userLocation": {

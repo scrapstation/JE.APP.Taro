@@ -8,7 +8,6 @@ import bg from '/src/static/images/my/headerbg.png';
 import defaultUserAvator from '/src/static/images/my/user.png';
 import './index.scss';
 import Taro from '@tarojs/taro';
-import { API } from '@/api';
 
 const renderListItem = (title: string, path: string, desc: string, showArrow: boolean) => {
   return (
@@ -31,22 +30,8 @@ const Personal: React.FC = () => {
     }
   }, [isLogin]);
 
-  useEffect(() => {
-    const login = async () => {
-      console.log(await Taro.login({}));
-    };
-    login();
-  });
-
-  const test = async (e) => {
-    const openIdCode = await Taro.login({});
-    await API.authClient.auth(openIdCode.code, e.detail.code);
-  };
-
-  const test1 = () => {
-    Taro.navigateTo({
-      url: `/pages/login/index`,
-    });
+  const toLogin = () => {
+    Taro.navigateTo({ url: '/pages/login/index' });
   };
 
   return (
@@ -54,35 +39,32 @@ const Personal: React.FC = () => {
       <View className='header-img'>
         <Image style={{ width: '100%' }} src={bg} mode='widthFix'></Image>
       </View>
-      <Button type='primary' openType={'getPhoneNumber'} onGetPhoneNumber={(e) => test(e)} className='right'>
-        结算1
-      </Button>
-      <Button type='primary' onClick={(e) => test1()}>
-        结算1
-      </Button>
       <View className='content'>
         <View className='member-card'>
-          <View style={{ display: 'flex' }}>
-            <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator}></Image>
-            <View style={{ display: 'flex', marginLeft: 10, flexDirection: 'column', justifyContent: 'space-evenly' }}>
-              {currentUser && (
-                <>
-                  <AtBadge value={'Lv1'}>
-                    <View className='wenyue-font' style={{ fontSize: 20 }}>{`你好, ${currentUser?.nickName}`}</View>
-                  </AtBadge>
-                  <View style={{ fontSize: 14 }}>热情周五，为你打气</View>
-                </>
-              )}
-              {!currentUser && (
-                <>
-                  <View className='wenyue-font' style={{ fontSize: 18 }} onClick={() => dispatch({ type: 'user/login' })}>
-                    轻点登录
-                  </View>
-                  {/* <AtTag onClick={() => dispatch({ type: "user/login" })} active type='primary' className='login-button'>点击登录</AtTag> */}
-                </>
-              )}
+          {currentUser && (
+            <View style={{ display: 'flex' }}>
+              <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator}></Image>
+              <View style={{ display: 'flex', marginLeft: 10, flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                <AtBadge value={'Lv1'}>
+                  <View className='wenyue-font' style={{ fontSize: 20 }}>{`你好, ${currentUser?.nickName}`}</View>
+                </AtBadge>
+                <View style={{ fontSize: 14 }}>热情周五，为你打气</View>
+              </View>
             </View>
-          </View>
+          )}
+          {!currentUser && (
+            <View style={{ display: 'flex', alignItems: 'center' }}>
+              <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+                <View>欢迎来到戴夫小卖部</View>
+                <View style={{ fontSize: 12, marginTop: 10 }}>更好的会员服务，注册登录即可体验</View>
+              </View>
+              <View>
+                <Button type='primary' size='mini' style={{ borderRadius: 50, backgroundColor: '#000' }} onClick={() => toLogin()}>
+                  立即登录
+                </Button>
+              </View>
+            </View>
+          )}
           <View className='row' style={{ marginTop: 20 }}>
             <View className='grid'>
               {/* <Image src={require('../../static/images/my/me_icon_points.png')}></Image> */}

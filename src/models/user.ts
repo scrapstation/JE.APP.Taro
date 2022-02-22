@@ -1,7 +1,7 @@
 import type { Effect } from 'dva-core';
 import Taro from '@tarojs/taro';
 import { Reducer } from 'react';
-import { AccountInfoResponse, GetWechatUserInfo } from '../api/client';
+import { AccountInfoResponse } from '../api/client';
 import { API } from '../api';
 import { useDispatch } from 'react-redux';
 
@@ -31,11 +31,11 @@ const user: UserModelType = {
     currentUser: undefined,
   },
   effects: {
-    *login(_, { call, put }) {
+    *login({ payload }: { payload: { phoneCode: string | null } | undefined }, { call, put }) {
       try {
         const getLoginInfo = async () => {
-          const [wechatLoginResult, userProfile] = await Promise.all([Taro.login({}), Taro.getUserProfile({ desc: '用于完善会员资料' })]);
-          const apiLoginResult = await API.authClient.auth(new GetWechatUserInfo({ code: wechatLoginResult.code, rawData: userProfile.rawData, signature: userProfile.signature }));
+          const wechatLoginResult = await Taro.login({})
+          const apiLoginResult = await API.authClient.auth(wechatLoginResult.code, payload?.phoneCode ?? null);
           return apiLoginResult.token;
         };
         const token = yield call(getLoginInfo);

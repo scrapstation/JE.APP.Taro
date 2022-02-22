@@ -11,8 +11,9 @@ const dvaApp = dva.createApp({
 });
 const store = dvaApp.getStore();
 class App extends Component {
-  componentDidMount() {
-    store.dispatch({ type: 'user/getCurrentUserInfo' });
+  async componentDidMount() {
+    await store.dispatch({ type: 'user/login', payload: { phoneCode: null } });
+    await store.dispatch({ type: 'user/getCurrentUserInfo' });
   }
   render() {
     return <Provider store={store}>{this.props.children}</Provider>;

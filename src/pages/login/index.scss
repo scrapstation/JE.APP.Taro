@@ -5,9 +5,30 @@ page {
 
 .main {
   height: 100%;
-  background-color: red;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .avatar {
+    width: 116rpx;
+    height: 116rpx;
+    margin-left: -10px;
+    border-radius: 100%;
+  }
+  .hello {
+    margin-top: 25px;
+    font-size: 36px;
+  }
+  .tips {
+    margin-top: 25px;
+    font-size: 24px;
+    color: #9a9a9a;
+  }
+  .bind-phone-btn {
+    font-size: 32rpx;
+    width: 70%;
+    border-radius: 50px;
+    margin: 150px;
+    background-color: #dba871;
+  }
 }

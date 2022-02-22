@@ -1,8 +1,19 @@
 module.exports = {
   env: {
-    NODE_ENV: '"production"'
+    NODE_ENV: '"production"',
   },
-  defineConstants: {
+  defineConstants: {},
+  weapp: {
+    module: {
+      postcss: {
+        url: {
+          enable: true,
+          config: {
+            limit: 10240, // 文件大小限制
+          },
+        },
+      },
+    },
   },
   mini: {},
   h5: {
@@ -14,5 +25,5 @@ module.exports = {
      *     .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, [])
      * }
      */
-  }
-}
+  },
+};

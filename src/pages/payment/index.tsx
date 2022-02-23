@@ -40,7 +40,7 @@ const Payment: React.FC = () => {
     Taro.eventCenter.on('submitRemark', handleSubmitRemark);
     const getRecommendedConsignee = async () => {
       const systemInfo = await Taro.getSystemInfo();
-      setBottomUnsafeHeight(systemInfo.screenHeight - systemInfo.safeArea.bottom);
+      setBottomUnsafeHeight(systemInfo.screenHeight - systemInfo!.safeArea!.bottom);
       const recommendedConsignee = await API.consigneeClient.getRecommended();
       setConsignee(recommendedConsignee);
       setConsigneeLoading(false);
@@ -86,8 +86,8 @@ const Payment: React.FC = () => {
       ),
       true
     );
-    const payinfo = await tryFetch(API.orderClient.pay(orderId), true);
     try {
+      const payinfo = await tryFetch(API.orderClient.pay(orderId), true);
       await Taro.requestPayment({
         timeStamp: payinfo.timeStamp!,
         nonceStr: payinfo.nonceStr!,

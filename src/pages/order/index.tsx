@@ -70,14 +70,6 @@ const Order: React.FC = () => {
     }
   }, [isLogin]);
 
-  // useDidShow(() => {
-  //   console.log('show');
-  //   if (isLogin) {
-  //     console.log('showInit');
-  //     init();
-  //   }
-  // });
-
   const toOrderDetail = (order: OrderResponse) => {
     Taro.navigateTo({
       url: `/pages/order/detail/index?order=${JSON.stringify(order)}`,
@@ -88,7 +80,6 @@ const Order: React.FC = () => {
     switch (loadStatus) {
       case 'noMore':
         return <View style={{ margin: '30px 0', fontSize: 13, color: '#999' }}>没有更多了~</View>;
-      // <AtLoadMore customStyle={{ height: 'unset', fontSize: 13, color: '#999' }} noMoreText='没有更多了' status={'noMore'} />;
       default:
         break;
     }

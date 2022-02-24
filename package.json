@@ -50,14 +50,14 @@
     "@tarojs/react": "3.4.2",
     "@tarojs/runtime": "3.4.2",
     "@tarojs/taro": "3.4.2",
-    "moment": "^2.29.1",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
     "axios-miniprogram-adapter": "^0.3.2",
     "classnames": "^2.3.1",
     "dva-core": "^2.0.4",
     "dva-loading": "^3.0.22",
     "haversine-distance": "^1.2.1",
+    "moment": "^2.29.1",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "taro-ui": "3.0.0-alpha.10"
@@ -71,13 +71,16 @@
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "babel-preset-taro": "3.4.2",
+    "cache-loader": "^4.1.0",
     "eslint": "^6.8.0",
     "eslint-config-taro": "3.4.2",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-react": "^7.8.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "nswag": "^13.10.8",
     "stylelint": "^14.4.0",
-    "typescript": "^4.1.0",
-    "nswag": "^13.10.8"
+    "taro-plugin-compiler-optimization": "^1.0.1",
+    "thread-loader": "^3.0.4",
+    "typescript": "^4.1.0"
   }
 }

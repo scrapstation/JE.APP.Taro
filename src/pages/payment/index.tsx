@@ -190,7 +190,7 @@ const Payment: React.FC = () => {
               <Text style={{ fontSize: 16 }}>支付方式</Text>
               <View style={{ display: 'inline-block', float: 'right' }}>
                 <View style={{ display: 'flex', alignItems: 'center' }}>
-                  <Image style={{ width: 14, height: 14 }} src={require('../../static/images/payment/weixin-pay.png')}></Image>
+                  <Image style={{ width: 14, height: 14 }} src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/payment/weixin-pay.png'}></Image>
                   <Text style={{ fontSize: 14, marginLeft: 5 }}>微信支付</Text>
                 </View>
               </View>

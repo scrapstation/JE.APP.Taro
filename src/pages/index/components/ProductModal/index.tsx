@@ -86,7 +86,7 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
   return (
     <AtModal isOpened onClose={() => props.onClose()}>
       <View className={styles.header}>
-        <Image src={require('../../../../static/Images/index/round_close_btn.png')} onClick={() => props.onClose()}></Image>
+        <Image src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/index/round_close_btn.png'} onClick={() => props.onClose()}></Image>
       </View>
       <Swiper duration={1000} indicator-dots className={styles.swiper} autoplay interval={3000}>
         <SwiperItem>

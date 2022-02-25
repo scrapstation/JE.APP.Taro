@@ -21,7 +21,7 @@ const CartBar: React.FC<CartBarProps> = (props) => {
       <View className='cart-bar'>
         <View className='left'>
           <View className='detail-action' onClick={() => cartPopupRef.current?.open()}>
-            <Image src={require('../../../../static/images/index/icon_shopping_bag.png')} className='shopbag-btn'></Image>
+            <Image src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/index/icon_shopping_bag.png'} className='shopbag-btn'></Image>
             <View className='badge'>{props.cart.reduce((arr, x) => arr + x.number, 0)}</View>
           </View>
           <View className='price'>￥{props.cart.reduce((arr, x) => arr + x.skuPrice * x.number, 0)}</View>

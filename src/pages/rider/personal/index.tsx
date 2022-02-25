@@ -1,18 +1,12 @@
 import { Image, Navigator, View } from '@tarojs/components';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { RiderGetSummaryResponse } from 'src/api/client';
 import { ConnectState } from 'src/models/connect';
 import { UserModelState } from 'src/models/user';
 import './index.scss';
-import defaultUserAvator from '/src/static/images/my/user.png';
-import lv1Svg from '/src/static/images/my/rider/level-1.svg';
-import riderSvg from '/src/static/images/my/rider/rider.svg';
-import settlementSvg from '/src/static/images/my/rider/settlement.svg';
-import riderBg from '/src/static/images/my/rider/riderBg.png';
 import NumberMotion from './components/NumberMotion';
 import { AtIcon } from 'taro-ui';
-import { API } from '../../../../src/api';
 
 export type PersonalProps = {
   summary: RiderGetSummaryResponse;
@@ -35,16 +29,16 @@ const Personal: React.FC<PersonalProps> = (props) => {
     <View className='main'>
       <View className='bg'>
         <View className='mask'></View>
-        <Image style={{ width: '100%' }} src={riderBg} mode='widthFix'></Image>
+        <Image style={{ width: '100%' }} src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/rider/riderBg.png'} mode='widthFix'></Image>
       </View>
       <View className='content'>
         <View className='rider-info-card'>
-          <Image className='avatar' src={currentUser ? currentUser!.avator! : defaultUserAvator}></Image>
+          <Image className='avatar' src={currentUser ? currentUser!.avator! : 'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/user.png'}></Image>
           <View className='base-info'>
             <View className='nickname'>Hi,汤姆可</View>
             <View className='viptips'>今天是你在戴夫小卖部的第67天</View>
           </View>
-          <Image className='level' src={lv1Svg}></Image>
+          <Image className='level' src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/rider/level-1.svg'}></Image>
         </View>
         <View className='account-info'>
           <View>

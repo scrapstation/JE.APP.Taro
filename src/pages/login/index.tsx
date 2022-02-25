@@ -2,7 +2,6 @@ import { View, Image, Swiper, SwiperItem, Text, Button } from '@tarojs/component
 import Taro from '@tarojs/taro';
 import { AtAvatar, AtIcon } from 'taro-ui';
 import './index.scss';
-import defaultUserAvator from '/src/static/images/my/user.png';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Index: React.FC = () => {
@@ -16,7 +15,7 @@ const Index: React.FC = () => {
   };
   return (
     <View className='main'>
-      <Image className='avatar' src={defaultUserAvator}></Image>
+      <Image className='avatar' src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/user.png'}></Image>
       <View className='hello'>您好，茶茶</View>
       <View className='tips'>为了您的账户安全，请绑定手机号</View>
 

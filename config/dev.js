@@ -23,6 +23,7 @@ module.exports = {
             plugin: require('terser-webpack-plugin'),
             args: [
               {
+                // extractComments: false,
                 terserOptions: {
                   compress: true, // 默认使用terser压缩
                   // mangle: false,

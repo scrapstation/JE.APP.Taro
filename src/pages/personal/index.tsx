@@ -41,7 +41,7 @@ const Personal: React.FC = () => {
         <View className='member-card'>
           {currentUser && (
             <View style={{ display: 'flex' }}>
-              <Image className='avatar' src={currentUser ? currentUser!.avator! : 'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/user.png'}></Image>
+              <Image className='avatar' src={currentUser?.avator ?? 'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/user_default_avatar.jpg'}></Image>
               <View style={{ display: 'flex', marginLeft: 10, flexDirection: 'column', justifyContent: 'space-evenly' }}>
                 <AtBadge value={'Lv1'}>
                   <View className='wenyue-font' style={{ fontSize: 20 }}>{`你好, ${currentUser?.nickName}`}</View>

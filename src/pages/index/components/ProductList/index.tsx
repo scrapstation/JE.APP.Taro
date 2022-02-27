@@ -193,7 +193,7 @@ const ProductList: React.FC<ProductListProps> = (props) => {
         </ScrollView>
       </View>
       <View>
-        {cart.length > 0 && <CartBar cart={cart} onClear={() => {}} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => {}} onPay={() => toPaymentPage()}></CartBar>}
+        <CartBar cart={cart} onClear={() => {}} onAdd={(item) => handleAddToCart(item)} onMinus={(skuId) => handleMinusFromCart(skuId)} onDetail={() => {}} onPay={() => toPaymentPage()}></CartBar>
         {productModal.visible && <ProductModal onAddToCart={(cartItem) => handleAddToCart(cartItem)} product={productModal.product!} onClose={() => setProductModal({ ...productModal, visible: false })}></ProductModal>}
       </View>
     </>

@@ -1,5 +1,6 @@
 export default {
   pages: [
+    'pages/coupon/index',
     'pages/index/index',
     'pages/rider/deliveries-history/index',
     'pages/rider/index',

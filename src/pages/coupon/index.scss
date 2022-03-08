@@ -2,3 +2,20 @@ page {
   height: 100%;
   background-color: #f5f6f7;
 }
+
+.info-name {
+  color: #343434;
+  font-size: 28px;
+  font-weight: 500;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+
+.info-expire {
+  color: #343434;
+  font-size: 22px;
+  font-weight: 400;
+}

@@ -3,6 +3,16 @@ page {
   background-color: #f5f6f7;
 }
 
+.limit-text {
+  width: 100%;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .info-name {
   color: #343434;
   font-size: 28px;

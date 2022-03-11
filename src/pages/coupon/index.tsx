@@ -1,7 +1,9 @@
 import { API } from '@/api';
 import { CouponTypeEnumOfCoupon, LoadCouponRequest, LoadCouponResponse } from '@/api/client';
+import Empty from '@/components/Empty';
 import { Text, View } from '@tarojs/components';
-import { useReady } from '@tarojs/taro';
+import Taro from '@tarojs/taro';
+import { usePullDownRefresh, useReachBottom, useReady } from '@tarojs/taro';
 import { useState } from 'react';
 import { AtButton } from 'taro-ui';
 import './index.scss';
@@ -48,15 +50,49 @@ export default () => {
       setLoadStatus('more');
     }
   };
-  return coupons.map((x) => {
-    switch (x.type) {
-      case CouponTypeEnumOfCoupon.Discount:
-        const discountPercentText = x.discountPercent % 10 === 0 ? x.discountPercent / 10 : x.discountPercent;
-        return renderCouponItem(x.name!, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
-      case CouponTypeEnumOfCoupon.FullReduction:
-        return renderCouponItem(x.name!, x.fullReductionDiscountAmount, '元', `满${x.fullReductionLimitAmount}元可用`, x.effectiveTimeRange!);
+
+  useReachBottom(() => {
+    if (loadStatus == 'more') {
+      loadOrder();
+    }
+  });
+
+  usePullDownRefresh(async () => {
+    await init();
+    setTimeout(() => {
+      Taro.stopPullDownRefresh();
+    }, 200);
+  });
+
+  const loadOrder = async () => {
+    const queriedCoupons = await API.couponClient.loadOrder(new LoadCouponRequest({ referenceId: [...coupons].pop()?.id }));
+    setLoadStatus(queriedCoupons.length < 10 ? 'noMore' : 'more');
+    setCoupons([...coupons, ...queriedCoupons]);
+  };
+
+  const renderLoadStatus = () => {
+    switch (loadStatus) {
+      case 'noMore':
+        return <View style={{ margin: '30px 0', fontSize: 13, color: '#999' }}>没有更多了~</View>;
       default:
         break;
     }
-  });
+  };
+  return (
+    <>
+      {coupons.map((x) => {
+        switch (x.type) {
+          case CouponTypeEnumOfCoupon.Discount:
+            const discountPercentText = x.discountPercent % 10 === 0 ? x.discountPercent / 10 : x.discountPercent;
+            return renderCouponItem(x.name!, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
+          case CouponTypeEnumOfCoupon.FullReduction:
+            return renderCouponItem(x.name!, x.fullReductionDiscountAmount, '元', `满${x.fullReductionLimitAmount}元可用`, x.effectiveTimeRange!);
+          default:
+            break;
+        }
+      })}
+      {coupons.length == 0 && loadStatus != 'loading' && <Empty text='您还没有订单哦' />}
+      {coupons.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
+    </>
+  );
 };

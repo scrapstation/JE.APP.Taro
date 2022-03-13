@@ -5,7 +5,7 @@ import { Text, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { usePullDownRefresh, useReachBottom, useReady } from '@tarojs/taro';
 import { useState } from 'react';
-import { AtButton } from 'taro-ui';
+import { AtButton, AtTabs, AtTabsPane } from 'taro-ui';
 import './index.scss';
 
 const renderCouponItem = (name: string, num: number, unit: string, limitText: string, effectiveTimeRange: string) => {
@@ -37,11 +37,14 @@ const renderCouponItem = (name: string, num: number, unit: string, limitText: st
 export default () => {
   const [coupons, setCoupons] = useState<LoadCouponResponse[]>([]);
   const [loadStatus, setLoadStatus] = useState<'more' | 'loading' | 'noMore'>('more');
+  const tabList = [{ title: '可使用' }, { title: '已使用' }, { title: '已失效' }];
+  const [currentTab, setCurrentTab] = useState<number>(0);
   useReady(() => {
     init();
   });
   const init = async () => {
     try {
+      setCoupons([]);
       setLoadStatus('loading');
       const queriedCoupons = await API.couponClient.loadOrder(new LoadCouponRequest());
       setLoadStatus(queriedCoupons.length < 10 ? 'noMore' : 'more');
@@ -78,21 +81,43 @@ export default () => {
         break;
     }
   };
+
+  const renderBody = () => {
+    return (
+      <>
+        {coupons.map((x) => {
+          switch (x.type) {
+            case CouponTypeEnumOfCoupon.Discount:
+              const discountPercentText = x.discountPercent % 10 === 0 ? x.discountPercent / 10 : x.discountPercent;
+              return renderCouponItem(x.name!, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
+            case CouponTypeEnumOfCoupon.FullReduction:
+              return renderCouponItem(x.name!, x.fullReductionDiscountAmount, '元', `满${x.fullReductionLimitAmount}元可用`, x.effectiveTimeRange!);
+            default:
+              break;
+          }
+        })}
+        {coupons.length == 0 && loadStatus != 'loading' && <Empty text='您还没有订单哦' />}
+        {coupons.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
+      </>
+    );
+  };
+  const handleTabChange = async (index: number) => {
+    setCurrentTab(index);
+    await init();
+  };
   return (
     <>
-      {coupons.map((x) => {
-        switch (x.type) {
-          case CouponTypeEnumOfCoupon.Discount:
-            const discountPercentText = x.discountPercent % 10 === 0 ? x.discountPercent / 10 : x.discountPercent;
-            return renderCouponItem(x.name!, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
-          case CouponTypeEnumOfCoupon.FullReduction:
-            return renderCouponItem(x.name!, x.fullReductionDiscountAmount, '元', `满${x.fullReductionLimitAmount}元可用`, x.effectiveTimeRange!);
-          default:
-            break;
-        }
-      })}
-      {coupons.length == 0 && loadStatus != 'loading' && <Empty text='您还没有订单哦' />}
-      {coupons.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
+      <AtTabs current={currentTab} tabList={tabList} onClick={(index) => handleTabChange(index)}>
+        <AtTabsPane current={currentTab} index={0}>
+          <View>{renderBody()}</View>
+        </AtTabsPane>
+        <AtTabsPane current={currentTab} index={1}>
+          <View>{renderBody()}</View>
+        </AtTabsPane>
+        <AtTabsPane current={currentTab} index={2}>
+          <View>{renderBody()}</View>
+        </AtTabsPane>
+      </AtTabs>
     </>
   );
 };

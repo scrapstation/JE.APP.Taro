@@ -3,7 +3,7 @@ import { CouponTypeEnumOfCoupon, LoadCouponRequest, LoadCouponResponse } from '@
 import Empty from '@/components/Empty';
 import TabPane from '@/components/Tab/TabPane';
 import Tabs from '@/components/Tab/Tabs';
-import { Text, View } from '@tarojs/components';
+import { ScrollView, Text, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { usePullDownRefresh, useReachBottom, useReady } from '@tarojs/taro';
 import { useState } from 'react';
@@ -109,7 +109,9 @@ export default () => {
   return (
     <Tabs tabList={['可使用', '已使用', '已失效']} currentIndex={currentTabIndex} onTabChange={(index) => handleTabChange(index)}>
       <TabPane currentIndex={currentTabIndex} index={0} onLoad={() => load()}>
-        {renderBody(availableCouponsTab)}
+        <ScrollView style={{ height: '100%' }} scrollY onScrollToLower={() => load()}>
+          {renderBody(availableCouponsTab)}
+        </ScrollView>
       </TabPane>
       {/* <TabPane currentIndex={currentTabIndex} index={1}>
         {renderBody(usedCouponsTab)}

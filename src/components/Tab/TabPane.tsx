@@ -7,9 +7,5 @@ type TabPaneProps = {
 };
 export default ((props) => {
   const windowInfo = Taro.getWindowInfo();
-  return (
-    <ScrollView scrollY onScrollToLower={() => props.onLoad()} style={{ overflow: 'scroll', transform: 'translateX(0px)', transition: 'all .45s', position: 'absolute', width: windowInfo.windowWidth + 'px', height: '100%', left: props.index * windowInfo.windowWidth - windowInfo.windowWidth * props.currentIndex + 'px' }}>
-      {props.children}
-    </ScrollView>
-  );
+  return <View style={{ transform: 'translateX(0px)', transition: 'all .45s', position: 'absolute', width: windowInfo.windowWidth + 'px', height: '100%', left: props.index * windowInfo.windowWidth - windowInfo.windowWidth * props.currentIndex + 'px' }}>{props.children}</View>;
 }) as React.FC<TabPaneProps>;

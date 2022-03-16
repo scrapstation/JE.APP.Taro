@@ -5,14 +5,15 @@ import TabPane from '@/components/Tab/TabPane';
 import Tabs from '@/components/Tab/Tabs';
 import { ScrollView, Text, View } from '@tarojs/components';
 import { useReady } from '@tarojs/taro';
+import classNames from 'classnames';
 import { useState } from 'react';
 import { AtButton } from 'taro-ui';
 import './index.scss';
 
-const renderCouponItem = (name: string, num: number, unit: string, limitText: string, effectiveTimeRange: string) => {
+const renderCouponItem = (name: string, status: StatusEnumOfCoupon, num: number, unit: string, limitText: string, effectiveTimeRange: string) => {
   return (
-    <View className='left' style={{ backgroundColor: '#FFF', display: 'flex', margin: 15, padding: '12px 10px', borderRadius: 8, alignItems: 'center' }}>
-      <View style={{ width: 75, marginRight: 0, color: '#daa871', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <View className={classNames('coupon-item', status !== StatusEnumOfCoupon.Usable && status !== StatusEnumOfCoupon.NotStart ? 'coupon-item-inactive' : '')}>
+      <View className='left'>
         <View>
           <Text className='neutra-font' style={{ fontSize: num < 100 ? 32 : 28 }}>
             {num}
@@ -28,8 +29,11 @@ const renderCouponItem = (name: string, num: number, unit: string, limitText: st
         <View className='info-expire'>{effectiveTimeRange}</View>
       </View>
       <View style={{ margin: '0' }}>
-        <AtButton type='primary' size='small' customStyle={{ color: '#fff', borderRadius: 50, fontSize: 13, width: 64, height: 26, lineHeight: '26px' }} onClick={() => {}}>
-          去使用
+        <AtButton disabled={status != StatusEnumOfCoupon.NotStart && status != StatusEnumOfCoupon.Usable} type='primary' size='small' customStyle={{ color: '#fff', borderRadius: 50, fontSize: 13, width: 64, height: 26, lineHeight: '26px' }} onClick={() => {}}>
+          {status == StatusEnumOfCoupon.NotStart && '去使用'}
+          {status == StatusEnumOfCoupon.Usable && '去使用'}
+          {status == StatusEnumOfCoupon.Used && '已使用'}
+          {status == StatusEnumOfCoupon.Expired && '已过期'}
         </AtButton>
       </View>
     </View>
@@ -76,9 +80,9 @@ export default () => {
           switch (x.type) {
             case CouponTypeEnumOfCoupon.Discount:
               const discountPercentText = x.discountPercent % 10 === 0 ? x.discountPercent / 10 : x.discountPercent;
-              return renderCouponItem(x.name!, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
+              return renderCouponItem(x.name!, x.status, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
             case CouponTypeEnumOfCoupon.FullReduction:
-              return renderCouponItem(x.name!, x.fullReductionDiscountAmount, '元', `满${x.orderLimitAmount}元可用`, x.effectiveTimeRange!);
+              return renderCouponItem(x.name!, x.status, x.fullReductionDiscountAmount, '元', `满${x.orderLimitAmount}元可用`, x.effectiveTimeRange!);
             default:
               break;
           }

@@ -136,6 +136,18 @@
     font-size: 32rpx;
     border-radius: 6rpx;
     margin: 20rpx 0 0 0;
-    background-color: #dba871;
+    background-color: #dba871 !important;
+    .loading {
+      @keyframes rotation {
+        from {
+          -webkit-transform: rotate(0deg);
+        }
+        to {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+      transform: rotate(360deg);
+      animation: rotation 3s linear infinite;
+    }
   }
 }

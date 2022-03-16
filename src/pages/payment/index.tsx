@@ -167,6 +167,10 @@ const Payment: React.FC = () => {
               })}
             </View>
             <View style={{ marginTop: 20, marginBottom: 20 }}>
+              <Text style={{ fontSize: 16 }}>商品总价</Text>
+              <Text style={{ fontSize: 14, float: 'right' }}>￥{calculateOrderFee.wareFee}</Text>
+            </View>
+            <View style={{ marginTop: 20, marginBottom: 20 }}>
               <Text style={{ fontSize: 16 }}>配送费</Text>
               <Text style={{ fontSize: 14, float: 'right' }}>￥{calculateOrderFee.deliveryFee}</Text>
             </View>
@@ -189,7 +193,7 @@ const Payment: React.FC = () => {
             </View>
             <View style={{ overflow: 'auto', marginTop: 20 }}>
               <Text style={{ fontSize: 14, float: 'right' }}>
-                共 {cart.reduce((arr, x) => arr + x.number, 0)} 件商品，小计 ￥{cart.reduce((arr, x) => arr + x.skuPrice * x.number, 0)}
+                共 {cart.reduce((arr, x) => arr + x.number, 0)} 件商品，小计 ￥{calculateOrderFee.totalFee}
               </Text>
             </View>
           </View>

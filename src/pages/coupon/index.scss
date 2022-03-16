@@ -3,6 +3,25 @@ page {
   background-color: #f5f6f7;
 }
 
+.coupon-item-inactive {
+  filter: grayscale(100%);
+}
+.coupon-item {
+  background-color: #fff;
+  display: flex;
+  margin: 30px;
+  padding: 24px 20px;
+  border-radius: 16px;
+  align-items: center;
+  .left {
+    width: 150px;
+    color: #daa871;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .limit-text {
   width: 100%;
   -webkit-line-clamp: 1;

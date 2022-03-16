@@ -1,7 +1,7 @@
 import { View, Image, Swiper, SwiperItem, ScrollView, Button } from '@tarojs/components';
 import { useEffect, useState } from 'react';
 import { ProductOfCategoryInfoVoOfStoreInfoResponse } from '../../../../../src/api/client';
-import { AtModal } from 'taro-ui';
+import { AtIcon, AtModal } from 'taro-ui';
 import { CardItem } from '../..';
 import Action from '../Action';
 import styles from './index.module.scss';
@@ -12,6 +12,7 @@ export type ProductModalProps = {
   onAddToCart: (cartItem: CardItem) => void;
 };
 const ProductModal: React.FC<ProductModalProps> = (props) => {
+  const [addBtnStatus, setAddBtnStatus] = useState<'normal' | 'loading' | 'ok'>('normal');
   const [attributeSelectedInfo, setAttributeSelectedInfo] = useState<{ attributeId: string; attributeItemId: string }[]>([]);
   const [cartItem, setCartItem] = useState<CardItem>({
     productId: props.product.id,
@@ -80,7 +81,14 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
   };
 
   const handleAddToCart = () => {
-    props.onAddToCart(cartItem);
+    setAddBtnStatus('loading');
+    setTimeout(() => {
+      setAddBtnStatus('ok');
+      setTimeout(() => {
+        setAddBtnStatus('normal');
+        props.onAddToCart(cartItem);
+      }, 700);
+    }, 400);
   };
 
   return (
@@ -133,8 +141,14 @@ const ProductModal: React.FC<ProductModalProps> = (props) => {
           </View>
           <Action isMultiSku={false} number={cartItem.number} onAdd={() => handleOnAdd()} onMinus={() => handleOnMinus()} onSelectMaterails={() => {}}></Action>
         </View>
-        <Button type='primary' className={styles.addCartBtn} onClick={() => handleAddToCart()}>
-          加入购物袋
+        <Button disabled={addBtnStatus !== 'normal'} type='primary' className={styles.addCartBtn} onClick={() => handleAddToCart()}>
+          {addBtnStatus === 'loading' && <AtIcon className={styles.loading} customStyle={{ fontSize: 'unset', marginRight: 5 }} value='loading'></AtIcon>}
+          {addBtnStatus === 'ok' && (
+            <>
+              <AtIcon customStyle={{ fontSize: 'unset', marginRight: 5 }} value='check'></AtIcon>已加入购物袋
+            </>
+          )}
+          {addBtnStatus == 'normal' && '加入购物袋'}
         </Button>
       </View>
     </AtModal>

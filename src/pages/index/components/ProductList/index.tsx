@@ -116,6 +116,7 @@ const ProductList: React.FC<ProductListProps> = (props) => {
       cartTemp.push(cardItem);
     }
     setCart(cartTemp);
+    setProductModal({ ...productModal, visible: false });
   };
 
   const handleMinusFromCart = (skuId: string) => {

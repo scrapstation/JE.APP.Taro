@@ -49,7 +49,7 @@ const Index: React.FC = () => {
             <View style={{ marginTop: 5, fontSize: 13, color: '#999' }}> 距离您{location && haversine([location.latitude, location.longitude], [store.latitude, store.longitude]).toFixed(0)}m</View>
           </View>
         </View>
-        <Swiper autoplay vertical circular style={{ height: 20, paddingLeft: 15 }}>
+        <Swiper autoplay vertical circular style={{ height: 20, padding: '5px 15px' }}>
           <SwiperItem className='test'>
             <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
             <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>

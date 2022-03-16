@@ -16,11 +16,6 @@ function createApp(opt) {
 
     store = app._store
     app.getStore = () => store
-    app.use({
-        onError(err) {
-            console.log(err)
-        },
-    })
 
     dispatch = store.dispatch
 

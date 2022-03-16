@@ -68,8 +68,8 @@ const Personal: React.FC = () => {
               <View className='value'>{currentUser ? 63 : '***'}</View>
               <View className='title'>积分商城</View>
             </View>
-            <View className='grid' hover-className='opacity-6'>
-              <View className='value'>{currentUser ? 0 : '***'}</View>
+            <View onClick={() => Taro.navigateTo({ url: '/pages/coupon/index' })} className='grid' hover-className='opacity-6'>
+              <View className='value'>{currentUser ? currentUser.couponCount : '***'}</View>
               <View className='title'>戴夫劵</View>
             </View>
             <View className='grid'>

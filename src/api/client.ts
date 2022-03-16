@@ -534,7 +534,7 @@ export class CouponClient {
 
     }
 
-    loadOrder(request: LoadCouponRequest , cancelToken?: CancelToken | undefined): Promise<LoadCouponResponse[]> {
+    loadCoupon(request: LoadCouponRequest , cancelToken?: CancelToken | undefined): Promise<LoadCouponResponse[]> {
         let url_ = this.baseUrl + "/api/Coupon/load";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -558,11 +558,11 @@ export class CouponClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLoadOrder(_response);
+            return this.processLoadCoupon(_response);
         });
     }
 
-    protected processLoadOrder(response: AxiosResponse): Promise<LoadCouponResponse[]> {
+    protected processLoadCoupon(response: AxiosResponse): Promise<LoadCouponResponse[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1801,12 +1801,13 @@ export class LoadCouponResponse implements ILoadCouponResponse {
     id!: string;
     name?: string | undefined;
     type!: CouponTypeEnumOfCoupon;
+    status!: StatusEnumOfCoupon;
     effectiveTimeRange?: string | undefined;
     discountPercent!: number;
     discountMaxAmount!: number;
     discountLimitAmount!: number;
     fullReductionDiscountAmount!: number;
-    fullReductionLimitAmount!: number;
+    orderLimitAmount!: number;
 
     constructor(data?: ILoadCouponResponse) {
         if (data) {
@@ -1822,12 +1823,13 @@ export class LoadCouponResponse implements ILoadCouponResponse {
             this.id = _data["id"];
             this.name = _data["name"];
             this.type = _data["type"];
+            this.status = _data["status"];
             this.effectiveTimeRange = _data["effectiveTimeRange"];
             this.discountPercent = _data["discountPercent"];
             this.discountMaxAmount = _data["discountMaxAmount"];
             this.discountLimitAmount = _data["discountLimitAmount"];
             this.fullReductionDiscountAmount = _data["fullReductionDiscountAmount"];
-            this.fullReductionLimitAmount = _data["fullReductionLimitAmount"];
+            this.orderLimitAmount = _data["orderLimitAmount"];
         }
     }
 
@@ -1843,12 +1845,13 @@ export class LoadCouponResponse implements ILoadCouponResponse {
         data["id"] = this.id;
         data["name"] = this.name;
         data["type"] = this.type;
+        data["status"] = this.status;
         data["effectiveTimeRange"] = this.effectiveTimeRange;
         data["discountPercent"] = this.discountPercent;
         data["discountMaxAmount"] = this.discountMaxAmount;
         data["discountLimitAmount"] = this.discountLimitAmount;
         data["fullReductionDiscountAmount"] = this.fullReductionDiscountAmount;
-        data["fullReductionLimitAmount"] = this.fullReductionLimitAmount;
+        data["orderLimitAmount"] = this.orderLimitAmount;
         return data;
     }
 }
@@ -1857,12 +1860,13 @@ export interface ILoadCouponResponse {
     id: string;
     name?: string | undefined;
     type: CouponTypeEnumOfCoupon;
+    status: StatusEnumOfCoupon;
     effectiveTimeRange?: string | undefined;
     discountPercent: number;
     discountMaxAmount: number;
     discountLimitAmount: number;
     fullReductionDiscountAmount: number;
-    fullReductionLimitAmount: number;
+    orderLimitAmount: number;
 }
 
 export enum CouponTypeEnumOfCoupon {
@@ -1871,8 +1875,16 @@ export enum CouponTypeEnumOfCoupon {
     FullReduction = "FullReduction",
 }
 
+export enum StatusEnumOfCoupon {
+    NotStart = "NotStart",
+    Usable = "Usable",
+    Used = "Used",
+    Expired = "Expired",
+}
+
 export class LoadCouponRequest implements ILoadCouponRequest {
     referenceId?: string | undefined;
+    statusList?: StatusEnumOfCoupon[] | undefined;
 
     constructor(data?: ILoadCouponRequest) {
         if (data) {
@@ -1886,6 +1898,11 @@ export class LoadCouponRequest implements ILoadCouponRequest {
     init(_data?: any) {
         if (_data) {
             this.referenceId = _data["referenceId"];
+            if (Array.isArray(_data["statusList"])) {
+                this.statusList = [] as any;
+                for (let item of _data["statusList"])
+                    this.statusList!.push(item);
+            }
         }
     }
 
@@ -1899,12 +1916,18 @@ export class LoadCouponRequest implements ILoadCouponRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["referenceId"] = this.referenceId;
+        if (Array.isArray(this.statusList)) {
+            data["statusList"] = [];
+            for (let item of this.statusList)
+                data["statusList"].push(item);
+        }
         return data;
     }
 }
 
 export interface ILoadCouponRequest {
     referenceId?: string | undefined;
+    statusList?: StatusEnumOfCoupon[] | undefined;
 }
 
 export class AuditFields implements IAuditFields {
@@ -2123,6 +2146,7 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
     totalFee!: number;
     wareFee!: number;
     deliveryFee!: number;
+    availableCouponsCount!: number;
 
     constructor(data?: ICalculateOrderFeeResponse) {
         if (data) {
@@ -2139,6 +2163,7 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
             this.totalFee = _data["totalFee"];
             this.wareFee = _data["wareFee"];
             this.deliveryFee = _data["deliveryFee"];
+            this.availableCouponsCount = _data["availableCouponsCount"];
         }
     }
 
@@ -2155,6 +2180,7 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
         data["totalFee"] = this.totalFee;
         data["wareFee"] = this.wareFee;
         data["deliveryFee"] = this.deliveryFee;
+        data["availableCouponsCount"] = this.availableCouponsCount;
         return data;
     }
 }
@@ -2164,6 +2190,7 @@ export interface ICalculateOrderFeeResponse {
     totalFee: number;
     wareFee: number;
     deliveryFee: number;
+    availableCouponsCount: number;
 }
 
 export class CalculateOrderFeeRequest implements ICalculateOrderFeeRequest {

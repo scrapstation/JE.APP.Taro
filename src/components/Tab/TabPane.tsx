@@ -3,7 +3,6 @@ import Taro from '@tarojs/taro';
 type TabPaneProps = {
   index: number;
   currentIndex: number;
-  onLoad: () => Promise<any>;
 };
 export default ((props) => {
   const windowInfo = Taro.getWindowInfo();

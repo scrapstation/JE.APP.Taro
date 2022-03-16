@@ -36,7 +36,6 @@ const ProductList: React.FC<ProductListProps> = (props) => {
   });
   useEffect(() => {
     if (categories.length > 0) {
-      console.log(categories);
       setMenuCurrentCategoryId(categories![0].id);
     }
     setTimeout(() => {

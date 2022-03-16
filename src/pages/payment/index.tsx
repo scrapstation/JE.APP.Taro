@@ -172,7 +172,16 @@ const Payment: React.FC = () => {
             </View>
             <View style={{ marginTop: 20, marginBottom: 20 }}>
               <Text style={{ fontSize: 16 }}>优惠券</Text>
-              <Text style={{ fontSize: 14, float: 'right', color: '#999' }}>暂无可用</Text>
+              <Text style={{ fontSize: 14, float: 'right', color: calculateOrderFee.availableCouponsCount > 0 ? '#dda25e' : '#999' }}>
+                {calculateOrderFee.availableCouponsCount > 0 ? (
+                  <>
+                    {calculateOrderFee.availableCouponsCount}张可用
+                    <AtIcon value='chevron-right' size='14' color='#dda25e' onClick={() => {}}></AtIcon>
+                  </>
+                ) : (
+                  '暂无可用'
+                )}
+              </Text>
             </View>
             <View style={{ marginTop: 20, marginBottom: 20 }} onClick={() => toRemarkPage()}>
               <Text style={{ fontSize: 16 }}>备注</Text>

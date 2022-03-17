@@ -769,6 +769,65 @@ export class OrderClient {
         return Promise.resolve<CalculateOrderFeeResponse>(null as any);
     }
 
+    getCouponsByOrder(wareFee: number , cancelToken?: CancelToken | undefined): Promise<OrderCouponItemRepsonse[]> {
+        let url_ = this.baseUrl + "/api/Order/coupons-by-order?";
+        if (wareFee === undefined || wareFee === null)
+            throw new Error("The parameter 'wareFee' must be defined and cannot be null.");
+        else
+            url_ += "wareFee=" + encodeURIComponent("" + wareFee) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetCouponsByOrder(_response);
+        });
+    }
+
+    protected processGetCouponsByOrder(response: AxiosResponse): Promise<OrderCouponItemRepsonse[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OrderCouponItemRepsonse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<OrderCouponItemRepsonse[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<OrderCouponItemRepsonse[]>(null as any);
+    }
+
     create(req: CreateOrderRequest , cancelToken?: CancelToken | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Order";
         url_ = url_.replace(/[?&]$/, "");
@@ -2343,6 +2402,94 @@ export class ItemOfCalculateOrderFeeRequest implements IItemOfCalculateOrderFeeR
 export interface IItemOfCalculateOrderFeeRequest {
     skuId: string;
     quantity: number;
+}
+
+export class OrderCouponItemRepsonse implements IOrderCouponItemRepsonse {
+    id!: string;
+    name?: string | undefined;
+    type!: CouponTypeEnumOfCoupon;
+    status!: StatusEnumOfCoupon;
+    effectiveTimeRange?: string | undefined;
+    discountPercent!: number;
+    discountMaxAmount!: number;
+    discountLimitAmount!: number;
+    fullReductionDiscountAmount!: number;
+    orderLimitAmount!: number;
+    available!: boolean;
+    unavailableReasons?: string[] | undefined;
+
+    constructor(data?: IOrderCouponItemRepsonse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.effectiveTimeRange = _data["effectiveTimeRange"];
+            this.discountPercent = _data["discountPercent"];
+            this.discountMaxAmount = _data["discountMaxAmount"];
+            this.discountLimitAmount = _data["discountLimitAmount"];
+            this.fullReductionDiscountAmount = _data["fullReductionDiscountAmount"];
+            this.orderLimitAmount = _data["orderLimitAmount"];
+            this.available = _data["available"];
+            if (Array.isArray(_data["unavailableReasons"])) {
+                this.unavailableReasons = [] as any;
+                for (let item of _data["unavailableReasons"])
+                    this.unavailableReasons!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): OrderCouponItemRepsonse {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderCouponItemRepsonse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["effectiveTimeRange"] = this.effectiveTimeRange;
+        data["discountPercent"] = this.discountPercent;
+        data["discountMaxAmount"] = this.discountMaxAmount;
+        data["discountLimitAmount"] = this.discountLimitAmount;
+        data["fullReductionDiscountAmount"] = this.fullReductionDiscountAmount;
+        data["orderLimitAmount"] = this.orderLimitAmount;
+        data["available"] = this.available;
+        if (Array.isArray(this.unavailableReasons)) {
+            data["unavailableReasons"] = [];
+            for (let item of this.unavailableReasons)
+                data["unavailableReasons"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IOrderCouponItemRepsonse {
+    id: string;
+    name?: string | undefined;
+    type: CouponTypeEnumOfCoupon;
+    status: StatusEnumOfCoupon;
+    effectiveTimeRange?: string | undefined;
+    discountPercent: number;
+    discountMaxAmount: number;
+    discountLimitAmount: number;
+    fullReductionDiscountAmount: number;
+    orderLimitAmount: number;
+    available: boolean;
+    unavailableReasons?: string[] | undefined;
 }
 
 export class CreateOrderRequest implements ICreateOrderRequest {

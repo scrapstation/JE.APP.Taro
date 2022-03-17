@@ -8,6 +8,7 @@ export default {
     'pages/order/detail/index',
     'pages/payment/index',
     'pages/payment/remark/index',
+    'pages/payment/select-coupon/index',
     'pages/consignee/index',
     'pages/personal/index',
     'pages/consignee/add/index',

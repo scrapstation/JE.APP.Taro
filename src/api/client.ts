@@ -2143,9 +2143,10 @@ export interface ILoadOrderRequest {
 
 export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
     freeDeliveryPrice!: number;
-    totalFee!: number;
     wareFee!: number;
     deliveryFee!: number;
+    couponDiscountFees?: CouponDiscountFeeOfTypesOfCalculateOrderFeeResponse[] | undefined;
+    totalFee!: number;
     availableCouponsCount!: number;
 
     constructor(data?: ICalculateOrderFeeResponse) {
@@ -2160,9 +2161,14 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
     init(_data?: any) {
         if (_data) {
             this.freeDeliveryPrice = _data["freeDeliveryPrice"];
-            this.totalFee = _data["totalFee"];
             this.wareFee = _data["wareFee"];
             this.deliveryFee = _data["deliveryFee"];
+            if (Array.isArray(_data["couponDiscountFees"])) {
+                this.couponDiscountFees = [] as any;
+                for (let item of _data["couponDiscountFees"])
+                    this.couponDiscountFees!.push(CouponDiscountFeeOfTypesOfCalculateOrderFeeResponse.fromJS(item));
+            }
+            this.totalFee = _data["totalFee"];
             this.availableCouponsCount = _data["availableCouponsCount"];
         }
     }
@@ -2177,9 +2183,14 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["freeDeliveryPrice"] = this.freeDeliveryPrice;
-        data["totalFee"] = this.totalFee;
         data["wareFee"] = this.wareFee;
         data["deliveryFee"] = this.deliveryFee;
+        if (Array.isArray(this.couponDiscountFees)) {
+            data["couponDiscountFees"] = [];
+            for (let item of this.couponDiscountFees)
+                data["couponDiscountFees"].push(item.toJSON());
+        }
+        data["totalFee"] = this.totalFee;
         data["availableCouponsCount"] = this.availableCouponsCount;
         return data;
     }
@@ -2187,14 +2198,60 @@ export class CalculateOrderFeeResponse implements ICalculateOrderFeeResponse {
 
 export interface ICalculateOrderFeeResponse {
     freeDeliveryPrice: number;
-    totalFee: number;
     wareFee: number;
     deliveryFee: number;
+    couponDiscountFees?: CouponDiscountFeeOfTypesOfCalculateOrderFeeResponse[] | undefined;
+    totalFee: number;
     availableCouponsCount: number;
+}
+
+export class CouponDiscountFeeOfTypesOfCalculateOrderFeeResponse implements ICouponDiscountFeeOfTypesOfCalculateOrderFeeResponse {
+    couponId!: string;
+    name?: string | undefined;
+    discountFee!: number;
+
+    constructor(data?: ICouponDiscountFeeOfTypesOfCalculateOrderFeeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.couponId = _data["couponId"];
+            this.name = _data["name"];
+            this.discountFee = _data["discountFee"];
+        }
+    }
+
+    static fromJS(data: any): CouponDiscountFeeOfTypesOfCalculateOrderFeeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CouponDiscountFeeOfTypesOfCalculateOrderFeeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["couponId"] = this.couponId;
+        data["name"] = this.name;
+        data["discountFee"] = this.discountFee;
+        return data;
+    }
+}
+
+export interface ICouponDiscountFeeOfTypesOfCalculateOrderFeeResponse {
+    couponId: string;
+    name?: string | undefined;
+    discountFee: number;
 }
 
 export class CalculateOrderFeeRequest implements ICalculateOrderFeeRequest {
     orderItems?: ItemOfCalculateOrderFeeRequest[] | undefined;
+    couponIds?: string[] | undefined;
 
     constructor(data?: ICalculateOrderFeeRequest) {
         if (data) {
@@ -2211,6 +2268,11 @@ export class CalculateOrderFeeRequest implements ICalculateOrderFeeRequest {
                 this.orderItems = [] as any;
                 for (let item of _data["orderItems"])
                     this.orderItems!.push(ItemOfCalculateOrderFeeRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["couponIds"])) {
+                this.couponIds = [] as any;
+                for (let item of _data["couponIds"])
+                    this.couponIds!.push(item);
             }
         }
     }
@@ -2229,12 +2291,18 @@ export class CalculateOrderFeeRequest implements ICalculateOrderFeeRequest {
             for (let item of this.orderItems)
                 data["orderItems"].push(item.toJSON());
         }
+        if (Array.isArray(this.couponIds)) {
+            data["couponIds"] = [];
+            for (let item of this.couponIds)
+                data["couponIds"].push(item);
+        }
         return data;
     }
 }
 
 export interface ICalculateOrderFeeRequest {
     orderItems?: ItemOfCalculateOrderFeeRequest[] | undefined;
+    couponIds?: string[] | undefined;
 }
 
 export class ItemOfCalculateOrderFeeRequest implements IItemOfCalculateOrderFeeRequest {

@@ -15,6 +15,7 @@ const Payment: React.FC = () => {
   const [bottomUnsafeHeight, setBottomUnsafeHeight] = useState<number>(0);
   const [cart, setCart] = useState<CardItem[]>([]);
   const [remark, setRemark] = useState<string>('');
+  const [selectedCouponIds, setSelectedCouponIds] = useState<string[]>(['897ea5ba-9a6f-7dd3-30ef-3a02a03c005c']);
   const [calculateOrderFee, setCalculateOrderFee] = useState<CalculateOrderFeeResponse>(new CalculateOrderFeeResponse());
 
   useDidShow(() => {
@@ -28,7 +29,12 @@ const Payment: React.FC = () => {
 
   useEffect(() => {
     const calculateOrderFee = async () => {
-      const result = await API.orderClient.calculateOrderFee(new CalculateOrderFeeRequest({ orderItems: cart.map((x) => new ItemOfCalculateOrderFeeRequest({ skuId: x.skuId, quantity: x.number })) }));
+      const result = await API.orderClient.calculateOrderFee(
+        new CalculateOrderFeeRequest({
+          orderItems: cart.map((x) => new ItemOfCalculateOrderFeeRequest({ skuId: x.skuId, quantity: x.number })),
+          couponIds: selectedCouponIds,
+        })
+      );
       setCalculateOrderFee(result);
     };
     if (cart.length > 0) {
@@ -174,18 +180,38 @@ const Payment: React.FC = () => {
               <Text style={{ fontSize: 16 }}>配送费</Text>
               <Text style={{ fontSize: 14, float: 'right' }}>￥{calculateOrderFee.deliveryFee}</Text>
             </View>
-            <View style={{ marginTop: 20, marginBottom: 20 }}>
+            <View style={{ marginTop: 20, marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 16 }}>优惠券</Text>
-              <Text style={{ fontSize: 14, float: 'right', color: calculateOrderFee.availableCouponsCount > 0 ? '#dda25e' : '#999' }}>
-                {calculateOrderFee.availableCouponsCount > 0 ? (
-                  <>
-                    {calculateOrderFee.availableCouponsCount}张可用
-                    <AtIcon value='chevron-right' size='14' color='#dda25e' onClick={() => {}}></AtIcon>
-                  </>
-                ) : (
-                  '暂无可用'
-                )}
+              <Text style={{ fontSize: 14, color: calculateOrderFee.availableCouponsCount > 0 ? '#dda25e' : '#999' }}>
+                {calculateOrderFee.couponDiscountFees?.length == 0 &&
+                  (calculateOrderFee.availableCouponsCount > 0 ? (
+                    <>
+                      {calculateOrderFee.availableCouponsCount}张可用
+                      <AtIcon value='chevron-right' size='14' color='#dda25e' onClick={() => {}}></AtIcon>
+                    </>
+                  ) : (
+                    '暂无可用'
+                  ))}
               </Text>
+              {calculateOrderFee.couponDiscountFees && (
+                <>
+                  <View style='flex:1;display:flex;flex-direction:column'>
+                    {calculateOrderFee.couponDiscountFees?.map((x) => (
+                      <View style='display:flex;justify-content:space-between;margin:0px 10px 5px 20px'>
+                        <Text style={{ fontSize: 14, color: '#999' }}>{x.name}</Text>
+                        <Text style={{ fontSize: 14 }}>{-x.discountFee}</Text>
+                      </View>
+                    ))}
+                    {calculateOrderFee.couponDiscountFees?.map((x) => (
+                      <View style='display:flex;justify-content:space-between;margin:0px 10px 5px 20px'>
+                        <Text style={{ fontSize: 14, color: '#999' }}>{x.name}</Text>
+                        <Text style={{ fontSize: 14 }}>{-x.discountFee}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  <AtIcon value='chevron-right' customStyle={{ lineHeight: '21px' }} size='14' color='#dda25e' onClick={() => {}}></AtIcon>
+                </>
+              )}
             </View>
             <View style={{ marginTop: 20, marginBottom: 20 }} onClick={() => toRemarkPage()}>
               <Text style={{ fontSize: 16 }}>备注</Text>

@@ -1,0 +1,44 @@
+.coupon-item-inactive {
+  filter: grayscale(100%);
+}
+.coupon-item {
+  background-color: #fff;
+  display: flex;
+  padding: 24px 20px;
+  border-radius: 16px;
+  align-items: center;
+  .left {
+    width: 150px;
+    color: #daa871;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.limit-text {
+  width: 100%;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-name {
+  color: #343434;
+  font-size: 28px;
+  font-weight: 500;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+
+.info-expire {
+  color: #343434;
+  font-size: 22px;
+  font-weight: 400;
+}

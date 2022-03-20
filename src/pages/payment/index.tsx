@@ -15,7 +15,7 @@ const Payment: React.FC = () => {
   const [bottomUnsafeHeight, setBottomUnsafeHeight] = useState<number>(0);
   const [cart, setCart] = useState<CardItem[]>([]);
   const [remark, setRemark] = useState<string>('');
-  const [selectedCouponIds, setSelectedCouponIds] = useState<string[]>(['897ea5ba-9a6f-7dd3-30ef-3a02a03c005c']);
+  const [selectedCouponIds, setSelectedCouponIds] = useState<string[]>([]);
   const [calculateOrderFee, setCalculateOrderFee] = useState<CalculateOrderFeeResponse>(new CalculateOrderFeeResponse());
 
   useDidShow(() => {
@@ -91,6 +91,7 @@ const Payment: React.FC = () => {
       API.orderClient.create(
         new CreateOrderRequest({
           consigneeId: consignee.id,
+          couponIds: calculateOrderFee.couponDiscountFees?.map((x) => x.couponId),
           createOrderItems: cart.map((x) => new ItemOfCreateOrderRequest({ skuId: x.skuId, quantity: x.number })),
           remark: remark,
         })
@@ -187,26 +188,20 @@ const Payment: React.FC = () => {
             </View>
             <View style={{ marginTop: 20, marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 16 }}>优惠券</Text>
-              <Text style={{ fontSize: 14, color: calculateOrderFee.availableCouponsCount > 0 ? '#dda25e' : '#999' }}>
+              <View style={{ fontSize: 14, color: calculateOrderFee.availableCouponsCount > 0 ? '#dda25e' : '#999' }}>
                 {calculateOrderFee.couponDiscountFees?.length == 0 &&
                   (calculateOrderFee.availableCouponsCount > 0 ? (
-                    <>
+                    <View onClick={() => Taro.navigateTo({ url: `/pages/payment/select-coupon/index?wareFee=${calculateOrderFee.wareFee}` })}>
                       {calculateOrderFee.availableCouponsCount}张可用
-                      <AtIcon value='chevron-right' size='14' color='#dda25e' onClick={() => Taro.navigateTo({ url: `/pages/payment/select-coupon/index?wareFee=${calculateOrderFee.wareFee}` })}></AtIcon>
-                    </>
+                      <AtIcon value='chevron-right' size='14' color='#dda25e'></AtIcon>
+                    </View>
                   ) : (
                     '暂无可用'
                   ))}
-              </Text>
+              </View>
               {calculateOrderFee.couponDiscountFees?.length !== 0 && (
                 <>
-                  <View style='flex:1;display:flex;flex-direction:column'>
-                    {calculateOrderFee.couponDiscountFees?.map((x) => (
-                      <View style='display:flex;justify-content:space-between;margin:0px 10px 5px 20px'>
-                        <Text style={{ fontSize: 14, color: '#999' }}>{x.name}</Text>
-                        <Text style={{ fontSize: 14 }}>-￥{x.discountFee.toFixed(2)}</Text>
-                      </View>
-                    ))}
+                  <View onClick={() => Taro.navigateTo({ url: `/pages/payment/select-coupon/index?wareFee=${calculateOrderFee.wareFee}` })} style='flex:1;display:flex;flex-direction:column'>
                     {calculateOrderFee.couponDiscountFees?.map((x) => (
                       <View style='display:flex;justify-content:space-between;margin:0px 10px 5px 20px'>
                         <Text style={{ fontSize: 14, color: '#999' }}>{x.name}</Text>
@@ -214,7 +209,7 @@ const Payment: React.FC = () => {
                       </View>
                     ))}
                   </View>
-                  <AtIcon value='chevron-right' customStyle={{ lineHeight: '21px' }} size='14' onClick={() => Taro.navigateTo({ url: `/pages/payment/select-coupon/index?wareFee=${calculateOrderFee.wareFee}` })}></AtIcon>
+                  <AtIcon onClick={() => Taro.navigateTo({ url: `/pages/payment/select-coupon/index?wareFee=${calculateOrderFee.wareFee}` })} value='chevron-right' customStyle={{ lineHeight: '21px' }} size='14'></AtIcon>
                 </>
               )}
             </View>

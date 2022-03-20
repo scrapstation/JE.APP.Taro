@@ -1,5 +1,6 @@
 import { API } from '@/api';
-import { CouponTypeEnumOfCoupon, LoadCouponRequest, LoadCouponResponse, StatusEnumOfCoupon } from '@/api/client';
+import { BaseCouponResponse, CouponTypeEnumOfCoupon, LoadCouponRequest, StatusEnumOfCoupon } from '@/api/client';
+import CouponItem from '@/components/CouponItem';
 import Empty from '@/components/Empty';
 import TabPane from '@/components/Tab/TabPane';
 import Tabs from '@/components/Tab/Tabs';
@@ -40,9 +41,9 @@ const renderCouponItem = (name: string, status: StatusEnumOfCoupon, num: number,
   );
 };
 export default () => {
-  const [usableCouponsTab, setUsableCouponsTab] = useState<{ list: LoadCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }>({ list: [], loadStatus: 'more' });
-  const [usedCouponsTab, setUsedCouponsTab] = useState<{ list: LoadCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }>({ list: [], loadStatus: 'more' });
-  const [expiredCouponsTab, setExpiredCouponsTab] = useState<{ list: LoadCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }>({ list: [], loadStatus: 'more' });
+  const [usableCouponsTab, setUsableCouponsTab] = useState<{ list: BaseCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }>({ list: [], loadStatus: 'more' });
+  const [usedCouponsTab, setUsedCouponsTab] = useState<{ list: BaseCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }>({ list: [], loadStatus: 'more' });
+  const [expiredCouponsTab, setExpiredCouponsTab] = useState<{ list: BaseCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }>({ list: [], loadStatus: 'more' });
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
   useReady(() => {
     load('availableCoupons');
@@ -73,20 +74,12 @@ export default () => {
     return loadStatusList[currentTabIndex] == 'noMore' ? <View style={{ margin: '30px 0', fontSize: 13, color: '#999' }}>没有更多了~</View> : <></>;
   };
 
-  const renderBody = ({ list, loadStatus }: { list: LoadCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }) => {
+  const renderBody = ({ list, loadStatus }: { list: BaseCouponResponse[]; loadStatus: 'more' | 'loading' | 'noMore' }) => {
     return (
       <>
-        {list.map((x) => {
-          switch (x.type) {
-            case CouponTypeEnumOfCoupon.Discount:
-              const discountPercentText = x.discountPercent % 10 === 0 ? x.discountPercent / 10 : x.discountPercent;
-              return renderCouponItem(x.name!, x.status, discountPercentText, '折', `满${x.discountLimitAmount}元可用`, x.effectiveTimeRange!);
-            case CouponTypeEnumOfCoupon.FullReduction:
-              return renderCouponItem(x.name!, x.status, x.fullReductionDiscountAmount, '元', `满${x.orderLimitAmount}元可用`, x.effectiveTimeRange!);
-            default:
-              break;
-          }
-        })}
+        {list.map((x) => (
+          <CouponItem baseCouponResponse={x} />
+        ))}
         {list.length == 0 && loadStatus == 'noMore' && <Empty text='这里什么都没有' />}
         {list.length != 0 && <View style={{ margin: '5px 0px 15px', textAlign: 'center' }}>{renderLoadStatus()}</View>}
       </>

@@ -1,0 +1,17 @@
+page {
+  background-color: #f5f6f5;
+}
+
+.order-items-card {
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  > view:nth-child(2) {
+    margin-top: 20px;
+  }
+  .order-items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

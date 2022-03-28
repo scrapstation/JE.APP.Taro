@@ -123,6 +123,9 @@ const OrderDetail: React.FC = () => {
               ))}
             </View>
           </View>
+          <View style={{ backgroundColor: '#ffffff00', textAlign: 'center', color: '#999', fontSize: 13 }}>
+            如有问题，请<Text style={{ textDecoration: 'underline' }}>申请售后</Text>
+          </View>
         </View>
       )}
     </>

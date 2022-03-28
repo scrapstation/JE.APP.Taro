@@ -1039,6 +1039,120 @@ export class OrderClient {
     }
 }
 
+export class RefundClient {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
+
+    }
+
+    createRefund(request: RefundRequest , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Refund";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreateRefund(_response);
+        });
+    }
+
+    protected processCreateRefund(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    getPreviousInfo(orderId: string , cancelToken?: CancelToken | undefined): Promise<GetRefundPreviousInfoResponse> {
+        let url_ = this.baseUrl + "/api/Refund/previous_info?";
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined and cannot be null.");
+        else
+            url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetPreviousInfo(_response);
+        });
+    }
+
+    protected processGetPreviousInfo(response: AxiosResponse): Promise<GetRefundPreviousInfoResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GetRefundPreviousInfoResponse.fromJS(resultData200);
+            return Promise.resolve<GetRefundPreviousInfoResponse>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GetRefundPreviousInfoResponse>(null as any);
+    }
+}
+
 export class RiderAccountClient {
     private instance: AxiosInstance;
     private baseUrl: string;
@@ -1436,120 +1550,6 @@ export class RiderClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<boolean>(null as any);
-    }
-}
-
-export class ShoppingCartClient {
-    private instance: AxiosInstance;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
-
-        this.instance = instance ? instance : axios.create();
-
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:4888";
-
-    }
-
-    get(  cancelToken?: CancelToken | undefined): Promise<ShoppingCartInfoResponse> {
-        let url_ = this.baseUrl + "/api/ShoppingCart";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: AxiosResponse): Promise<ShoppingCartInfoResponse> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = ShoppingCartInfoResponse.fromJS(resultData200);
-            return Promise.resolve<ShoppingCartInfoResponse>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ShoppingCartInfoResponse>(null as any);
-    }
-
-    modifyItem(req: ModifyShoppingCartItemRequest , cancelToken?: CancelToken | undefined): Promise<ShoppingCartInfoResponse> {
-        let url_ = this.baseUrl + "/api/ShoppingCart";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(req);
-
-        let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "PUT",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processModifyItem(_response);
-        });
-    }
-
-    protected processModifyItem(response: AxiosResponse): Promise<ShoppingCartInfoResponse> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = ShoppingCartInfoResponse.fromJS(resultData200);
-            return Promise.resolve<ShoppingCartInfoResponse>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ShoppingCartInfoResponse>(null as any);
     }
 }
 
@@ -2102,7 +2102,7 @@ export enum StatusEnumOfOrder {
     PendingPayment = "PendingPayment",
     PendingPack = "PendingPack",
     Packing = "Packing",
-    PenddingDelivery = "PenddingDelivery",
+    PendingDelivery = "PendingDelivery",
     Delivering = "Delivering",
     Canceled = "Canceled",
     Completed = "Completed",
@@ -2762,6 +2762,238 @@ export interface ITransactionNotifyResourceOfTransactionNotifyRequest {
     nonce?: string | undefined;
 }
 
+export class RefundRequest implements IRefundRequest {
+    orderId!: string;
+    refundType!: RefundTypeEnumOfRefundRequest;
+    reasonType!: ReasonTypeEnumOfRefund;
+    reasonDescription?: string | undefined;
+    refundDeliveryFee!: number;
+    refundOrderItems?: RefundOrderItemOfTypesOfRefundRequest[] | undefined;
+
+    constructor(data?: IRefundRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderId = _data["orderId"];
+            this.refundType = _data["refundType"];
+            this.reasonType = _data["reasonType"];
+            this.reasonDescription = _data["reasonDescription"];
+            this.refundDeliveryFee = _data["refundDeliveryFee"];
+            if (Array.isArray(_data["refundOrderItems"])) {
+                this.refundOrderItems = [] as any;
+                for (let item of _data["refundOrderItems"])
+                    this.refundOrderItems!.push(RefundOrderItemOfTypesOfRefundRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RefundRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new RefundRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderId"] = this.orderId;
+        data["refundType"] = this.refundType;
+        data["reasonType"] = this.reasonType;
+        data["reasonDescription"] = this.reasonDescription;
+        data["refundDeliveryFee"] = this.refundDeliveryFee;
+        if (Array.isArray(this.refundOrderItems)) {
+            data["refundOrderItems"] = [];
+            for (let item of this.refundOrderItems)
+                data["refundOrderItems"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IRefundRequest {
+    orderId: string;
+    refundType: RefundTypeEnumOfRefundRequest;
+    reasonType: ReasonTypeEnumOfRefund;
+    reasonDescription?: string | undefined;
+    refundDeliveryFee: number;
+    refundOrderItems?: RefundOrderItemOfTypesOfRefundRequest[] | undefined;
+}
+
+export enum RefundTypeEnumOfRefundRequest {
+    Full = "Full",
+    Partial = "Partial",
+}
+
+export enum ReasonTypeEnumOfRefund {
+    BuyTheWrong = "BuyTheWrong",
+    QualityProblem = "QualityProblem",
+    NotReceived = "NotReceived",
+    Others = "Others",
+}
+
+export class RefundOrderItemOfTypesOfRefundRequest implements IRefundOrderItemOfTypesOfRefundRequest {
+    orderItemId!: string;
+    quantity!: number;
+    amount!: number;
+
+    constructor(data?: IRefundOrderItemOfTypesOfRefundRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderItemId = _data["orderItemId"];
+            this.quantity = _data["quantity"];
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): RefundOrderItemOfTypesOfRefundRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new RefundOrderItemOfTypesOfRefundRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderItemId"] = this.orderItemId;
+        data["quantity"] = this.quantity;
+        data["amount"] = this.amount;
+        return data;
+    }
+}
+
+export interface IRefundOrderItemOfTypesOfRefundRequest {
+    orderItemId: string;
+    quantity: number;
+    amount: number;
+}
+
+export class GetRefundPreviousInfoResponse implements IGetRefundPreviousInfoResponse {
+    orderItems?: OrderItemOfTypesOfGetRefundPreviousInfoResponse[] | undefined;
+    maxRefundAmount!: number;
+    deliveryFee!: number;
+
+    constructor(data?: IGetRefundPreviousInfoResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["orderItems"])) {
+                this.orderItems = [] as any;
+                for (let item of _data["orderItems"])
+                    this.orderItems!.push(OrderItemOfTypesOfGetRefundPreviousInfoResponse.fromJS(item));
+            }
+            this.maxRefundAmount = _data["maxRefundAmount"];
+            this.deliveryFee = _data["deliveryFee"];
+        }
+    }
+
+    static fromJS(data: any): GetRefundPreviousInfoResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetRefundPreviousInfoResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.orderItems)) {
+            data["orderItems"] = [];
+            for (let item of this.orderItems)
+                data["orderItems"].push(item.toJSON());
+        }
+        data["maxRefundAmount"] = this.maxRefundAmount;
+        data["deliveryFee"] = this.deliveryFee;
+        return data;
+    }
+}
+
+export interface IGetRefundPreviousInfoResponse {
+    orderItems?: OrderItemOfTypesOfGetRefundPreviousInfoResponse[] | undefined;
+    maxRefundAmount: number;
+    deliveryFee: number;
+}
+
+export class OrderItemOfTypesOfGetRefundPreviousInfoResponse implements IOrderItemOfTypesOfGetRefundPreviousInfoResponse {
+    refundedQuantity!: number;
+    price!: number;
+    discountAmount!: number;
+    quantity!: number;
+    snapshotName?: string | undefined;
+    imageUrl?: string | undefined;
+    snapshotAttributeItemNames?: string | undefined;
+
+    constructor(data?: IOrderItemOfTypesOfGetRefundPreviousInfoResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.refundedQuantity = _data["refundedQuantity"];
+            this.price = _data["price"];
+            this.discountAmount = _data["discountAmount"];
+            this.quantity = _data["quantity"];
+            this.snapshotName = _data["snapshotName"];
+            this.imageUrl = _data["imageUrl"];
+            this.snapshotAttributeItemNames = _data["snapshotAttributeItemNames"];
+        }
+    }
+
+    static fromJS(data: any): OrderItemOfTypesOfGetRefundPreviousInfoResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderItemOfTypesOfGetRefundPreviousInfoResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["refundedQuantity"] = this.refundedQuantity;
+        data["price"] = this.price;
+        data["discountAmount"] = this.discountAmount;
+        data["quantity"] = this.quantity;
+        data["snapshotName"] = this.snapshotName;
+        data["imageUrl"] = this.imageUrl;
+        data["snapshotAttributeItemNames"] = this.snapshotAttributeItemNames;
+        return data;
+    }
+}
+
+export interface IOrderItemOfTypesOfGetRefundPreviousInfoResponse {
+    refundedQuantity: number;
+    price: number;
+    discountAmount: number;
+    quantity: number;
+    snapshotName?: string | undefined;
+    imageUrl?: string | undefined;
+    snapshotAttributeItemNames?: string | undefined;
+}
+
 export class RiderGetSummaryResponse implements IRiderGetSummaryResponse {
     todayTaskCount!: number;
     todayExpectedIncome!: number;
@@ -3007,154 +3239,6 @@ export interface ILoadRiderDeliveryHistoryRequest {
     startTime: Date;
     endTime: Date;
     isDisputed: boolean;
-}
-
-export class ShoppingCartInfoResponse implements IShoppingCartInfoResponse {
-    items?: ShoppingCartInfoItem[] | undefined;
-    amount!: number;
-
-    constructor(data?: IShoppingCartInfoResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ShoppingCartInfoItem.fromJS(item));
-            }
-            this.amount = _data["amount"];
-        }
-    }
-
-    static fromJS(data: any): ShoppingCartInfoResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ShoppingCartInfoResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["amount"] = this.amount;
-        return data;
-    }
-}
-
-export interface IShoppingCartInfoResponse {
-    items?: ShoppingCartInfoItem[] | undefined;
-    amount: number;
-}
-
-export class ShoppingCartInfoItem implements IShoppingCartInfoItem {
-    id!: string;
-    name?: string | undefined;
-    imgUrl?: string | undefined;
-    quantity!: number;
-    price!: number;
-    isSelected!: boolean;
-
-    constructor(data?: IShoppingCartInfoItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.imgUrl = _data["imgUrl"];
-            this.quantity = _data["quantity"];
-            this.price = _data["price"];
-            this.isSelected = _data["isSelected"];
-        }
-    }
-
-    static fromJS(data: any): ShoppingCartInfoItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new ShoppingCartInfoItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["imgUrl"] = this.imgUrl;
-        data["quantity"] = this.quantity;
-        data["price"] = this.price;
-        data["isSelected"] = this.isSelected;
-        return data;
-    }
-}
-
-export interface IShoppingCartInfoItem {
-    id: string;
-    name?: string | undefined;
-    imgUrl?: string | undefined;
-    quantity: number;
-    price: number;
-    isSelected: boolean;
-}
-
-export class ModifyShoppingCartItemRequest implements IModifyShoppingCartItemRequest {
-    productId!: string;
-    quantity?: number | undefined;
-    isSelected?: boolean | undefined;
-
-    constructor(data?: IModifyShoppingCartItemRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.productId = _data["productId"];
-            this.quantity = _data["quantity"];
-            this.isSelected = _data["isSelected"];
-        }
-    }
-
-    static fromJS(data: any): ModifyShoppingCartItemRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new ModifyShoppingCartItemRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["productId"] = this.productId;
-        data["quantity"] = this.quantity;
-        data["isSelected"] = this.isSelected;
-        return data;
-    }
-}
-
-export interface IModifyShoppingCartItemRequest {
-    productId: string;
-    quantity?: number | undefined;
-    isSelected?: boolean | undefined;
 }
 
 export class StoreInfoResponse implements IStoreInfoResponse {

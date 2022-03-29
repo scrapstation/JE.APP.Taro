@@ -1,7 +1,7 @@
 export default {
   pages: [
-    'pages/order/detail/refund/index',
     'pages/index/index',
+    'pages/order/detail/refund/index',
     'pages/coupon/index',
     'pages/rider/deliveries-history/index',
     'pages/rider/index',

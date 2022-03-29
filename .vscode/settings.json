@@ -8,8 +8,8 @@
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  // "prettier.printWidth": 999,
-  // "prettier.proseWrap": "never",
+  "prettier.printWidth": 999,
+  "prettier.proseWrap": "never",
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   }

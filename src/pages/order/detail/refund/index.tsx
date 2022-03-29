@@ -13,13 +13,13 @@ export default (() => {
       setRefundPreviousInfo(result);
     };
     fetch();
-  });
+  }, []);
   return (
     <>
       <View className='order-items-card'>
         {refundPreviousInfo.orderItems?.map((orderItem) => {
           return (
-            <View className='order-items'>
+            <View className='order-item'>
               <View style={{ display: 'flex', alignItems: 'center' }}>
                 <Image lazyLoad mode='aspectFill' src={orderItem.imageUrl!} style={{ width: 64, height: 64 }}></Image>
               </View>
@@ -27,11 +27,9 @@ export default (() => {
                 <View style={{ fontSize: 16 }}>{orderItem.snapshotName}</View>
                 <View style={{ fontSize: 14, color: '#999' }}>x{orderItem.quantity}</View>
               </View>
-              <View style={{ minWidth: 40, textAlign: 'right' }}>
-                <AtButton type='primary' size='small' customStyle={{ color: '#fff', borderRadius: 50, fontSize: 13, width: 64, height: 26, lineHeight: '26px' }} onClick={() => {}}>
-                  申请
-                </AtButton>
-              </View>
+              <AtButton type='primary' size='small' customStyle={{ color: '#fff', borderRadius: 50, fontSize: 13, width: 64, height: 26, lineHeight: '26px' }} onClick={() => {}}>
+                申请
+              </AtButton>
             </View>
           );
         })}

@@ -7,11 +7,12 @@ page {
   padding: 20px;
   background-color: #fff;
   border-radius: 20px;
-  > view:nth-child(2) {
+  > view:not(:first-child) {
     margin-top: 20px;
   }
-  .order-items {
+  .order-item {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
   }
 }

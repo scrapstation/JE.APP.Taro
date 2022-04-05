@@ -1,19 +1,34 @@
 import { API } from '@/api';
-import { GetRefundPreviousInfoResponse } from '@/api/client';
+import { GetRefundPreviousInfoResponse, ReasonTypeEnumOfRefund, RefundRequest, RefundTypeEnumOfRefundRequest } from '@/api/client';
 import { Button, Image, Text, View } from '@tarojs/components';
+import { useRouter } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { AtButton, AtDivider } from 'taro-ui';
 import './index.scss';
 
 export default (() => {
+  const router = useRouter();
   const [refundPreviousInfo, setRefundPreviousInfo] = useState<GetRefundPreviousInfoResponse>(new GetRefundPreviousInfoResponse());
   useEffect(() => {
     const fetch = async () => {
-      const result = await API.refundClient.getPreviousInfo('e0b44e66-2e90-b741-be14-3a02e87c6efe');
+      const result = await API.refundClient.getPreviousInfo(router.params!.orderId!);
       setRefundPreviousInfo(result);
     };
     fetch();
   }, []);
+
+  const fullRefund = async (orderId: string) => {
+    await API.refundClient.createRefund(
+      new RefundRequest({
+        orderId: orderId,
+        refundType: RefundTypeEnumOfRefundRequest.Full,
+        reasonType: ReasonTypeEnumOfRefund.BuyTheWrong,
+        reasonDescription: '无理由',
+        refundDeliveryFee: 2,
+        refundOrderItems: [],
+      })
+    );
+  };
   return (
     <>
       {/* <View className='header'>
@@ -24,8 +39,7 @@ export default (() => {
       <View className='order-items-card'>
         <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <View style={{ fontWeight: 'bold' }}>请选择要退款的商品</View>
-
-          <Text style={{ fontSize: 13, color: '#999' }} onClick={() => {}}>
+          <Text style={{ fontSize: 13, color: '#999' }} onClick={() => fullRefund(router.params.orderId!)}>
             整单退款
           </Text>
           {/* <AtButton size='small' customStyle={{ color: '#999', borderColor: '#999', padding: '0 10px', margin: 'unset', borderRadius: 50, fontSize: 13, height: 26, lineHeight: '26px' }} onClick={() => {}}>

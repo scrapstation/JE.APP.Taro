@@ -125,7 +125,7 @@ const OrderDetail: React.FC = () => {
           </View>
           <View style={{ backgroundColor: '#ffffff00', textAlign: 'center', color: '#999', fontSize: 13 }}>
             如有问题，请
-            <Text style={{ textDecoration: 'underline' }} onClick={() => Taro.navigateTo({ url: '/pages/order/detail/refund/index' })}>
+            <Text style={{ textDecoration: 'underline' }} onClick={() => Taro.navigateTo({ url: `/pages/order/detail/refund/index?orderId=${order.id}` })}>
               申请售后
             </Text>
           </View>

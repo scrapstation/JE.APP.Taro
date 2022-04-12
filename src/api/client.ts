@@ -192,6 +192,58 @@ export class AuthClient {
         }
         return Promise.resolve<WechatAuthResponse>(null as any);
     }
+
+    updateInfo(nickName: string | null, avatarUrl: string | null , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Auth/info?";
+        if (nickName === undefined)
+            throw new Error("The parameter 'nickName' must be defined.");
+        else if(nickName !== null)
+            url_ += "nickName=" + encodeURIComponent("" + nickName) + "&";
+        if (avatarUrl === undefined)
+            throw new Error("The parameter 'avatarUrl' must be defined.");
+        else if(avatarUrl !== null)
+            url_ += "avatarUrl=" + encodeURIComponent("" + avatarUrl) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpdateInfo(_response);
+        });
+    }
+
+    protected processUpdateInfo(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 
 export class ConsigneeClient {
@@ -986,7 +1038,7 @@ export class OrderClient {
         return Promise.resolve<PaymentResponse>(null as any);
     }
 
-    notify(request: TransactionNotifyRequest , cancelToken?: CancelToken | undefined): Promise<WechatTransactionResponse> {
+    notify(request: TransactionNotifyRequest , cancelToken?: CancelToken | undefined): Promise<TransactionNotifyResponse> {
         let url_ = this.baseUrl + "/api/Order/notify";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1014,7 +1066,7 @@ export class OrderClient {
         });
     }
 
-    protected processNotify(response: AxiosResponse): Promise<WechatTransactionResponse> {
+    protected processNotify(response: AxiosResponse): Promise<TransactionNotifyResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1028,14 +1080,14 @@ export class OrderClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = WechatTransactionResponse.fromJS(resultData200);
-            return Promise.resolve<WechatTransactionResponse>(result200);
+            result200 = TransactionNotifyResponse.fromJS(resultData200);
+            return Promise.resolve<TransactionNotifyResponse>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<WechatTransactionResponse>(null as any);
+        return Promise.resolve<TransactionNotifyResponse>(null as any);
     }
 }
 
@@ -2609,11 +2661,11 @@ export interface IPaymentResponse {
     paySign?: string | undefined;
 }
 
-export class WechatTransactionResponse implements IWechatTransactionResponse {
-    code!: CodeEnumOfWechatTransactionResponse;
+export class TransactionNotifyResponse implements ITransactionNotifyResponse {
+    code!: CodeEnumOfTransactionNotifyResponse;
     message?: string | undefined;
 
-    constructor(data?: IWechatTransactionResponse) {
+    constructor(data?: ITransactionNotifyResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2629,9 +2681,9 @@ export class WechatTransactionResponse implements IWechatTransactionResponse {
         }
     }
 
-    static fromJS(data: any): WechatTransactionResponse {
+    static fromJS(data: any): TransactionNotifyResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new WechatTransactionResponse();
+        let result = new TransactionNotifyResponse();
         result.init(data);
         return result;
     }
@@ -2644,12 +2696,12 @@ export class WechatTransactionResponse implements IWechatTransactionResponse {
     }
 }
 
-export interface IWechatTransactionResponse {
-    code: CodeEnumOfWechatTransactionResponse;
+export interface ITransactionNotifyResponse {
+    code: CodeEnumOfTransactionNotifyResponse;
     message?: string | undefined;
 }
 
-export enum CodeEnumOfWechatTransactionResponse {
+export enum CodeEnumOfTransactionNotifyResponse {
     SUCCESS = "SUCCESS",
     FAILURE = "FAILURE",
 }

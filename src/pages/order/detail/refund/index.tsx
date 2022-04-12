@@ -1,6 +1,7 @@
 import { API } from '@/api';
 import { GetRefundPreviousInfoResponse, ReasonTypeEnumOfRefund, RefundRequest, RefundTypeEnumOfRefundRequest } from '@/api/client';
 import { Button, Image, Text, View } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import { useRouter } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { AtButton, AtDivider } from 'taro-ui';
@@ -18,16 +19,21 @@ export default (() => {
   }, []);
 
   const fullRefund = async (orderId: string) => {
-    await API.refundClient.createRefund(
-      new RefundRequest({
-        orderId: orderId,
-        refundType: RefundTypeEnumOfRefundRequest.Full,
-        reasonType: ReasonTypeEnumOfRefund.BuyTheWrong,
-        reasonDescription: '无理由',
-        refundDeliveryFee: 2,
-        refundOrderItems: [],
-      })
-    );
+    try {
+      await API.refundClient.createRefund(
+        new RefundRequest({
+          orderId: orderId,
+          refundType: RefundTypeEnumOfRefundRequest.Full,
+          reasonType: ReasonTypeEnumOfRefund.BuyTheWrong,
+          reasonDescription: '无理由',
+          refundDeliveryFee: 2,
+          refundOrderItems: [],
+        })
+      );
+      Taro.showToast({ title: '申请已提交' });
+    } catch (error) {
+      Taro.showToast({ title: '申请失败' });
+    }
   };
   return (
     <>

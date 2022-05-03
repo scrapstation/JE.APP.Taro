@@ -48,6 +48,7 @@
 <kbd><img width="350" src="https://user-images.githubusercontent.com/56467036/166490029-f96f2991-e846-4b05-9a02-d41904aa6f2e.jpg"></kbd>
 <kbd><img width="350" src="https://user-images.githubusercontent.com/56467036/166490039-ff81bf23-0309-4f4e-8ea8-89fc30069b97.jpg"></kbd> 
 <kbd><img width="350" src="https://user-images.githubusercontent.com/56467036/166490050-bb513be8-be8e-41ed-a59d-84a4f47788d6.png"></kbd>
+<kbd><img width="350" src="https://user-images.githubusercontent.com/56467036/166500193-96127d74-3ac0-486c-9979-05576b2b9c71.jpg"></kbd>
 
 ## 🔨 管理平台截图
 ![店铺设置](https://user-images.githubusercontent.com/56467036/166499393-2277d5c7-9848-48cd-804e-7f2433b1ada9.png)

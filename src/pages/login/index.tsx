@@ -34,7 +34,7 @@ const Index: React.FC = () => {
   return (
     <View className='main'>
       <Image className='avatar' src={'https://daveshop-taro.oss-cn-beijing.aliyuncs.com/images/my/user.png'}></Image>
-      <View className='hello'>您好，茶茶</View>
+      <View className='hello'>您好，新朋友</View>
       <View className='tips'>为了您的账户安全，请绑定手机号</View>
       <Button onClick={() => getUserProfile()} type='primary' className='bind-phone-btn' openType={'getPhoneNumber'} onGetPhoneNumber={(e) => login(e)}>
         <View>

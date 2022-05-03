@@ -20,6 +20,13 @@ export type CardItem = {
   image: string;
   mark?: string;
 };
+const getDistance = (mile: number) => {
+  if (mile < 1000) {
+    return mile.toFixed(0) + 'm';
+  } else {
+    return (mile / 1000).toFixed(2) + 'km';
+  }
+};
 const Index: React.FC = () => {
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
   const [location, setLocation] = useState<Taro.getLocation.SuccessCallbackResult | undefined>();
@@ -46,21 +53,17 @@ const Index: React.FC = () => {
         <View className='store'>
           <View className='title'>
             <View style={{ fontSize: 17 }}>{store.name}</View>
-            <View style={{ marginTop: 5, fontSize: 13, color: '#999' }}> 距离您{location && haversine([location.latitude, location.longitude], [store.latitude, store.longitude]).toFixed(0)}m</View>
+            <View style={{ marginTop: 5, fontSize: 13, color: '#999' }}> 距离您{location && getDistance(haversine([location.latitude, location.longitude], [store.latitude, store.longitude]))}</View>
           </View>
         </View>
         <Swiper autoplay vertical circular style={{ height: 20, padding: '5px 15px' }}>
           <SwiperItem className='test'>
             <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
-            <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>
+            <Text className='test1'>新店开业, 新用户无门槛88折优惠。</Text>
           </SwiperItem>
           <SwiperItem className='test'>
             <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
-            <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>
-          </SwiperItem>
-          <SwiperItem className='test'>
-            <Image style={{ borderRadius: 2, height: 14, marginRight: 5, width: 13 }} src='https://go.cdn.heytea.com/2021/07/21/tmp/3b9b01a954824daca50323fba4881563.jpg' />
-            <Text className='test1'>糯糯入茶，清新不腻。用经典定制茶底中和软萌米糯糯的饱满口感，碰撞出清新不腻的糯糯茶。</Text>
+            <Text className='test1'>30分钟闪速上门配送。</Text>
           </SwiperItem>
         </Swiper>
       </View>

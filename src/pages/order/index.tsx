@@ -90,7 +90,7 @@ const Order: React.FC = () => {
       <View onClick={() => toOrderDetail(order)} style={{ display: 'flex', flexDirection: 'column', margin: '8px 8px 0', borderRadius: 8, padding: '16px 16px 24px', backgroundColor: '#FFF' }}>
         <View style={{ display: 'flex', justifyContent: 'space-between' }}>
           <View>
-            <View style={{ fontSize: 14, color: '#343434' }}>齐鲁工业大学店</View>
+            <View style={{ fontSize: 14, color: '#343434' }}>亮马河大厦店</View>
             <View style={{ fontSize: 11, color: '#999' }}>{moment(order.createdOn).format('YYYY-MM-DD HH:mm:ss')}</View>
           </View>
           <View style={{ fontSize: 12, color: '#5d5d5d' }}>
